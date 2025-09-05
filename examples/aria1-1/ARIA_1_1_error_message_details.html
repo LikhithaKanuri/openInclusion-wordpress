@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Error message and details - ARIA 1.1 Tests</title>
+
+<style type="text/css">
+
+*	{
+	font-family: sans-serif;
+}
+
+.layout {
+	font-family: sans-serif;
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+}
+</style>
+
+</head>
+
+<body>
+<h1>ARIA 1.1 Test cases</h1>
+
+<h2><code>aria-errormessage</code> Tests</h2>
+
+<p><strong>NOTE ON TEST SUITE</strong> Tests were undertaken on these code examples using IE 11, Safari 10 and latest builds of Chrome and Firefox.
+	AT used was JAWS 18, NVDA, and VoiceOver.</p>
+
+
+<p>The <code>aria-errormessage</code> attribute references another element that contains custom error message text. Authors must use <code>aria-invalid</code> in conjunction with <code>aria-errormessage</code>. </p>
+
+<h2><code>aria-errormessage</code> example</h2>
+
+
+<div class="layout">
+	<h3>Start time</h3>
+<label for="startTime"> Please enter a start time for the meeting: </label>
+<input id="startTime" type="text" aria-errormessage="msgID" value="" aria-invalid="false">
+<span id="msgID" aria-live="off" style="visibility:hidden"> Invalid time:  the time must be between 9:00 AM and 5:00 PM" </span>
+
+<!-- User has input an invalid value -->
+<h3> Start time - no functionada</h3>
+<label for="startTime"> Please enter a start time for the meeting: </label>
+<input id="startTime" type="text" aria-errormessage="msgID" aria-invalid="true" value="11:30 PM" >
+<span id="msgID" aria-live="assertive" style="visibility:visible"> Invalid time:  the time must be between 9:00 AM and 5:00 PM" </span>
+
+</div>
+
+<h2>Screen reader test results</h2>
+
+<table class="layout"><caption>Screen Reader Test Results for <code>aria-errormessage</code></caption>
+<td><th>IE 11</th> <th>Firefox</th><th>Chrome</th> <th>Safari 10.1</th>
+<tr>
+<th>JAWS 18</th> <td>Not supported</td> <td>Not supported</td> <td>Not supported</td> <td>x</td> 
+</tr>
+<tr>
+	<th>NVDA</th><td> Not supported</td> <td>Not supported</td> <td>Not supported</td> <td>x</td> 
+</tr>
+<th>VoiceOver</th><td>x</td>  <td>x</td><td>x</td>  <td>Not supported</td> 
+</table>
+
+
+<h2><code>aria-details</code> example</h2>
+<p>The <code>aria-details</code>attribute references a single element that provides more detailed information than would normally be provided by aria-describedby. </p>
+
+	<!-- Provision of an extended description -->
+
+	<h3><code>aria-details</code>example 1</h3>
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Pythagorean.svg/260px-Pythagorean.svg.png" alt="Pythagorean Theorem 1" aria-details="det">
+<details id="det">
+  <summary>Example</summary>
+  <p>
+    The Pythagorean Theorem is a relationship in Euclidean Geometry between the three sides of
+    a right triangle, where the square of the hypotenuse is the sum of the squares of the two
+    opposing sides.
+  </p>
+  <p>
+    The following drawing illustrates an application of the Pythagorean Theorem when used to
+    construct a skateboard ramp.
+  </p>
+  <object data="skatebd-ramp.svg"  type="image/svg+xml"/>
+  <p>
+    In this example you will notice a skateboard with a base and vertical board whose width
+    is the width of the ramp. To compute how long the ramp must be, simply calculate the
+    base length, square it, sum it with the square of the height of the ramp, and take the
+    square root of the sum.
+  </p>
+</details>
+
+<h3><code>aria-details</code> example 2</h3>
+
+<!-- Provision of an extended description -->
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Pythagorean.svg/260px-Pythagorean.svg.png" alt="Pythagorean Theorem 2" aria-details="dets">
+<p>
+  See an <a href="http://foo.com/pt.html" id="det">Application of the Pythagorean Theorem</a>.
+</p>
+
+
+
+<table class="layout"><caption>Screen Reader Test Results for <code>aria-details</code></caption>
+<td><th>IE 11</th> <th>Firefox</th><th>Chrome</th> <th>Safari 10.1</th>
+<tr>
+<th>JAWS 18</th> <td>Not supported</td> <td>Not supported</td> <td>Not supported</td> <td>x</td> 
+</tr>
+<tr>
+	<th>NVDA</th><td> Not supported</td> <td>Not supported</td> <td>Not supported</td> <td>x</td> 
+</tr>
+<th>VoiceOver</th><td>x</td>  <td>x</td><td>x</td>  <td>Not supported</td> 
+</table>
+
+
+</body>
+</html>

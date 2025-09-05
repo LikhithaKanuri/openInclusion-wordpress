@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<title>Using aria-labelledby</title>
+   <style type="text/css" media="screen">
+fieldset {
+   border:none; margin:10px 0; padding:0;
+}
+body{
+   font-family:arial
+}
+</style>
+</head>
+
+<body>
+
+
+<p><input type="checkbox" name="confirmtc" id="confirmtc" value="tcread">
+<label for="confirmtc">I confirm I've read the terms and conditions</label>
+</p>
+
+<p style="clear:both;">&nbsp;</p>
+
+<h2>aria-labelledby 1</h2>
+<p><span id="water-q">Are there any rivers or canals with 400 metres of the property?</span><br>
+<input type="radio" name="water" id="water-y" value="water-y" aria-labelledby="water-q">
+<label for="water-y">Yes</label>
+<input type="radio" name="water" id="water-n" value="water-n" aria-labelledby="water-q">
+<label for="water-n">No</label>
+</p>
+
+<h2>aria-labelledby 2</h2>
+<p><span id="trees-q">Are there any tall trees within 20 metres of the property?</span><br>
+<input type="radio" name="trees" id="trees-y" value="trees-y" aria-labelledby="trees-q trees-y-l">
+<label id="trees-y-l" for="trees-y">Yes</label>
+<input type="radio" name="trees" id="trees-n" value="trees-n" aria-labelledby="trees-q trees-n-l">
+<label id="trees-n-l" for="trees-n">No</label>
+</p>
+
+
+<h2>aria-describedby</h2>
+<p><span id="road-q">Is the property within 5 metres of the roadside?</span><br>
+<input type="radio" name="road" id="road-y" value="road-y" aria-describedby="road-q">
+<label for="road-y">Yes</label>
+<input type="radio" name="road" id="road-n" value="road-n" aria-describedby="road-q">
+<label for="road-n">No</label>
+</p>
+
+
+
+
+
+</body>
+</html>

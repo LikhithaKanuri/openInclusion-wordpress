@@ -1,0 +1,124 @@
+<!doctype html>
+<html class="no-js" lang="en-GB">
+<head>
+<meta charset="UTF-8" /> 
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>Secret Santa App</title>
+<link href="css/enhanced-new.css" type="text/css" rel="stylesheet" />
+
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/library.js"></script>
+
+<style type="text/css">
+input[aria-invalid="true"], select[aria-invalid="true"], fieldset.error {
+   outline:1px solid red;
+}
+span.errors, input, select {
+   display:block;
+}
+#panel1 {
+   display:block;
+}
+#panel2, #panel3, #panel4 {
+   display:none;
+}
+</style>
+</head>
+<body id="body">
+<h1>Secret Santa App</h1>
+<div id="panel1">
+<p><strong>Welcome to the North Pole</strong></p>
+<p>To help you set up your team gift exchange, please complete the following 4 easy steps:</p>
+<ol class="">
+<li>Fill in your name.</li>
+<li>Select your work team.</li>
+<li>Choose a preferred gift category.</li>
+<li>Draw a name from the list - someone for you to buy a present for.</li>
+</ol>
+<button id="get-started">Get started!</button>
+</div>
+
+<div id="panel2">
+<h2 id="enter-detail-hdr" tabindex="-1">Enter your details here to add yourself to the list.</h2>
+<p><span id="error-notification" role="alert" aria-atomic="true"></span></p>
+
+<form action="error-reporting02.php" method="post" name="error-reporting" id="error-reporting">
+<p><label for="myname">Name</label>
+<input type="text" name="myname" id="myname" aria-required="true" data-v-reqd="Please specify your name">
+<span class="errors" id="myname-errors"></span>
+</p>
+<p><label for="workteam">Work team</label>
+<select name="workteam" id="workteam" aria-required="true" data-v-reqd="Please specify your team">
+	<option value="">Please choose...</option>
+	<option value="Marketing">Marketing</option>
+	<option value="Sales">Sales</option>
+	<option value="Finance">Finance</option>
+	<option value="Operations">Operations</option>
+</select>
+<span class="errors" id="workteam-errors"></span>
+</p>
+
+
+<p id="gift-category">Gift category selection</p>
+<div class="btn-wrap" role="radiogroup" aria-labelledby="gift-category category-errors">
+<button id="btn-sport" role="radio" aria-checked="false">Sport</button>
+<button id="btn-games" role="radio" aria-checked="false">Games</button>
+<button id="btn-beauty" role="radio" aria-checked="false">Beauty Products</button>
+<button id="btn-gift" role="radio" aria-checked="false">Gift Cards</button>
+<button id="btn-food" role="radio" aria-checked="false">Food and Drink</button>
+<button id="btn-random" role="radio" aria-checked="false">Random</button>
+<!-- 
+<input type="radio" name="category" id="category-sport" value="Sport" />
+<label for="category-sport">Sport</label>
+<input type="radio" name="category" id="category-games" value="Games" />
+<label for="category-games">Games</label>
+<input type="radio" name="category" id="category-beauty" value="Beauty Products" />
+<label for="category-beauty">Beauty Products</label>
+<input type="radio" name="category" id="category-gift" value="Gift Cards" />
+<label for="category-gift">Gift Cards</label>
+<input type="radio" name="category" id="category-food" value="Food and Drink" />
+<label for="category-food">Food and Drink</label>
+<input type="radio" name="category" id="category-random" value="Random" />
+<label for="category-random">Random</label>
+ -->
+ </div>
+<span class="errors" id="category-errors"></span>
+
+
+
+<p><input type="submit" name="my-submit" id="my-submit" value="Submit your choices"></p>
+
+</form>
+
+</div><!-- End of #panel2 -->
+
+<div id="panel3">
+<h2 id="your-detail-hdr" tabindex="-1">Your details</h2>
+<ul class="">
+<li><strong>Name:</strong> <span id="show-my-name"></span></li>
+<li><strong>Team:</strong> <span id="show-my-team"></span></li>
+<li><strong>Gift type:</strong> <span id="show-my-gift"></span></li>
+</ul>
+<p>Now choose the name of the person you need to buy a present for.</p>
+<button id="get-name">Draw a name</button>
+</div><!-- End of #panel3 -->
+
+<div id="panel4">
+<h2 id="name-selected-hdr" tabindex="-1">Name selected</h2>
+<p>You need to buy a present for:</p>
+<ul class="">
+<li><strong>Name:</strong> <span id="selected-name"></span></li>
+<li><strong>Team:</strong> <span id="selected-team"></span></li>
+<li><strong>Gift type:</strong> <span id="selected-gift"></span></li>
+</ul>
+<p>Please remember to purchase and wrap the gift by 12th December in time for the Christmas Party.</p>
+<p><a href="santa-app.html">Start again</a></p>
+</div><!-- End of #panel4 -->
+
+</body>
+</html>
+
+
+
+

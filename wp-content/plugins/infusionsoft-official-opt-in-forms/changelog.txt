@@ -1,0 +1,64 @@
+version 2.0.3
+- Changes to enforcement of authorization based on user role.
+
+version 2.0.2
+- Fixes issue with service parameter processing.
+
+version 2.0.1
+- Update API Key field label to reflect support for Personal Access Tokens (PAT) and Service Account Keys (SAK).
+
+version 2.0
+- Update to support Personal Access Tokens (PAT) and Service Account Keys (SAK).
+
+version 1.1.5
+- Fix related to support for Wordpress MultiSite capabilities.
+
+version 1.1.4
+- Fix related to support for Wordpress MultiSite capabilities.
+
+version 1.1.3
+- Fix related to support for Wordpress MultiSite capabilities.
+
+version 1.1.2
+- Updated to support Wordpress MultiSite capabilities.
+
+version 1.0.11
+- Fixes compatibility issue with PHP 8.0+. Updates to compatibility versions.
+
+version 1.0.10
+- Fixes compatibility issue with PHP 8.0+
+
+version 1.0.9
+- Fixes compatibility issue with PHP 8.0+
+
+version 1.0.8
+- Fixes issue where opt-in statistics graph does not properly display in some scenarios
+
+version 1.0.7
+- Fixes issue with Preview button being disabled in some scenarios
+- Updates branding
+
+version 1.0.6
+- Fixes encoded entities issue with form selection
+- Updates branding
+
+version 1.0.5
+- Plugin now complies with the General Data Protection Regulation (GDPR) (EU)
+- Fixes issue where duplicating or split testing an opt-in only displays the newest version of the form in the Infusionsoft Campaign Builder
+
+version 1.0.4
+- Fixes contact 7 forms plugin conflict
+
+version 1.0.3
+- Optinid is no longer removed on form edit
+
+version 1.0.2
+- Spelling Fixes
+- Minor bug fixes
+
+version 1.0.1
+- Fixes some plugin conflicts
+
+version 1.0
+- Initial Release
+

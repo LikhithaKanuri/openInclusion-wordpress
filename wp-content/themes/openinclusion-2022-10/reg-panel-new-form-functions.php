@@ -1,0 +1,985 @@
+<?php
+
+/////////////////// Validation functions /////////
+function isValidURL($url) {
+
+   return preg_match('|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i', $url);
+}
+
+function checkUrlStart($url) {
+   // check url starts with http:// - and if not, add on front
+   $test1 = 'http://';
+   $test2 = 'https://';
+   
+   $pos1 = strrpos ( $url , $test1, 0 );
+   $pos2 = strrpos ( $url , $test2, 0 );
+   
+   //echo ($pos1 != 0);
+   
+   if (($pos1 === 0) or ($pos2 === 0 ) ) {
+      return $url;
+   } else {
+      return $test1.$url;
+   }
+}
+
+// Errors array
+$arrErrs = array();
+function getFormErrors() {
+   global $arrErrs;
+   
+   return $arrErrs;
+}
+function setFormErrors($arr) {
+   global $arrErrs;
+   
+   $arrErrs = $arr;
+}
+
+// Clean form values
+$clean = array();
+function getClean() {
+   global $clean;
+   $clean = $_POST;
+   return $clean;
+}
+function setClean($arr) {
+   global $clean;
+   
+   $clean = $arr;
+}
+
+/**********************************************************************************************
+      This function redirects the logged in user to open vanilla forum
+**********************************************************************************************/
+
+function openvanilla_redirect() {
+   $requestURI = $_SERVER['REQUEST_URI'];
+   if(str_contains($requestURI, '/login')) {
+      return false;
+   }
+   $current_user = wp_get_current_user();
+   if($current_user) {
+      if ( get_user_meta( $current_user->ID, 'ActivationKey', true ) != false ){
+
+         if($_SERVER['HTTP_HOST'] == 'localhost') {
+            $redirect = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST']."/openinclusion/login";
+         }
+         else {
+            $redirect = $_SERVER['REQUEST_SCHEME'] . "://". $_SERVER['HTTP_HOST']. "/login";
+         } 
+         wp_logout();
+         wp_redirect($redirect);
+         exit();              
+      }      
+   }
+   
+   if ( is_page( 'user' ) && is_user_logged_in() ) {
+       wp_redirect( "https://openinclusion.vanillastaging.com/");
+       exit();
+   }
+}
+add_action( 'template_redirect', 'openvanilla_redirect' );
+
+
+///////////////////////// Shortcodes to place forms on pages //////////////////////////////
+/**********************************************************************************************
+Contact Forms
+
+This function places the panel form on the page
+**********************************************************************************************/
+function opinc_panel_form_sc_v2($atts, $content = null) {
+   // Get parameters
+   extract(shortcode_atts(array(
+   ), $atts));
+
+   // Pull in stored values
+   $arrErrs = getFormErrors();
+   $clean = getClean();
+   
+   global $panelForm;
+   
+   // Call the function to print out the form and return
+   $strHtml = printFormNew($panelForm, $clean, $arrErrs );
+   
+   // Need the javascript after the form
+   // $strHtml .= '<script type="text/javascript" src="https://ly190.infusionsoft.com/app/webTracking/getTrackingCode?trackingId=3e8aae4c347ffce85759672e1959435e"></script>';
+   return $strHtml;
+}
+
+add_shortcode("opinc-panel-form-reg", "opinc_panel_form_sc_v2");   
+
+/**********************************************************************************************
+This function redirects to thank you page after registration. Validate if consent is submitted
+**********************************************************************************************/
+function redirectAfterRegistration(){
+   ob_clean();
+   ob_start();
+   if(isset($_POST['_consent'])) {
+      $mailSent = false;
+      if(isValidUserInput()) {
+         error_log("Before user creation");
+         // user table data
+         $userData = array(
+         'user_pass' =>  $_POST['inf_field_Password'],
+         'user_login' => $_POST['inf_field_UserName'],
+         'user_email' => $_POST['inf_field_Email'],
+         'first_name' => $_POST['inf_field_FirstName'],
+         'last_name' => $_POST['inf_field_LastName'],
+         );
+         $returnVal = wp_insert_user($userData);
+         error_log("user creation::".print_r($returnVal, 1));
+         if(!$returnVal || is_wp_error($returnVal)) {
+            echo $returnVal->get_error_message();
+         }
+         else {
+            $userId = $returnVal;
+            $userMetaData = prepareUserMetaData();
+            foreach( $userMetaData as $key => $val ) {
+               update_user_meta( $userId, $key, $val ); 
+            }
+            $code = sha1( $userId . time() );
+
+            $baseLink = "https://openinclusion.com/activation/";
+            if(isset($_SERVER['HTTP_HOST'])) {
+               if($_SERVER['HTTP_HOST'] == 'localhost') {
+                  $baseLink = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST']."/openinclusion/activation/";
+               }
+               else {
+                  $baseLink = $_SERVER['REQUEST_SCHEME'] . "://". $_SERVER['HTTP_HOST']. "/activation/";
+               }          
+            }
+   
+            $activation_link = add_query_arg( array( 'key' => $code, 'user' => $userId ), $baseLink);
+            add_user_meta( $userId, 'ActivationKey', $code);
+            $mailSent = sentUserActivationMail($userData['user_email'], $userData['first_name'] . " " . $userData['last_name'], $activation_link);
+         }
+      }
+
+      if($mailSent && isset($_SERVER['HTTP_HOST'])) {
+         if($_SERVER['HTTP_HOST'] == 'localhost') {
+            $redirectUrl = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST']."/openinclusion/thank-you/";
+         }
+         else {
+            $redirectUrl = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST']."/thank-you/";
+         }         
+      }
+      else {
+         $redirectUrl = "https://openinclusion.com/thank-you/";
+      }
+      
+      wp_redirect($redirectUrl);
+      exit;
+   }
+}
+add_action( 'template_redirect', 'redirectAfterRegistration');
+
+
+/**********************************************************************************************
+   Below two function prepare the registration form and meta data mapping array.
+**********************************************************************************************/
+function getUserMetaDataMapping() {
+   return array(
+      'inf_field_FirstName' => 'First Name',
+      'inf_field_LastName' => 'Last Name',
+      'inf_field_Email' => 'Email',
+      'inf_field_countryphonecode' => 'Contact Number',
+      'inf_field_countryphonecode' => 'Country Code',
+      'inf_field_Phone2' => 'Contact Number',      
+      '_PreferToContact' => 'Prefer To Contact',
+      '_PreferToContactOthers' => 'Prefer To Contact',
+      '_PreferToContactOthers' => 'Prefer To Contact Other',
+      'inf_field_country' => 'Country',
+      'inf_field_region' => 'Region',
+      'inf_custom_YearBorn' => 'Year_Born',
+      'inf_option_Gender' => 'Gender',
+      'inf_option_Gender_opentext' => 'Gender',
+      'inf_option_Gender_opentext' => 'Gender OpenText',
+      '_SensoryNeeds' => 'Sensory Needs',
+      '_PhysicalNeeds' => 'Physical Needs',
+      '_CognitiveAndMentalhealthNeeds' => 'Cognitive And Mental health Needs',
+      '_CommunicationNeeds' => 'Communication Needs',
+      '_ChronichealthNeeds' => 'Chronic health Needs',
+      '_OtherNeedsOtherPleaseSpecify' => 'Other Needs',
+      '_OtherNeedsOtherPleaseSpecify_OpenText' => 'Other Needs',
+      '_OtherNeedsOtherPleaseSpecify_OpenText' => 'Other Needs Open Text',
+      'inf_field_PrimaryNeed' => 'Primary Need',
+      'inf_field_Age_Bracket' => 'Age Bracket',
+      'inf_field_TemporaryAccessNeed' => 'Temporary Access Need',
+      '_DigitalandScreenTechnologies' => 'Digital and Screen Technologies',
+      '_MovementCanesandServiceAnimals' => 'Movement Canes and Service Animals',
+      '_CommunicationPreferences' => 'Communication Preferences',
+      '_PersonalSupportandHome' => 'PersonalSupportandHome',
+      '_OtherTechnologiesOtherPleaseSpecify' => 'Other Technologies',
+      '_OtherTechnologiesOtherPleaseSpecify_OpenText' => 'Other Technologies',
+      '_OtherTechnologiesOtherPleaseSpecify_OpenText' => 'Other Technologies Open Text',
+      '_consent' => 'Consent',
+   );
+}
+
+function prepareUserMetaData() {
+   $mappingArray = getUserMetaDataMapping();
+   $output = array();
+   foreach($mappingArray as $inputKey => $mappingKey) {
+      if(isset($_POST[$inputKey])) {
+         $inputVal = $_POST[$inputKey];
+         if(is_array($inputVal)) {
+            $data = implode("|", $inputVal);
+         }
+         else {
+            $data = $inputVal;
+         }
+         if(isset($output[$mappingKey])) {
+            $existingData = $output[$mappingKey];
+            $output[$mappingKey] = trim($existingData . " " . $data);
+         }
+         else {
+            $output[$mappingKey] = trim($data);
+         }         
+      }
+   }
+   return $output;
+}
+
+/**********************************************************************************************
+      This function validate the user registration have valid inputs.
+**********************************************************************************************/
+function isValidUserInput() {
+   $return = true;
+   error_log(print_r($_POST,1));
+   if(!isset($_POST['inf_field_UserName'])){
+      $return = false;
+   } 
+   if(!isset($_POST['inf_field_Password'])){
+      $return = false;
+   }
+   if(!isset($_POST['inf_field_re_Email'])) {
+      $return = false;
+   }
+   if(!isset($_POST['inf_field_FirstName'])){
+      $return = false;
+   }
+   if(!isset($_POST['inf_field_LastName'])){
+      $return = false;
+   }   
+   return $return;
+}
+
+/**********************************************************************************************
+      This function sents the user activation mail
+**********************************************************************************************/
+function sentUserActivationMail($toEmailId, $name, $activation_link) {
+   $headers = array(
+      'Content-Type: text/html; charset=UTF-8',
+      'From: contact@openinclusion.com'
+    );
+   $subject = "Please verify your email";
+   $content = "
+   <div style=\"background: #f2f2f2;\">
+   <div style=\"height: 50px;background:#E5E8E8\"></div>
+   <div style=\"max-width: 560px; padding: 20px; background: #ffffff; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #666;\">
+   <div style=\"color: #444444; font-weight: normal;\"></div>
+   <div style=\"padding: 0 30px 30px 30px;\">
+   <div style=\"padding: 30px 0; font-size: 24px; text-align: center; line-height: 40px;\">
+   <div style=\"padding: 30px 0px; font-size: 24px; line-height: 40px; text-align: left;\">
+   
+   Hi ".ucwords(strtolower($name)).",
+   
+   <p>Please verify your email and login to the online Open Inclusion community using the button below.</p>
+   
+   </div>
+   <p style=\"text-align: left;\">
+   <button style=\"background: #2A3258; height: 50px; border-radius: 23px; font-family: 'Poppins'; font-style: normal; font-weight: 500; font-size: 20px; line-height: 30px; display: flex; align-items: center; color: #ffffff;padding:6px\">
+   <a style=\"text-decoration: none; cursor: pointer; color: #ffffff;\" href=\"".$activation_link."\" target=\"_blank\" rel=\"noopener\">Verify your email and login</a>
+   </button>
+   </p>
+   </div>
+   </div>
+   </div>
+   <div style=\"height: 50px;background:#E5E8E8\"></div>
+   </div>";
+
+   return wp_mail( $toEmailId, $subject, $content, $headers);     
+}
+
+/**********************************************************************************************
+      This function activate the user
+**********************************************************************************************/
+function opinc_panel_useractivation($atts, $content = null) {
+   $user_id = filter_input( INPUT_GET, 'user', FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 1 ) ) );
+   if ( $user_id ) {
+      // get user meta activation hash field
+      $code = get_user_meta( $user_id, 'ActivationKey', true );
+      if ( $code == filter_input( INPUT_GET, 'key' ) ) {
+          delete_user_meta( $user_id, 'ActivationKey' );
+      }
+      if($_SERVER['HTTP_HOST'] == 'localhost') {
+         $redirect = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST']."/openinclusion/login";
+      }
+      else {
+         $redirect = $_SERVER['REQUEST_SCHEME'] . "://". $_SERVER['HTTP_HOST']. "/login";
+      }       
+      wp_redirect( $redirect ); exit;
+  }
+}
+
+add_shortcode("opinc-panel-activation", "opinc_panel_useractivation");  
+
+
+
+/**********************************************************************************************
+      This function show the user profile
+**********************************************************************************************/
+function opinc_userprofile() {
+   $current_user = wp_get_current_user();
+   if($current_user) {
+      $userid = $current_user->ID;
+      $user_info = array();
+      $user_info = get_user_meta($userid);
+      $user_info['inf_field_UserName'] = array($current_user->user_login);
+      // echo "<pre>";
+      // print_r($user_info);
+
+      $profileFields = getProfileFields();
+      $formToMetaMapping = getUserMetaDataMapping();
+      $metaToFormMapping = array_flip($formToMetaMapping);
+      $outputHtml = "<div class='contact panel-contact'>";
+      $outputHtml.= "<ul>";
+      if(isset($profileFields['fields']) && is_array($profileFields['fields'])) {
+         foreach($profileFields['fields'] as $field) {
+            $name = $field['name'];
+            if(isset($formToMetaMapping[$name])) {
+               $metaKey = $formToMetaMapping[$name];
+            }
+            else {
+               $metaKey = $name;
+            }
+            
+            $liCss = (empty($field['li-class']))?'':' class="'.$field['li-class'].'"';
+            switch($field['type']) {
+               case 'other-html':
+                  // Print the sections of the profile
+                  $outputHtml.= '<li'.$liCss.'>';
+                  $outputHtml.= $field['value'];
+                  $outputHtml.= '</li>';
+                  break;
+
+               case 'text':
+                  $outputHtml.= "<li ".$liCss."><div style='text-align:right'>".$field['label']."</div></li>";
+                  $outputHtml.= "<li class='short'><div style='text-align:left'>".getMetaValue($user_info[$metaKey])."</div></li>";
+                  break;
+
+               case 'select':
+                  $options = $field['options'];
+                  $metaValue = getMetaValue($user_info[$metaKey]);
+                  $displayText = "Display Text";
+                  if(is_array($options)) {
+                     foreach($options as $option){
+                        if($metaValue == $option[0]) {
+                           $displayText = $option[1];
+                        }
+                     }
+                  }
+                  $outputHtml.= "<li ".$liCss."><div style='text-align:right'>".$field['label']."</div></li>";
+                  $outputHtml.= "<li class='short'><div style='text-align:left'>".$displayText."</div></li>";
+                  break;
+               
+               case 'chkboxgroup-inf':
+               case 'radiogroup-inf':
+                  $options = $field['options'];
+                  $metaValues = explode("|", getMetaValue($user_info[$metaKey]));
+                  $displayText = array();
+                  if(is_array($options)) {
+                     foreach($options as $option){
+                        if(in_array($option[0], $metaValues)) {
+                           $displayText[] = $option[1];
+                        }
+                     }
+                  }
+                  $displayText = implode(",", $displayText);               
+                  $outputHtml.= "<li ".$liCss."><div style='text-align:right'>".$field['label']."</div></li>";
+                  $outputHtml.= "<li class='short'><div style='text-align:left'>".$displayText."</div></li>";
+                  break;   
+                  case 'submit':
+                     if($_SERVER['HTTP_HOST'] == 'localhost') {
+                        $redirect = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST']."/openinclusion/edit-profile";
+                     }
+                     else {
+                        $redirect = $_SERVER['REQUEST_SCHEME'] . "://". $_SERVER['HTTP_HOST']. "/edit-profile";
+                     }                       
+                     $outputHtml.= "<li class='clear'><div style='text-align:center'><a href='".$redirect."'>".$field['value']."</a></div></li>";
+                     break;                 
+               default:
+               
+               break;
+            }
+         } 
+      }
+      $outputHtml.= "</ul>";
+      $outputHtml.= "</div>";
+      return $outputHtml;
+   }  
+   
+}
+
+add_shortcode("opinc-userprofile", "opinc_userprofile");   
+
+
+function opinc_editprofile() {
+   $current_user = wp_get_current_user();
+   if($current_user) {
+      //echo "<pre>";
+      $userid = $current_user->ID;
+      $user_info = array();
+      $user_info = get_user_meta($userid);
+      //print_r($user_info);
+      $metaDataMapping = getUserMetaDataMapping();
+      $formValues = array();
+      $formValues['inf_field_UserName'] = $current_user->user_login;
+      foreach($metaDataMapping as $fKey => $mKey) {
+         if(isset($user_info[$mKey])) {
+            $metaValue = $user_info[$mKey][0];
+            if (is_string($metaValue) && str_contains($metaValue, '|')) {
+               $metaValue = explode("|", $metaValue);
+            }   
+            $formValues[$fKey] = $metaValue;
+         }
+      }
+      
+      //print_r($formValues);
+      // exit;
+      $profileFields = getProfileEditFields();
+      // Call the function to print out the form and return
+      $strHtml = printFormNew($profileFields, $formValues, array() );
+      
+      // Need the javascript after the form
+      // $strHtml .= '<script type="text/javascript" src="https://ly190.infusionsoft.com/app/webTracking/getTrackingCode?trackingId=3e8aae4c347ffce85759672e1959435e"></script>';
+      return $strHtml;      
+   }
+   else {
+      if($_SERVER['HTTP_HOST'] == 'localhost') {
+         $redirect = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST']."/openinclusion/login";
+      }
+      else {
+         $redirect = $_SERVER['REQUEST_SCHEME'] . "://". $_SERVER['HTTP_HOST']. "/login";
+      }       
+      wp_redirect( $redirect ); exit;
+   }    
+}
+
+add_shortcode("opinc-editprofile", "opinc_editprofile");   
+
+function getMetaValue($input) {
+   if(is_array($input)) {
+      return implode(",", $input);
+   }
+}
+
+function getFormFieldLength($formDef, $fieldName) {
+   foreach((array)$formDef['fields'] as $field) {
+      if ($field['name'] == $fieldName) {
+         return $field['maxlen'];
+         break;
+      }
+   }
+   return false;
+}
+function checkSelectInOptions($formDef, $fieldName, $val) {
+// Checks that a submitted value from a select control 
+// matches one of the available options
+   foreach((array)$formDef['fields'] as $field) {
+      if (($field['type'] == 'select') and ($field['name'] == $fieldName)) {
+         foreach((array)$field['options'] as $option) {
+            if ($option[0] == $val) {
+               return true;
+               break;
+            }
+         }
+      }
+   }
+   return false;
+}
+function checkCheckboxInOptions($formDef, $fieldName, $val) {
+// Checks that a submitted value from a checkbox group 
+// matches one of the available options
+   foreach((array)$formDef['fields'] as $field) {
+      if (($field['type'] == 'chkboxgroup') and ($field['name'] == $fieldName)) {
+         foreach((array)$field['options'] as $option) {
+            if ($option[0] == $val) {
+               return true;
+               break;
+            }
+         }
+      }
+   }
+   return false;
+}
+
+function printFormErrors($formDef,$arrErrs ) {
+   $strHtml = '';
+   
+   if (count($arrErrs) > 0){
+      $strHtml .= '<div id="'.$formDef['error-sect-id'].'" class="'.$formDef['error-sect-class'].'">';
+      $strHtml .= '<h'.$formDef['error-sect-hdr-level'].'>'.$formDef['error-sect-hdr'].'</h'.$formDef['error-sect-hdr-level'].'>';
+      $strHtml .= $formDef['error-sect-intro'];
+      $strHtml .= '<ul>';
+      foreach ($arrErrs as $err) {
+         if (!empty($err[0])) {
+            $strHtml .= '<li><a href="#'.$err[0].'">'.$err[1].'</a></li>';
+         } else {
+            $strHtml .= '<li>'.$err[1].'</li>';
+         }
+      }
+      $strHtml .= '</ul></div>';
+   }
+   return $strHtml;
+}
+
+
+function getSelectedOptions($name, $userData) {
+   $returnArray = array();
+   if(is_array($userData)) {
+      foreach($userData  as $key => $value) {
+         $percentage = "";
+         similar_text($name, $key, $percentage);
+         if($percentage > 90) {
+            $returnArray = $value;
+         }    
+      }
+   }
+   return $returnArray;
+}
+
+////////////// New Print form /////////////////////////////
+function printFormNew($formDef,$clean, $arrErrs ) {
+   // Initialise strings
+   $strHidden = '';
+
+   //Check action URL
+   if (empty($formDef['submit-to'])) {
+      $action_url = get_the_permalink();
+   } else {
+      $action_url = $formDef['submit-to'];
+   }
+   
+   // Start error container
+   $strHtml = '<div id="form-error-list"></div>';
+
+   // Start container and form
+   $strHtml .= '<div class="'.$formDef['cont-class'].'">';
+   $strHtml .= '<form role="form" aria-label="Panel form" action="'.$action_url.'" method="post" name="'.$formDef['form-id'].'" id="'.$formDef['form-id'].'">';
+   //$strHtml .= '<p>Required information is marked with a <span class="mand">'.$formDef['mand-ind'].'</span></p>';
+
+   // Start list
+   $firstTime = true;
+   $strHtml .= '<ul>';
+   
+   // Print out each of the fields
+   foreach($formDef['fields'] as $field) {
+      $errMsg = getErrorMsg($arrErrs, $field['name']);
+      $errInd = '';
+      $ariaInvalidFrag = '';
+      $fieldName = $field['name'];
+      
+      // Check for any errors on this field
+      if (!empty($errMsg)) {
+         //$errInd = errInd($field['name']);
+         $ariaInvalidFrag = ' aria-invalid="true"';
+      } else {
+         if (!empty($clean['submitted']) and $clean['submitted']) {
+            $ariaInvalidFrag = ' aria-invalid="false"';
+         }
+      }  
+      
+      // Retrieve class name for <li>
+      $liCss = (empty($field['li-class']))?'':' class="'.$field['li-class'].'"';
+      $liId = (empty($field['li-id']))?'':' id="'.$field['li-id'].'"';
+      // Is field required?
+      $reqd = false;
+      $reqStr = '';
+      $reqAttr = '';
+      // These straings are used in client side validation and will contain 
+      // the validation that can be done on the client.
+      $validStr = '';
+      $validFrag = '';
+      
+      //echo '<p>Field '.$field['name'].'</p>';
+      //if (!empty($field['validation'])) var_dump($field['validation']);
+
+      // Check in validation array - if it exists
+      if (!empty($field['validation'])) {
+         foreach((array) $field['validation'] as $validate) {
+            switch ($validate[0]) {
+               case 'reqd' :
+                  $reqd = true;
+                  $reqStr = '&nbsp;<span class="mand">'.$formDef['mand-ind'].'</span>';
+                  $reqAttr = ' aria-required="true"';
+                  
+                  $validStr .= ' data-v-reqd="'.$validate[1].'"';
+                  break;
+               case 'reqd-all' :
+                  $reqd = true;
+                  $reqStr = '&nbsp;<span class="mand">'.$formDef['mand-ind'].'</span>';
+                  $reqAttr = ' aria-required="true"';
+                  
+                  $validStr .= ' data-v-reqd-all="'.$validate[1].'"';
+                  break;
+               case 'len' :
+                  $validStr .= ' data-v-len="'.$field['maxlen'].'~'.sprintf($validate[1],$field['maxlen']).'"';
+                  break;
+               case 'email' :
+                  $validStr .= ' data-v-email="'.$validate[1].'"';
+                  break;
+               case 'int' :
+                  $validStr .= ' data-v-int="'.$validate[1].'"';
+                  break;
+               case 'sqldate' :
+                  $validStr .= ' data-v-sqldate="'.$validate[1].'"';
+                  break;
+               case 'sq' :
+                  $validStr .= ' data-v-sq="'.getSecA($clean['sq']).'~'.$validate[1].'"';
+                  break;
+           }
+         }
+      } // end of if (!empty($field['validation']))
+
+      if ($field['type'] != 'chkboxgroup') {
+         // Construct start of label
+         if (!empty($field['label'])) {
+            $labelTxt = '<label for="'.$field['name'].'"><span class="text">'.$errInd.$field['label'].$reqStr.'</span>';
+         } else {
+            $labelTxt = '';
+         }
+      } else {
+         // Checkbox group labels will be handled further down
+      }
+      
+      switch ($field['type']) {
+         case 'text':
+            $strHtml .= '<li'.$liCss.'>';
+            $strHtml .= $labelTxt;
+            // Check if clean array populated - to see if prev value stored
+            if (count($clean) > 0) {
+               $val = outScrn($clean[$field['name']]);
+            } else {
+               $val = '';
+            }
+            $strHtml .= '<input maxlength="'.$field['maxlen'].'" type="text" name="'.$field['name'].'" id="'.$field['name'].'" value="'.$val.'"';
+            $strHtml .= $reqAttr.$ariaInvalidFrag.$validStr.'><span class="errors">'.$errMsg.'</span>';
+            $strHtml .= '</label></li>';
+         break;
+         
+         case 'textarea':
+            $strHtml .= '<li'.$liCss.'>';
+            $strHtml .= $labelTxt;
+            $strHtml .= '<textarea cols="" rows="3" name="'.$field['name'].'" id="'.$field['name'].'"'.$reqAttr.$ariaInvalidFrag.$validStr.'>';
+            // Check if clean array populated - to see if prev value stored
+            if (count($clean) > 0) {
+               $strHtml .= outScrn($clean[$field['name']]);
+            }
+            $strHtml .= '</textarea>';
+            $strHtml .= '<span class="errors">'.$errMsg.'</span>';
+            $strHtml .= '</label></li>';
+         break;
+         
+         case 'select':
+            $strHtml .= '<li'.$liCss.'>';
+            $strHtml .= $labelTxt;
+            $strHtml .= '<select name="'.$field['name'].'" id="'.$field['name'].'"'.$reqAttr.$ariaInvalidFrag.$validStr.'>';
+            // $strHtml .= '<option value="">Please choose...</option>';
+            
+            foreach ((array)$field['options'] as $option) {
+               $selected = (isset($clean[$field['name']]) && $clean[$field['name']] == $option[0])?' selected="selected"':'';
+               if(isset($option[3])) {
+                  $selected.= " class=\"".$option[3]."\"";
+               }
+               $strHtml .= '<option value="'.$option[0].'"'.$selected.'>'.$option[1].'</option>';
+            
+            }
+            $strHtml .= '</select><span class="errors">'.$errMsg.'</span>';
+            $strHtml .= '</label></li>';
+         break;
+         
+         case 'chkbox':  // Single checkbox
+            $strHtml .= '<li'.$liCss.'>';
+            $strHtml .= '<input type="checkbox" name="'.$field['name'].'" id="'.$field['name'].'" value="'.outScrn($clean[$field['name']]).'"';
+            $strHtml .= $labelTxt;
+            $strHtml .= $reqAttr.$ariaInvalidFrag.$validStr.'><br><span class="errors">'.$errMsg.'</span>';
+            $strHtml .= '</label></li>';
+         break;
+
+         case 'chkboxgroup':
+            $strHtml .= '<li'.$liCss.' '.$liId.'>';
+            $strHtml .= '<fieldset data-type="chkbox"'.$validStr.'>';
+            $strHtml .= '<legend id="'.$field['name'].'-legend">'.$field['label'].' '.$reqStr.'</legend>';
+            $strHtml .= '<ul class="checkbox-radio">';
+            
+            foreach ((array)$field['options'] as $option) {
+               // See if any of them have been checked
+               $checked = '';
+               foreach ((array)$clean[$field['name']] as $sel) {
+                  if ($sel == $option[0]) {
+                     $checked = ' checked="checked"';
+                     break;
+                  }
+               }
+
+               $strHtml .= '<li class="check-radio">';
+               $strHtml .= '<input type="checkbox" name="'.$field['name'].'[]" id="'.$field['name'].'-'.$option[0].'" value="'.$option[0].'" aria-labelledby="'.$field['name'].'-legend '.$field['name'].'-'.$option[0].'-label '.$field['name'].'-errors"'.$checked.'>';
+               $strHtml .= '<label for="'.$field['name'].'-'.$option[0].'" id="'.$field['name'].'-'.$option[0].'-label">';                
+               $strHtml .= $option[1].'</label>';                
+               $strHtml .= '</li>';
+            }
+            $strHtml .= '</ul>';
+            $strHtml .= '<div class="fieldseterrors" id="'.$field['name'].'-errors">'.$errMsg.'</div>';
+            $strHtml .= '</fieldset></li>';
+         break;
+         
+         case 'chkboxgroup-inf':
+            $strHtml .= '<li'.$liCss.' '.$liId.'>';
+            $strHtml .= '<fieldset data-type="chkbox"'.$validStr.'>';
+            $strHtml .= '<legend id="'.$field['name'].'-legend">'.$field['label'].' '.$reqStr.'</legend>';
+            $strHtml .= '<ul class="checkbox-radio">';
+            $selectedValues = getSelectedOptions($fieldName, $clean);
+            foreach ((array)$field['options'] as $option) {
+               // See if any of them have been checked
+               
+               $checked = '';
+               if(in_array($option[0], $selectedValues)) {
+                  $checked = ' checked="true" ';  
+               } 
+               $clickevent = '';
+               if($option[0] == 'OtherPleaseSpecify') {
+                  $clickevent.= ' OnClick="hideshowOpenText(this)"';  
+               }                 
+               $strHtml .= '<li class="check-radio">';
+               $strHtml .= '<input type="checkbox" name="'.$option[2].'" id="'.$option[3].'" value="'.$option[0].'" aria-labelledby="'.$field['name'].'-legend '.$field['name'].'-'.$option[0].'-label '.$field['name'].'-errors"'.$checked . $clickevent .' >';
+               $strHtml .= '<label for="'.$option[3].'" id="'.$field['name'].'-'.$option[0].'-label">';                
+               $strHtml .= $option[1].'</label>';
+               if($option[0] == 'OtherPleaseSpecify') {
+                  $strHtml .= '<label for="'.$option[2].'_OpenText" style="display:none"><span>"'.$option[1].'"</span></label><input type="text" name="'.$option[2].'_OpenText" id="'.$option[2].'_OpenText" value="" style="width:100%;display:none">'; 
+               }                
+               $strHtml .= '</li>';
+            }
+            $strHtml .= '</ul>';
+            $strHtml .= '<div class="fieldseterrors" id="'.$field['name'].'-errors">'.$errMsg.'</div>';
+            $strHtml .= '</fieldset></li>';
+         break;
+
+    
+          case 'radiogroup-inf':
+            $strHtml .= '<li'.$liCss.'>';
+            $strHtml .= '<fieldset data-type="radio"'.$validStr.'>';
+            $strHtml .= '<legend id="'.$field['name'].'-legend">'.$field['label'].' '.$reqStr.'</legend>';
+            $strHtml .= '<ul class="checkbox-radio">';
+            $selectedValue = $clean[$fieldName];
+            foreach ((array)$field['options'] as $option) {
+               // See if any of them have been checked
+               $checked = '';
+               if($option[0] == $selectedValue) {
+                  $checked = 'checked="true"';
+               }
+               
+
+               $strHtml .= '<li class="check-radio">';
+               // $strHtml .= '<input type="radio" name="'.$field['name'].'" id="'.$option[2].'" value="'.$option[0].'" aria-labelledby="'.$field['name'].'-legend '.$field['name'].'-'.$option[0].'-label '.$field['name'].'-errors"'.$checked.'>';
+               $strHtml .= '<input type="radio" name="'.$field['name'].'" id="'.$option[2].'" value="'.$option[0].'" '.$checked.'>';
+               $strHtml .= '<label for="'.$option[2].'">';                
+               $strHtml .= $option[1].'</label>'; 
+               if(isset($option[3])) {
+                  $strHtml .= '<label for="'.$option[3].'" style="display:none"><span>"'.$option[4].'"</span></label><input type="text" name="'.$option[3].'" id="'.$option[3].'" value="" style="width:100%">'; 
+               }               
+               $strHtml .= '</li>';
+            }
+            $strHtml .= '</ul>';
+            $strHtml .= '<div class="fieldseterrors" id="'.$field['name'].'-errors">'.$errMsg.'</div>';
+            $strHtml .= '</fieldset></li>';
+            break;
+         
+         case 'sq':
+            $strHtml .= '<li'.$liCss.'>';
+            $strHtml .= sprintf($labelTxt, getSecQ($clean['sq'])) ;
+            $strHtml .= '<input maxlength="'.$field['maxlen'].'" type="text" name="'.$field['name'].'" id="'.$field['name'].'" value=""';
+            $strHtml .= $reqAttr.$ariaInvalidFrag.$validStr.' /><span class="errors">'.$errMsg.'</span>';
+            $strHtml .= '</label></li>';
+            break;
+         
+         case 'start-fieldset':
+            $strHtml .= '<fieldset id="'.$field['name'].'">';
+            $strHtml .= '<legend>'.$field['legend'].'</legend>';
+            break;
+
+         case 'end-fieldset':
+            $strHtml .= '</fieldset>';
+            break;
+
+         case 'other-html':
+            $strHtml .= '<li'.$liCss.'>'.$field['value'].'</li>';
+            break;
+
+         case 'submit':
+            $strHtml .= '<li'.$liCss.'>';
+            $strHtml .= '<input type="submit" name="'.$field['name'].'" id="'.$field['name'].'" value="'.$field['value'].'" />';
+            $strHtml .= '</li>';
+            break;
+
+         case 'hidden':
+            $strHidden .= '<input type="hidden" name="'.$field['name'].'" id="'.$field['name'].'" value="'.$field['value'].'" />';
+            break;
+
+         case 'password':
+            $strHtml .= '<li'.$liCss.'>';
+            $strHtml .= $labelTxt;
+            // Check if clean array populated - to see if prev value stored
+            if (count($clean) > 0) {
+               $val = outScrn($clean[$field['name']]);
+            } else {
+               $val = '';
+            }
+            $strHtml .= '<input maxlength="'.$field['maxlen'].'" type="password" name="'.$field['name'].'" id="'.$field['name'].'" value="'.$val.'"';
+            $strHtml .= $reqAttr.$ariaInvalidFrag.$validStr.'><a href="javascript:void(0)" onclick="hideshowPassword(\''.$field['name'].'\')">Show password</a><span class="errors">'.$errMsg.'</span>';
+            $strHtml .= '</label></li>';
+            break;   
+
+      }
+      
+   
+   }
+
+   $strHtml .= '</ul>';
+  
+   // Check if a security question is being used and if so,
+   // put out the hidden fields with the index value inside
+   if ($formDef['sq-reqd']) {
+      $strHidden .= '<input type="hidden" name="'.$formDef['sq-id'].'" id="'.$formDef['sq-id'].'" value="'.$clean['sq'].'" />';
+
+   }
+   if (!empty($formDef['nonce-name'])) {
+      $strHidden .= wp_nonce_field($formDef['nonce-name'],$formDef['nonce-name'],true, false);
+   }
+   
+   $strHtml .= $strHidden; // Add hidden fields
+   $strHtml .= '</form></div>';
+   return $strHtml;
+
+}
+
+////////////////////////////////////////////////////
+
+
+function validateForm($formDef,$clean, $arrErrs ) {
+// This is definitely not finished - work in progress only
+
+   $raw = array();
+   
+   foreach((array)$formDef['fields'] as $field) {
+      
+      foreach((array)$field['validation'] as $validate) {
+      
+         // Clean up the values passed in and store
+         switch ($field['type']) {
+            case 'text':
+            case 'textarea':
+               $clean[$field['name']] = substr(sanitize_text_field($_POST[$field['name']]), 0, $field['maxlen']);
+               break;
+            case 'select':
+               // Select value must be one of the supplied values
+               if (ccCheckArr($field['options'], $_POST[$field['name']])) {
+                  $clean[$field['name']] = $_POST[$field['name']];
+               } else {
+                  $clean[$field['name']] = '';
+               }
+               
+               break;
+         }
+         switch ($validate[0]) {
+            case 'reqd':
+               break;
+         }
+
+
+
+      } // End foreach $formDef['fields']
+   } // End foreach $formDef['fields']
+   var_dump($clean);
+   
+   // Update the global version of the $clean array
+   setClean($clean);
+   return false;
+}
+
+function setAria($errMsg, $clean) {
+   $str = '';
+   // Check for any errors on this field
+   if (!empty($errMsg)) {
+      $str = ' aria-invalid="true"';
+   } else {
+      if ($clean['submitted']) {
+         $str = ' aria-invalid="false"';
+      }
+   }  
+
+   return $str;
+}
+
+function validateDate($date, $format = 'Y-m-d H:i:s') {
+    $d = DateTime::createFromFormat($format, $date);
+    return $d && $d->format($format) == $date;
+}
+
+
+function check_uk_postcode($string){
+    // Start config
+    $valid_return_value = true;
+    $invalid_return_value = false;
+    $exceptions = array('BS981TL', 'BX11LT', 'BX21LB', 'BX32BB', 'BX55AT', 'CF101BH', 'CF991NA', 'DE993GG', 'DH981BT', 'DH991NS', 'E161XL', 'E202AQ', 'E202BB', 'E202ST', 'E203BS', 'E203EL', 'E203ET', 'E203HB', 'E203HY', 'E981SN', 'E981ST', 'E981TT', 'EC2N2DB', 'EC4Y0HQ', 'EH991SP', 'G581SB', 'GIR0AA', 'IV212LR', 'L304GB', 'LS981FD', 'N19GU', 'N811ER', 'NG801EH', 'NG801LH', 'NG801RH', 'NG801TH', 'SE18UJ', 'SN381NW', 'SW1A0AA', 'SW1A0PW', 'SW1A1AA', 'SW1A2AA', 'SW1P3EU', 'SW1W0DT', 'TW89GS', 'W1A1AA', 'W1D4FA', 'W1N4DJ');
+    // Add Overseas territories ?
+    array_push($exceptions, 'AI-2640', 'ASCN1ZZ', 'STHL1ZZ', 'TDCU1ZZ', 'BBND1ZZ', 'BIQQ1ZZ', 'FIQQ1ZZ', 'GX111AA', 'PCRN1ZZ', 'SIQQ1ZZ', 'TKCA1ZZ');
+    // End config
+
+
+    $string = strtoupper(preg_replace('/\s/', '', $string)); // Remove the spaces and convert to uppercase.
+    $exceptions = array_flip($exceptions);
+    if(isset($exceptions[$string])){return $valid_return_value;} // Check for valid exception
+    $length = strlen($string);
+    if($length < 5 || $length > 7){return $invalid_return_value;} // Check for invalid length
+    $letters = array_flip(range('A', 'Z')); // An array of letters as keys
+    $numbers = array_flip(range(0, 9)); // An array of numbers as keys
+
+    switch($length){
+        case 7:
+            if(!isset($letters[$string[0]], $letters[$string[1]], $numbers[$string[2]], $numbers[$string[4]], $letters[$string[5]], $letters[$string[6]])){break;}
+            if(isset($letters[$string[3]]) || isset($numbers[$string[3]])){
+                return $valid_return_value;
+            }
+        break;
+        case 6:
+            if(!isset($letters[$string[0]], $numbers[$string[3]], $letters[$string[4]], $letters[$string[5]])){break;}
+            if(isset($letters[$string[1]], $numbers[$string[2]]) || isset($numbers[$string[1]], $letters[$string[2]]) || isset($numbers[$string[1]], $numbers[$string[2]])){
+                return $valid_return_value;
+            }
+        break;
+        case 5:
+            if(isset($letters[$string[0]], $numbers[$string[1]], $numbers[$string[2]], $letters[$string[3]], $letters[$string[4]])){
+                return $valid_return_value;
+            }
+        break;
+    }
+
+    return $invalid_return_value;
+}
+
+
+
+/* add_action( 'wp_ajax_runFunction', 'runFunction' );
+add_action( 'wp_ajax_nopriv_runFunction', 'runFunction' );
+
+function runFunction() {
+   $output = print_r($_POST, 1);
+   error_log("Inserting to table :: ".$output);
+   // include("../infusion/process.php");
+   die();
+   wp_die(); 
+}
+ */
+?>

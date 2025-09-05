@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+   <meta charset="UTF-8" /> 
+   <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+	<title>Custom input</title>
+	<link href="css/basic.css" type="text/css" rel="stylesheet" />
+	<script type="text/javascript" src="../-shared/EnhanceJS/enhance.js"></script>		
+	<script type="text/javascript">
+		// Run capabilities test
+		enhance({
+			loadScripts: [
+				'../-shared/jquery.min.js',
+				'js/jQuery.customInput.js',
+				'js/example.js'
+			],
+			loadStyles: ['css/enhanced.css']	
+		});   
+    </script>
+</head>
+
+<body>
+
+
+<form action="#" method="post">	
+	<fieldset id="view" class="toggle">
+		<legend>Choose view:</legend>
+		<input type="radio" name="view" id="view-list" value="list" />
+		<label for="view-list" tabindex="-1" aria-hidden="true">List</label>
+		<input type="radio" name="view" id="view-grid" value="grid" />
+		<label for="view-grid" tabindex="-1" aria-hidden="true">Grid</label>
+	</fieldset>
+	
+	
+	<fieldset id="show" class="toggle">
+		<legend>Show:</legend>
+		<input type="checkbox" name="show" id="show-comments" value="comments" />
+		<label for="show-comments" tabindex="-1" aria-hidden="true">Comments</label>
+		<input type="checkbox" name="show" id="show-formatting" value="formatting" />
+		<label for="show-formatting" tabindex="-1" aria-hidden="true">Formatting</label>
+		<input type="checkbox" name="show" id="show-changes" value="changes" />
+		<label for="show-changes" tabindex="-1" aria-hidden="true">Changes</label>
+	</fieldset>
+</form>
+
+<form action="#" method="post">	
+   
+   <fieldset>
+		<legend>Choose view:</legend>
+		<input type="radio" name="viewx" id="viewx-list" value="list" />
+		<label for="viewx-list">List</label>
+		<input type="radio" name="viewx" id="viewx-grid" value="grid" />
+		<label for="viewx-grid">Grid</label>
+	</fieldset>
+
+</form>
+
+	
+	
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!doctype html>
+<html class="no-js" lang="en-GB">
+<head>
+<meta charset="UTF-8" /> 
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<script src="jquery.js"></script>
+<script src="library2.js"></script>
+<title>Accessible Accordions</title>
+<style type="text/css">
+body {
+   font-family:arial;
+}
+div {
+    text-align: left;
+    margin: 0;
+    padding: 0;
+    border: none;
+    white-space: normal;
+    line-height: normal;
+}
+.acc-group, .intro {
+   width:50%;
+}
+.js .acc-q {
+   border:1px solid black;
+   padding:5px 35px 5px 5px;
+   margin:25px 0 0 0;
+   background: #ccc url(nav-highlight02.png) right center no-repeat;
+   cursor:pointer;
+}
+.js .acc-q:hover,
+.js .acc-q:focus {
+   background-color:yellow;
+}
+.js .acc-q[aria-selected="true"] {
+   border:1px solid black;
+   padding:5px 35px 5px 5px;
+   margin:25px 0 0 0;
+   background-image: url(nav-highlight03.png);
+}
+.js .acc-a {
+   padding:5px;
+}
+.js .acc-a:focus {
+   border:1px solid #999;
+   background:#eee;
+}
+.js .acc-a p{
+   margin-top:0;
+}
+</style>
+</head>
+
+<body>
+<h1>Accessible Accordions</h1>
+<p class="intro">Here is a simple accordion setup. The initial page loads with just a series of headings and accompanying text. Some jquery routines add in the various ARIA and other attributes required, and control the functionality of the accordion</p>
+<p><a href="#">link before accordion group</a></p>
+<div class="acc-group">
+
+<h2 class="acc-q" id="acc-q-1" data-id="1" role="button" aria-controls="acc-a-1" tabindex="0"
+aria-expanded="false">How do I get your newsletters?</h2>
+<div class="acc-a" tabindex="-1" id="acc-a-1" role="region" aria-hidden="true" aria-labelledby="acc-q-1">
+<p>Simply fill out our membership form and you'll start getting the newsletters straight away.</p>
+</div>
+
+<h2 class="acc-q" data-id="2">Can I control the frequency?</h2>
+<div class="acc-a" tabindex="-1">
+<p>When you sign up you can select the frequency of the newsletters. </p>
+</div>
+<h2 class="acc-q" data-id="3">How do I unsubscribe?</h2>
+<div class="acc-a" tabindex="-1">
+<p>Each newsletter has an unsubscribe link at the bottom.</p>
+</div>
+</div>
+<p><a href="#">link after accordion group</a></p>
+
+</body>
+</html>

@@ -1,0 +1,532 @@
+#content{padding: 10px 20px;}
+
+#content .contact input[aria-invalid="true"],
+#content .contact select[aria-invalid="true"],
+#content .contact textarea[aria-invalid="true"],
+ul.radio.error,
+ul.checkbox.error,
+ul.checkbox-radio.error,
+ul.dob.error {
+  /*outline: 2px solid #CC063B;*/
+  border: 1px solid #CC063B !important;
+}
+
+input[type=date], input[type=email], input[type=number], input[type=password], input[type=search], input[type=tel], input[type=text], input[type=url], select, textarea {	
+	border-radius: 25px !important;	
+}
+
+
+#content .contact span.mand,
+#content .contact ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0; }
+
+#content .contact ul li {
+  list-style-type: none;
+  padding: 0;
+  background: none;
+  margin: 0 0 2em 0;
+  clear: left; }
+
+#content .contact ul li li {
+  margin: 0; }
+
+#content .contact ul li.days fieldset li {
+  margin: 0 2em 0 0;
+  display: inline-block;
+  clear: none;
+  float: none; }
+
+#content .contact ul li.short {
+  clear: none;
+  float: left;
+  margin-left: 3%;
+  margin-right: 0;
+  width: 100%; }
+
+#content .contact ul li.short.clear {
+  clear: both;
+  float: left;
+  margin-right: 3%;
+  margin-left: 0;
+  width:100%; } 
+
+#content .contact ul.dob {
+  display: table;
+  width: 100%; }
+
+#content .contact ul.dob li {
+  display: table-cell;
+  padding-left: 2%; }
+
+#content .contact ul.dob li:first-child {
+  padding-left: 0; }
+
+#content .contact ul.dob li.dob-d {
+  width: 5em; }
+
+#content .contact ul.dob li.dob-y {
+  width: 6em; }
+
+#content .contact ul li.check-radio {
+  clear: left;
+  margin: 0.4em 0; }
+
+#content .contact ul li.check-radio input {
+  clear: left;
+  float: left;
+  width: 15px;
+  margin-top: 7px;
+  margin-right: 0; }
+
+#content .contact ul li.check-radio label {
+  margin-left: 1.5em;
+  width: auto; }
+
+#content .contact ul li.submit {
+  padding-top: 0.5em; }
+
+#content .contact ul li.columns ul.checkbox-radio > li {
+  display: inline-block;
+  width: 45%;
+  vertical-align: top; }
+
+#content .contact label {
+  display: block;
+  margin: 0;
+  text-align: left;
+  line-height: 1.8em; }
+
+#content .contact label .text {
+  width: auto;
+  display: block;
+  padding: 0 30px 0 0; 
+  line-height: 1.6rem;}
+
+#content .contact fieldset {
+  width: 100%;
+  display: block; }
+
+#content .contact legend {
+  width: 90%;
+  display: block;
+  padding: 0 30px 0 0; }
+
+#content .contact legend.valid,
+#content .contact label.valid {
+  background: transparent url(images/form-tick.png) no-repeat top right; }
+
+#content .contact input, .contact select, .contact textarea {
+  width: 100%; 
+}
+
+.contact select {
+  background: #fff;
+}
+
+#content .contact li.submit input {
+  width: auto;
+  cursor: pointer; }
+
+#content .contact .clarify {
+  font-size: 0.8rem; }
+
+#content .contact .err-img {
+  border: none; }
+
+#content .contact .errors,
+#content .contact .fieldseterrors {
+  background: #fff;
+  color: #CC063B;
+ }
+
+
+input[type=button], input[type=submit], button{
+	background-color: var( --e-global-color-acad472 );
+    color: #ffffff;
+	font-family: "Roboto", Sans-serif;
+    font-size: 19px;
+    font-weight: 400;
+    border-radius: 25px 25px 25px 25px;
+    padding: 15px 30px 15px 30px;
+	border: 0px ;
+}
+
+input[type=button]:focus, input[type=button]:hover, input[type=submit]:focus, input[type=submit]:hover, button:focus, button:hover{
+	color: #fff;
+    background-color: var( --e-global-color-secondary );
+    text-decoration: none;	
+}
+
+
+
+#content fieldset{
+	padding: 0px;
+    border: 0px;	
+}
+
+#content fieldset legend{	
+	font-weight:500;
+}
+
+.txtbold{
+	font-weight:500;
+}
+
+
+@media (min-width: 1350px){
+	#content {
+		margin: auto;
+    	width: 50%;
+	}		
+}
+
+
+@media (max-width: 425px) {
+	.youtube{
+		width:98%;
+		height:250px;
+	}
+}
+
+.terms {
+  margin-left: 20px !important;
+}
+
+.terms li {
+  list-style-type:disc !important;
+	padding-bottom:20px !important;
+} 
+
+.sectionhead {
+  background-color: #29325a;
+	color:#FFFFFF;
+  padding: 5px 5px 5px 16px;
+  border-radius: 1px;
+  font-size: 1.8rem;
+}
+
+.sectionwrapper {
+ /* display: grid;
+  grid-template-areas: "list illus";
+  grid-template-columns: 55% 45%;
+  grid-template-rows: auto;
+  row-gap: 20px;*/
+}
+
+.privacy_bannercontent {
+  background-color: #29325A;
+  padding: 5px 5px 5px 16px;
+  margin-top: 20px;
+  color: white;
+}
+
+.bannerleftcol {
+  grid-area: "list";
+}
+
+.sectionlist {
+  
+}
+
+.bannerrightcol {
+  grid-area: "illus";
+  /* max-width: 400px; */
+  display: flex;
+  justify-content: center;
+  max-height: 300px;
+}
+
+.bannerillustration {  
+  width: 400px;
+  height: 300px;
+	padding-bottom:20px;
+  position: relative;
+  background: #FFFFFF;
+  /* top: -50px; */
+}
+
+
+.bannercontent {
+  background-color: #ABD9F3;
+  padding: 5px 5px 5px 16px;
+  border-radius: 25px;  
+  margin-top: 20px;
+}
+
+.support_bannercontent {
+  background-color: #29325A;
+  padding: 5px 5px 5px 16px;
+  margin-top: 20px;
+  color: white;
+}
+
+.country_code .custom{
+  padding-top : 10px !important;
+}
+
+li.clear.edit_phone .text {
+  display: none;
+  margin-left: 0 !important;
+}
+
+.bannerlicontent {
+  list-style-type:disc !important;
+  padding: 5px;
+  margin-left: 10px !important;
+}
+
+.bannerdropdown {
+  float:right;
+  padding-right:20px;
+  width:50px;
+  height:25px
+}
+
+/*
+.bannerlicontent {
+  display: grid;
+  grid-template-areas: "listimage listcontent";
+  grid-template-columns: 20% 80%;
+
+}
+
+.listimage {
+  grid-area: "listimage";
+  width: 100px;
+  height: 100px;
+}
+
+.listcontent {
+  grid-area: "listcontent";
+  padding: 10px;
+}*/
+
+.showpassword {
+  padding: 2px 8px !important;
+  width: auto !important;
+  font-size: 14px !important;
+}
+
+label div.custom {
+	  position: relative;
+    width: 100%;
+    /* display: inline; */
+}
+
+label div.custom::before {
+    content: '';
+    border-top: 8px solid #666;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    position: absolute;
+    right: 12px;
+    z-index: 2;
+    top: 17px;
+}
+
+label div.custom::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background: white;
+    right: 4px;
+    border-radius: 50%;
+    top: 10px;
+}
+
+
+#licountryphonecode .custom {
+  width: 95% !important;
+  margin-top: 6px;
+}
+
+/* Account page edit button */
+/* .edit_profile_section {
+  display: flex;
+  justify-content: space-evenly;
+} */
+
+.edit_button, .click-here {
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+  background-color: #29325a;
+  color: white;
+  font-family: "Poppins", Sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  border-style: solid;
+  border-width: 2px 2px 2px 2px;
+  border: 1px solid #fec952;
+  border-radius: 25px 25px 25px 25px;
+}
+
+.edit_button a{
+  text-decoration: none !important;
+}
+
+.edit_button:hover{
+  background-color: #F6D578 !important;
+  border-color: #FFFFFF;
+}
+
+.edit_button:hover .edit_button_navigation{
+  color: #28325A !important;
+}
+/* main:has(div.edit_profile_section){
+  width: 100% !important;
+} */
+
+
+/* #content {
+  width: 100% !important;
+} */
+
+
+
+
+
+
+.check-radio input[type="checkbox"], .check-radio input[type="radio"] {
+	
+	width:24px !important;
+	height:24px !important;	
+}
+
+
+
+
+/*
+.check-radio input[type="checkbox"], .check-radio input[type="radio"] {
+    padding: 0;
+    height: initial;
+    width: initial;
+    margin-bottom: 0;
+    display: none;
+    cursor: pointer;
+}
+.check-radio label {
+    position: relative;
+    cursor: pointer;
+    margin-left: 0 !important;
+}
+
+.check-radio label::before
+{
+    content: '';
+    -webkit-appearance: none;
+    background-color: transparent;
+    border: 2px solid #2a325a;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 5%), inset 0px -15px 10px -12px rgb(0 0 0 / 5%);
+    padding: 10px;
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+    cursor: pointer;
+    margin-right: 5px;
+}
+*/
+
+
+body.contrast .check-radio label::before{
+  border: 2px solid #ffffff;
+}
+body.contrast .check-radio input:checked + label:after {
+  border: solid #ffffff;
+  border-width: 0 2px 2px 0;
+}
+body.contrast .check-radio input[type="radio"]:checked + label:after {
+  border: solid #ffffff;
+  border-width: 0 2px 2px 0;
+  background: #ffffff ;
+}
+
+body.contrast a{
+  color : #f6d578;
+}
+body.contrast a:hover{
+  color : #ffffff;
+}
+
+.check-radio input:checked + label:after
+{
+    content: '';
+    display: block;
+    position: absolute;
+    top: 10px;
+    left: 9px;
+    width: 6px;
+    height: 14px;
+    border: solid #2a325a;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.check-radio input[type="radio"] + label::before
+{
+    border-radius: 50%;
+}
+.check-radio input[type="radio"]:checked + label:after
+{
+    top: 12px;
+    left: 5px;
+    width: 14px;
+    height: 14px;
+    background: #2a325a;
+    border-radius: 50%;
+}
+
+img.thank-you-image {
+  width: 400px;
+}
+
+p.thankyou-image-display {
+  display: flex;
+  padding-bottom: 20px;
+  justify-content: center;
+}
+
+@media screen and (max-width:450px) {
+  .phone-number-text{
+    margin-left: -85px !important;
+  }
+}
+
+body.contrast .attachment-full.size-full{
+  background-color : transparent;
+}
+
+.preferred_text{
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.click-here{
+  /* width: fit-content;
+  background-color: #29325a !important; */
+  padding: 15px 30px 15px 30px!important;
+  cursor: pointer;
+}
+
+.buttonExpand {
+  border: none !important;
+  color: white !important;
+  font-size: 100% !important;
+  padding: 0 !important;
+  width: 100% !important;
+}
+
+.buttonExpand :hover{
+  background-color: #29325A !important;
+}
+
+.child-list{
+  padding-left:30px !important;
+}
+ul.sub-list li {
+  list-style-position: inside;
+  list-style-type: circle !important;
+}

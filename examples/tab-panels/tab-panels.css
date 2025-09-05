@@ -1,0 +1,44 @@
+body {
+   font-family:arial;
+}
+div {
+    text-align: left;
+    margin: 0;
+    padding: 0;
+    border: none;
+    white-space: normal;
+    line-height: normal;
+}
+.hidden {
+  display:none;
+}
+table {
+  border-collapse: collapse;
+}
+th, td {
+  border:1px solid black;
+}
+.js .tab-panel {
+  background:#eee;
+  padding:10px;
+}
+.js .tab-headers {
+  width:100%;
+  margin:0;
+  padding:0;
+  list-style: none;
+}
+.js .tab-headers>li {
+  display:inline-block;
+  margin:0;
+  padding:0;
+  width:auto;
+}
+.js .tab-header:link, .js .tab-header:visited {
+  text-decoration:none;
+  color:#fff;
+  background:#aa0000;
+  margin:0;
+  padding:10px;
+
+}

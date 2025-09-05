@@ -1,0 +1,41 @@
+<!doctype html>
+<html class="no-js" lang="en-GB">
+<head>
+<meta charset="UTF-8" /> 
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<script src="js/jquery.js"></script>
+<script src="js/library.js"></script>
+<title>Search Filter Example 1</title>
+<link rel="stylesheet" href="css/search-filter.css">
+</head>
+
+<body>
+<h1>Search Filter Example 2</h1>
+<p class="intro">In this example, I'm required to input my country into a text box, and a filter panel appears. If required, the user can choose from one of the options, in one of two ways:</p>
+<ul>
+<li>On desktop, they can use the down arrow key to move into and through the list. Using the up arrow will move up through the list and back onto the input field. Pressing the enter key will select the chosen option. <strong>(For debate) If focus is on one of the options and I press the tab key, what happens?</strong></li>
+<li>On mobile <strong>(for discussion)</strong>, the user can swipe right whilst the list is shown, and move through the list. Double tapping will select the item that currently has focus.</li>
+</ul>
+<p>If the user starts typing into the search filter text box and there are more than two characters, the list of countries appears and is filtered to remove countries that don't contain the character string.</p>
+<p>If no countries contain the string entered, then the list will disappear.</p>
+
+<form id="search-filter">
+  <p>
+    <label for="your-name">Please enter your name</label><br>
+    <input type="text" name="your-name" id="your-name">
+  </p>
+  
+  <p>
+    <label for="country-birth">Please enter the country of your birth</label><br>
+    <input type="text" name="country-birth" id="country-birth">
+  </p>
+  <div id="country-panel"></div>
+  <p class="srdr" aria-live="polite" aria-hidden="true" id="country-status"></p>
+  <p>
+  <input type="submit" name="sub-country" id="sub-country" value="Submit">
+  </p>
+</form>
+
+</body>
+</html>

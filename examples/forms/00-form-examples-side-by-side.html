@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>Example Forms</title>
+<style type="text/css" media="screen">
+body {font-family:arial}
+fieldset {
+   border:none; margin:10px 0; padding:0;
+}
+.col2 {
+   width:30%;padding:0 2%;float:left;
+}
+.clear {
+   float:none; clear:both;
+}
+@media screen and (max-width: 600px) {
+   .col2 {
+      width:94%;padding:0 2%;
+      float:none;
+      clear:both
+   }
+
+}
+</style>   
+<script src="flying-focus.js" async></script> 
+</head>
+
+<body>
+<h1>Forms markup</h1>
+<p><a href="#">Link before form</a></p>
+
+<form class="col2" action="/" method="post" name="unlabelled" id="unlabelled">
+<h2>Form 1</h2>
+<p>Where do you live?<br>
+<input type="text" name="live" id="live"></p>
+
+<p>How did you get to Bristol?<br>
+<select name="work" id="work">
+	<option value="0" selected="selected">Please choose...</option>
+	<option value="1">Walk</option>
+	<option value="2">Car</option>
+	<option value="3">Bus</option>
+	<option value="4">Train</option>
+	<option value="5">Helicopter</option>
+</select></p>
+
+<p>Do you have a smartphone?<br>
+<input type="radio" name="smartphone" id="smartphoney" value="yes">
+Yes
+<input type="radio" name="smartphone" id="smartphonen" value="no">
+No<br>
+</p>
+
+<p>Tell us what you've done in Bristol so far<br>
+<textarea name="bristol" id="bristol"></textarea></p>
+
+<p>
+<input type="checkbox" name="tcs" id="tcs" value="tcs">
+<a href="tcs.html">I have read the terms and conditions.</a>
+</p>
+
+<input type="submit" name="sub-unlab" id="sub-unlab" value="Submit">
+</form>
+<!-- 2nd form -->
+<form class="col2" action="/" method="post" name="labelled" id="labelled">
+<h2>Form 2</h2>
+<p><label for="name2">Your Name</label><br>
+<input type="text" name="name2" id="name2"></p>
+
+<p><label for="pizza2">Which pizza did you have?</label><br>
+<select name="pizza2" id="pizza2">
+	<option value="0" selected="selected">Please choose...</option>
+	<option value="1">Napolitana</option>
+	<option value="2">Capricciosa</option>
+	<option value="3">Siciliana</option>
+	<option value="4">Four Seasons</option>
+</select></p>
+
+<fieldset><legend>Did you have a salad?</legend>
+<input type="radio" name="salad2" id="salad2y" value="salad2y">
+<label for="salad2y">Yes</label> 
+<input type="radio" name="salad2" id="salad2n" value="salad2n">
+<label for="salad2n">No</label><br>
+</fieldset>
+
+<p><label for="comments2">Add your comments on our pizza here</label><br>
+<textarea name="comments2" id="comments2"></textarea></p>
+
+<p>
+<input type="checkbox" name="tcs2" id="tcs2" value="tcs">
+<label for="tcs2">I have read the <span><a href="tcs.html">terms and conditions.</a></span></label>
+</p>
+
+<input type="submit" name="sub-lab" id="sub-lab" value="Submit">
+</form>
+
+<p class="clear">&nbsp;</p>
+<p class="clear"><a href="#">Link after form</a></p>
+
+</body>
+</html>

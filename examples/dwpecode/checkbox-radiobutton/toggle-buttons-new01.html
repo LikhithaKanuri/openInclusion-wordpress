@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+<head>
+   <meta charset="UTF-8" /> 
+   <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+	<title>Custom input</title>
+	<link href="css/basic.css" type="text/css" rel="stylesheet" />
+	<script type="text/javascript" src="../-shared/EnhanceJS/enhance.js"></script>		
+	<script type="text/javascript">
+		// Run capabilities test
+		enhance({
+			loadScripts: [
+				'../-shared/jquery.min.js',
+				'js/jQuery.customInput-new.js',
+				'js/example-new.js'
+			],
+			loadStyles: ['css/enhanced-new.css']	
+		});   
+    </script>
+</head>
+
+<body>
+
+<p><a href="#">Link before start</a></p>
+<form action="#" method="post">	
+   <p>This set of controls are just plain HTML radio buttons and checkboxes.</p>
+   <fieldset>
+		<legend>Choose view:</legend>
+		<input type="radio" name="viewx" id="viewx-list" value="list" />
+		<label for="viewx-list">List</label>
+		<input type="radio" name="viewx" id="viewx-grid" value="grid" />
+		<label for="viewx-grid">Grid</label>
+	</fieldset>
+
+	<fieldset>
+		<legend>Show:</legend>
+		<input type="checkbox" name="showx" id="show-commentsx" value="comments" />
+		<label for="show-commentsx">Comments</label>
+		<input type="checkbox" name="showx" id="show-formattingx" value="formatting" />
+		<label for="show-formattingx">Formatting</label>
+		<input type="checkbox" name="showx" id="show-changesx" value="changes" />
+		<label for="show-changesx">Changes</label>
+	</fieldset>
+</form>
+
+<form action="#" method="post">	
+   <p>This set of controls are the styled controls where the underlying HTML is unchanged from the native controls.</p>
+	<fieldset id="view" class="toggle">
+		<legend>Choose pizza type:</legend>
+		<input type="radio" name="view" id="view-list" value="normal" />
+		<label for="view-list">Normal</label>
+		<input type="radio" name="view" id="view-grid" value="romana" />
+		<label for="view-grid">Romana</label>
+	</fieldset>
+	
+	
+	<fieldset id="show" class="toggle">
+		<legend>Extras:</legend>
+		<input type="checkbox" name="show" id="show-comments" value="garlic" />
+		<label for="show-comments">Garlic</label>
+		<input type="checkbox" name="show" id="show-formatting" value="chilli" />
+		<label for="show-formatting">Chilli</label>
+		<input type="checkbox" name="show" id="show-changes" value="cheese" />
+		<label for="show-changes">Cheese</label>
+	</fieldset>
+</form>
+
+<form action="#" method="post">	
+   <p>This set of controls are the styled controls with steps taken to prevent double focus in Android with Talkback</p>
+	<fieldset id="viewy" class="toggle">
+		<legend>Choose wine:</legend>
+		<input type="radio" name="viewy" id="view-listy" value="red" />
+		<label for="view-listy" aria-hidden="true" role="button">Red</label>
+		<input type="radio" name="viewy" id="view-gridy" value="white" />
+		<label for="view-gridy" aria-hidden="true" role="button">White</label>
+	</fieldset>
+	
+	
+	<fieldset id="show" class="toggle">
+		<legend>Premium ingredients:</legend>
+		<input type="checkbox" name="showy" id="show-commentsy" value="prawns" />
+		<label for="show-commentsy" aria-hidden="true" role="button">Prawns</label>
+		<input type="checkbox" name="showy" id="show-formattingy" value="olives" />
+		<label for="show-formattingy" aria-hidden="true" role="button">Olives</label>
+		<input type="checkbox" name="showy" id="show-changesy" value="truffle" />
+		<label for="show-changesy" aria-hidden="true" role="button">Truffle</label>
+	</fieldset>
+</form>
+
+	
+	
+</body>
+</html>

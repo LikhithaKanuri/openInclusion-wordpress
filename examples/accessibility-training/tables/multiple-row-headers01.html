@@ -1,0 +1,130 @@
+<!doctype html>
+
+<html>
+<head>
+	<title>Tables with multiple row headers</title>
+<style>
+table {
+   width:500px;
+}
+th, td {
+   outline:1px solid blue;
+}
+</style>
+</head>
+
+<body>
+<h2>Orig code</h2>
+<a href="#">Before orig code</a>
+<table class="table mainTable fullWidth">
+<caption class="hidden">Physical scrip deposit and withdrawal</caption>
+	<thead>
+		<tr class="row0 pearl-bg t16b">
+			<th class="column0" data-id="column0" scope="col">Service Item</th>
+			<th class="column1 show" data-id="column1" scope="col">Rate</th>
+			<th class="column2 mhide" data-id="column2" scope="col">Minimum Charge</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr class="row1">
+			<td class="column0" rowspan="2">Deposit</td>
+			<td class="column1 show" headers="column1 row18">Scrip fee: HKD2.5 per board lot</td>
+			<td class="column2 mhide" headers="column2 row18">--</td>
+		</tr>
+		<tr class="row2">
+			<td class="column1 show" headers="column1 row19">Transfer deed stamp duty (if applicable): HKD5 for each transfer deed</td>
+			<td class="column2 mhide" headers="column2 row19">--</td>
+		</tr>
+		<tr class="row3">
+			<td class="column0" rowspan="3">Withdrawal one</td>
+			<td class="column1 show" headers="column1 row20">Transaction charge: HKD5 per board lot</td>
+			<td class="column2 mhide" headers="column2 row20">HKD30 per stock per transaction</td>
+		</tr>
+		<tr class="row4">
+			<td class="column1 show" headers="column1 row21">Transfer deed stamp duty (if applicable): HKD6 for each transfer deed</td>
+			<td class="column2 mhide" headers="column2 row21">--</td>
+		</tr>
+		<tr class="row5">
+			<td class="column1 show" headers="column1 row22">Transfer deed stamp duty (if applicable): HKD7 for each transfer deed</td>
+			<td class="column2 mhide" headers="column2 row22">--</td>
+		</tr>
+	</tbody>
+</table>
+<h2>Rows marked as TH</h2>
+<a href="#">Rows marked as TH</a>
+
+<table class="table mainTable fullWidth">
+<caption class="hidden">Physical scrip deposit and withdrawal</caption>
+	<thead>
+		<tr class="row0 pearl-bg t16b">
+			<th class="column0" data-id="column0" scope="col">Service Item</th>
+			<th class="column1 show" data-id="column1" scope="col">Rate</th>
+			<th class="column2 mhide" data-id="column2" scope="col">Minimum Charge</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr class="row1">
+			<th class="column0" rowspan="2" scope="row">Deposit</td>
+			<td class="column1 show">Scrip fee: HKD2.5 per board lot</td>
+			<td class="column2 mhide">--</td>
+		</tr>
+		<tr class="row2">
+			<td class="column1 show">Transfer deed stamp duty (if applicable): HKD5 for each transfer deed</td>
+			<td class="column2 mhide">--</td>
+		</tr>
+		<tr class="row3">
+			<th class="column0" rowspan="3" scope="row">Withdrawal two</td>
+			<td class="column1 show">Transaction charge: HKD5 per board lot</td>
+			<td class="column2 mhide">HKD30 per stock per transaction</td>
+		</tr>
+		<tr class="row4">
+			<td class="column1 show">Transfer deed stamp duty (if applicable): HKD8 for each transfer deed</td>
+			<td class="column2 mhide">--</td>
+		</tr>
+		<tr class="row5">
+			<td class="column1 show">Transfer deed stamp duty (if applicable): HKD9 for each transfer deed</td>
+			<td class="column2 mhide">--</td>
+		</tr>
+	</tbody>
+</table>
+<h2>Using headers properly</h2>
+<a href="#">Before Using headers properly</a>
+
+<table class="table mainTable fullWidth">
+<caption class="hidden">Physical scrip deposit and withdrawal</caption>
+	<thead>
+		<tr class="row0 pearl-bg t16b">
+			<th class="column0" id="column0" scope="col">Service Item</th>
+			<th class="column1 show" id="column1" scope="col">Rate</th>
+			<th class="column2 mhide" id="column2" scope="col">Minimum Charge</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr class="row1">
+			<th class="column0" rowspan="2" id="row18" scope="row">Deposit</th>
+			<td class="column1 show" headers="column1 row18">Scrip fee: HKD2.5 per board lot</td>
+			<td class="column2 mhide" headers="column2 row18">--</td>
+		</tr>
+		<tr class="row2">
+			<td class="column1 show" headers="column1 row18">Transfer deed stamp duty (if applicable): HKD5 for each transfer deed</td>
+			<td class="column2 mhide" headers="column2 row18">--</td>
+		</tr>
+		<tr class="row3">
+			<th class="column0" rowspan="3" id="row19" scope="row">Withdrawal three</th>
+			<td class="column1 show" headers="column1 row19">Transaction charge: HKD5 per board lot</td>
+			<td class="column2 mhide" headers="column2 row19">HKD30 per stock per transaction</td>
+		</tr>
+		<tr class="row4">
+			<td class="column1 show" headers="column1 row19">Transfer deed stamp duty (if applicable): HKD10 for each transfer deed</td>
+			<td class="column2 mhide" headers="column2 row19">--</td>
+		</tr>
+		<tr class="row5">
+			<td class="column1 show" headers="column1 row19">Transfer deed stamp duty (if applicable): HKD12 for each transfer deed</td>
+			<td class="column2 mhide" headers="column2 row19">--</td>
+		</tr>
+	</tbody>
+</table>
+<a href="#">After tables</a>
+
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!doctype html>
+<html class="no-js" lang="en-GB">
+<head>
+<meta charset="UTF-8" /> 
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+<title>Responsive Tables 1</title>
+<style type="text/css">
+div {
+    text-align: left;
+    margin: 0;
+    padding: 0;
+    border: none;
+    white-space: normal;
+    line-height: normal;
+}
+#inner1 {
+   width:100%;
+   max-width:300px;
+   margin:0 auto;
+   background:#ccc;
+   
+}
+
+.table-cont {
+   width: 100%;
+   margin: 1em 0 1em 0;
+   position: relative;
+   overflow: auto;
+   overflow-y: hidden
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>Responsive Tables</h1>
+<div id="inner1">
+<p>First a paragraph.</p>
+<h2>Table</h2>
+<div class="table-cont">
+<table cellspacing="2" cellpadding="2" border="0">
+<tr>
+    <th id="accno">Account Number</th>
+    <th>Account Name</th>
+    <th>Age</th>
+    <th>Town</th>
+    <th>Balance</th>
+</tr>
+<tr>
+    <td>12345678</td>
+    <td>George Thorogood</td>
+    <td>47</td>
+    <td>Weybridge</td>
+    <td>23,456.89</td>
+</tr>
+<tr>
+    <td aria-labelledby="accno">12020678</td>
+    <td>Elvis Presley</td>
+    <td>67</td>
+    <td>Graceland</td>
+    <td>-13,222.89</td>
+</tr>
+</table>
+</div>
+<p>Content afterwards</p>
+<ul>
+<li><a href="blah.htm" target="_blank" title="Opens in a new window">Calculator 1</a></li>
+<li><a href="blah.htm" target="_blank">Calculator 2<span> Opens in a new window</span></a></li>
+<li><a href="blah.htm" target="_blank">Calculator 3 <img src="blah.jpg" alt="Opens in new window"></a></li>
+</ul>
+
+<form action="/" method="post" name="myform" id="myform">
+<p>No checked<input type="checkbox" name="chkbox1" id="chkbox1" value=""><label for="chkbox1">Checbox 1</label></p>
+<p>Checked attribute<input type="checkbox" name="chkbox2" id="chkbox2" checked value=""><label for="chkbox2">Checbox 2</label></p>
+<p>Checked plus aria-checked true<input type="checkbox" name="chkbox3" id="chkbox3" checked value="" aria-checked="true"><label for="chkbox3">Checbox 3</label></p>
+<p>Checked plus aria-checked false<input type="checkbox" name="chkbox4" id="chkbox4" checked value="" aria-checked="false"><label for="chkbox4">Checbox 4</label></p>
+</form>
+</div>
+</body>
+</html>

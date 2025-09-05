@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<title>Form fields</title>
+<style type="text/css" media="screen">
+fieldset {
+   border:none; margin:10px 0; padding:0;
+}
+.col2 {
+   width:20%;padding:0 ;float:left;
+}
+.clear {
+   float:none; clear:both;
+}
+</style>   
+</head>
+
+<body style="font-family:arial">
+<a href="#">Link before form</a>
+<form action="/" method="post">
+
+<p><input type="checkbox" name="confirmtc" id="confirmtc" value="tcread">
+<label for="confirmtc">I confirm I've read the terms and conditions</label>
+</p>
+
+<p tabindex="0">Some content between forms</p>
+
+<div class="col2">
+<fieldset><legend>First Applicant</legend>
+<p><label for="firstname1">First Name</label>
+<input type="text" name="firstname1" id="firstname1"></p>
+<p><label for="lastname1">Last Name</label>
+<input type="text" name="lastname1" id="lastname1"></p>
+<p><label for="gender1">Gender</label>
+<select name="gender1" id="gender1">
+	<option value="0" selected="selected">Please choose...</option>
+	<option value="m">Male</option>
+	<option value="f">Female</option>
+</select>
+</fieldset>
+<p tabindex="0">Some content between forms</p>
+</div>
+<div class="col2">
+<fieldset><legend>Second Applicant</legend>
+<p><label for="firstname2">First Name</label>
+<input type="text" name="firstname2" id="firstname2"></p>
+<p><label for="lastname2">Last Name</label>
+<input type="text" name="lastname2" id="lastname2"></p>
+<p><label for="gender2">Gender</label>
+<select name="gender2" id="gender2">
+	<option value="0" selected="selected">Please choose...</option>
+	<option value="m">Male</option>
+	<option value="f">Female</option>
+</select>
+</fieldset>
+</div>
+
+
+
+
+
+<p class="clear">&nbsp;</p>
+
+
+</form>
+</body>
+</html>

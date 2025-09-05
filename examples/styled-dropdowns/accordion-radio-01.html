@@ -1,0 +1,75 @@
+<!doctype html>
+<html class="non-js" lang="en-GB">
+<head>
+<meta charset="UTF-8" /> 
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+<title>Accordion with radio buttons</title>
+<style type="text/css">@import url(acc-radio.css);</style>
+
+
+<script src="/jquery/jquery.js"></script>
+<script src="library.js"></script>
+
+</head>
+
+<body>
+<h1>Styled dropdowns - Accordion with radio buttons</h1>
+<p><a href="#">start of page</a></p>
+
+
+<h2>Fill out this Contact form</h2>
+<p>Required fields are indicated with a *
+<form action="." method="post" class="contact">
+<ul>
+<li>
+<label for="name1">* Your Name</label>
+<input type="text" name="name1" id="name1" value="Roehampton Pharmacy" aria-required="true">
+</li>
+<li><label for="email1">* Your Email</label>
+<input type="text" name="email1" id="email1" aria-describedby="email1-error" aria-required="true" aria-invalid="true" value="abdc.com"><br>
+<span id="email1-error" class="error">Error: That is not a valid email format</span></li>
+
+<li><label for="comments1">* Your Question</label>
+<textarea name="comments1" id="email1" aria-describedby="comments1-error" aria-required="true"></textarea>
+<span id="comments1-error" class="error"></span></li>
+
+<li>
+  
+  <fieldset>
+    <legend class="acc-drop-legend acc-q" id="acc-drop-legend01" data-id="01">Select how many employees you have <span id="acc-drop-legend01-value"></span></legend>
+    <ul class="acc-drop-radio-group acc-a" tabindex="-1">
+      <li class="check">
+        <input type="radio" name="employees" id="employees-10" value="10">
+        <label for="employees-10">Less than 10</label>        
+      </li>
+      <li class="check">
+        <input type="radio" name="employees" id="employees-20" value="20">
+        <label for="employees-20">Between 10 and 20</label>        
+      </li>
+      <li class="check">
+        <input type="radio" name="employees" id="employees-50" value="50">
+        <label for="employees-50">Between 20 and 50</label>        
+      </li>
+      <li class="check">
+        <input type="radio" name="employees" id="employees-100" value="100">
+        <label for="employees-100">Between 50 and 100</label>        
+      </li>
+      <li class="check">
+        <input type="radio" name="employees" id="employees-max" value="max">
+        <label for="employees-max">Greater than 100</label>        
+      </li>
+
+    </ul>
+  </fieldset>
+</li>
+<li><input type="submit" name="sub-unlab" id="sub-unlab" value="Submit" class="button"></li>
+</ul>
+</form>
+
+
+<p><a href="#">End of page</a></p>
+
+</body>
+</html>

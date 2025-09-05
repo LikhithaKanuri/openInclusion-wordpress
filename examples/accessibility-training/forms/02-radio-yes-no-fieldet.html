@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<title>Form fields</title>
+<style type="text/css" media="screen">
+body {
+   font-face:arial;
+   font-size:100%;
+}
+fieldset {
+   border:none; margin:10px 0; padding:0;
+}
+.col2 {
+   width:40%;padding:0 5%;float:left;
+}
+.clear {
+   float:none; clear:both;
+}
+</style>   
+</head>
+
+<body style="font-family:arial">
+<a href="#">Link before form</a>
+<p>&nbsp;</p>
+<form action="/" method="post">
+<!-- Orig -->
+<fieldset>
+<legend id="maint">Is the property ever likely to be unoccupied for more than 30 days at a time?</legend>
+<p class="radio error">
+<input name="maintoptions" id="maintoptions-yes" value="yes" aria-labelledby="maint maintoptions-yes-label maint-errors" type="radio"><label for="maintoptions-yes" id="maintoptions-yes-label">Yes</label>
+<input name="maintoptions" id="maintoptions-no" value="no" aria-labelledby="maint maintoptions-no-label maint-errors" type="radio"><label for="maintoptions-no" id="maintoptions-no-label">No</label>
+</p>
+</fieldset>
+
+<fieldset>
+<legend id="maint">Is the property regularly unoccupied during the day?</legend>
+<p class="error">
+<input name="maintoptions" id="maintoptions-yes" value="yes" aria-labelledby="maint maintoptions-yes-label maint-errors" type="radio">
+<label for="maintoptions-yes" id="maintoptions-yes-label">Yes</label></li>
+<input name="maintoptions" id="maintoptions-no" value="no" aria-labelledby="maint maintoptions-no-label maint-errors" type="radio">
+<label for="maintoptions-no" id="maintoptions-no-label">No</label></li>
+</p>
+</fieldset>
+
+<fieldset>
+<legend id="maint">Has the property ever suffered from flooding?</legend>
+<p class="error">
+<input name="maintoptions" id="maintoptions-yes" value="yes" aria-labelledby="maint maintoptions-yes-label maint-errors" type="radio">
+<label for="maintoptions-yes" id="maintoptions-yes-label">Yes</label></li>
+<input name="maintoptions" id="maintoptions-no" value="no" aria-labelledby="maint maintoptions-no-label maint-errors" type="radio">
+<label for="maintoptions-no" id="maintoptions-no-label">No</label></li>
+</p>
+</fieldset>
+
+</form>
+</body>
+</html>

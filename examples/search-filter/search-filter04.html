@@ -1,0 +1,201 @@
+<!doctype html>
+<html class="no-js" lang="en-GB">
+<head>
+<meta charset="UTF-8" /> 
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<script src="js/jquery.js"></script>
+<script src="js/accessible-auto-suggest-new01.js"></script>
+<title>Search Filter Example 4</title>
+<style type="text/css" media="screen">
+body {padding:20px;}
+* {
+  font-family: "Arial";
+}
+
+#res {
+  margin: 0px;
+  padding-left: 0px;
+}
+
+#res li {
+  list-style-type: none;
+}
+
+#res li:hover,
+#res li.highligt,
+#res div:hover,
+#res div.highligt {
+  background: #110D3B;
+  color: #FFF;
+  cursor: pointer;
+}
+
+#searchfield {
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 5px;
+}
+
+#searchfield form {
+  display: inline-block;
+  background: #eeefed;
+  padding: 0;
+  margin: 0;
+  padding: 5px;
+  border-radius: 3px;
+  margin: 5px 0 0 0;
+}
+
+#searchfield form .biginput {
+  width: 600px;
+  height: 40px;
+  padding: 0 10px 0 10px;
+  border: 1px solid #c8c8c8;
+  border-radius: 3px;
+  color: #000;
+  font-weight: normal;
+  font-size: 1.5em;
+  -webkit-transition: all 0.2s linear;
+  -moz-transition: all 0.2s linear;
+  transition: all 0.2s linear;
+  width: 600px;
+  margin: 0 auto;
+}
+
+#searchfield form .biginput:focus,
+input:focus {
+  color: #000;
+  border: 2px solid #005499;
+  outline: none;
+}
+
+.autocomplete-suggestions {
+  border: 1px solid #999;
+  background: #fff;
+  cursor: default;
+  overflow: auto;
+  max-height: 220px;
+  width: 626px;
+  margin: 0 ;
+  display: none;
+}
+
+.autocomplete-suggestion {
+  padding: 10px 5px;
+  font-size: 1.2em;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.autocomplete-selected {
+  background: #f0f0f0;
+}
+
+.autocomplete-suggestions strong {
+  font-weight: normal;
+  color: #3399ff;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  clip: rect(1px 1px 1px 1px);
+  /* IE6, IE7 */
+  clip: rect(1px, 1px, 1px, 1px);
+  padding: 0 !important;
+  border: 0 !important;
+  height: 1px !important;
+  width: 1px !important;
+  overflow: hidden;
+}
+
+body:hover .visually-hidden a,
+body:hover .visually-hidden input,
+body:hover .visually-hidden button {
+  display: none !important;
+}
+
+#hint {
+  position: absolute;
+  left: 777px;
+  z-index: 10;
+  background-color: #fff;
+  text-transform: capitalize;
+}
+
+#search {
+  z-index: 11;
+  background-color: #fff;
+  position: relative;
+  text-transform: capitalize;
+}
+
+.button {
+  cursor: pointer;
+}
+
+.info {
+  margin: 0 auto;
+}
+
+h1 {
+  text-align: left;
+}
+</style> 
+</head>
+
+<body>
+<a href="#searchfield">Link at top</a>
+<h1>Accessible auto-suggest</h1>
+
+<!-- A live region to announce number of suggestions presented-->
+<div id='announce' class='visually-hidden' aria-live="polite"></div>
+
+<div id="searchfield">
+  <form>
+    <label for="search">Country Search</label><br>
+    <!-- Search field. aria-autocomplete is 'both' -->    
+    <input role="combobox" id="search" type="text" class="biginput" autocomplete="off" aria-owns="res" aria-autocomplete="both">
+
+  </form>
+</div>
+<!-- Container for the suggestions div. this is used for styling purposes, it's the div that sits inside this that actually counts -->
+<div class="autocomplete-suggestions" id="search-autocomplete"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Info on required aria role, interactions etc -->
+<div class="info">
+  <h2>Keyboard Interaction</h2>
+  <ul>
+    <li><strong>UP and DOWN:</strong> Cycles through auto-suggestions and input field.</li>
+    <li><strong>ESC:</strong> Close the menu</li>
+    <li><strong>ENTER:</strong> Select the currently focused auto-suggestion and close the menu.</li>
+    <li><strong>TAB:</strong> Close the menu, leave what the user has typed in the textbox and move focus to the next focusable element.</li>
+  </ul>
+  <h2>Screen-reader Interaction</h2>
+  <ul>
+    <li>when search results are returned the count and instructions are announced.</li>
+    <li>when suggestions are arrowed through they are announced.</li>
+  </ul>
+  <h2>ARIA</h2>
+  <ul>
+    <li><strong>input:</strong> role="combobox" aria-owns="search-autocomplete" aria-autocomplete="both" aria-activedescendant="suggestion-#"</li>
+    <li><strong>div:</strong> id="res" role="listbox"</li>
+    <li><strong>div:</strong> id="suggestion-#" role="option" aria-selected="false"</li>
+  </ul>
+
+</div>
+<a href="#searchfield">Link after form</a>
+</body>
+</html>

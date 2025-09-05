@@ -1,0 +1,47 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<title>Form fields</title>
+<style type="text/css" media="screen">
+fieldset {
+   border:none; margin:10px 0; padding:0;
+}
+.col2 {
+   width:40%;padding:0 5%;float:left;
+}
+.clear {
+   float:none; clear:both;
+}
+.fieldseterrors {
+   color:red;
+}
+.srdr-text {
+   position:absolute;
+   left:-9999px;
+}
+</style>   
+</head>
+
+<body style="font-family:arial">
+<a href="#">Link before form</a>
+<form action="/" method="post">
+
+<fieldset>
+<legend id="maint">Maintenance</legend>
+<p class="error">
+<input name="maintoptions" id="maintoptions-yes" value="yes" type="radio">
+<label for="maintoptions-yes">Please provide maintenance. <span class="srdr-text"> Required - you must choose one option</span></label>
+<br>
+<input name="maintoptions" id="maintoptions-no" value="no" type="radio">
+<label for="maintoptions-no">Do not provide maintenance. I will provide maintenance. <span class="srdr-text"> Required - you must choose one option</span></label></p>
+<div class="fieldseterrors">Please choose from Maintenance options</div>
+</fieldset>
+
+
+
+
+
+</form>
+</body>
+</html>

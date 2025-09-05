@@ -1,0 +1,97 @@
+<!doctype html>
+
+<html>
+<head>
+	<title>Tables with multiple row headers</title>
+<style>
+body {
+   font-family:arial;
+   background:#eee;
+   padding:10px;
+}
+th, td {
+   outline:1px solid blue;
+   padding:10px 20px;
+}
+caption{ font-weight:bold }
+</style>
+</head>
+
+<body>
+<p><a href="#">Link before table</a></p>
+<table>
+  <caption>Travel Expense Report</caption>
+  <tr>  
+       <td>Item</td>  
+       <th>Transport</th>
+       <th>Hotels</th>
+       <th>Meals</th>
+       <th>Subtotals</th>    
+  </tr>   
+  <tr>  
+       <th colspan="5">San Jose</th>
+  </tr>   
+<!--   <tr>  
+      <th id="rowheader1">25 Aug 97</th>
+      <td aria-describedby="rowheader1">65.02</td>
+      <td aria-describedby="rowheader1">112.00</td>
+      <td aria-describedby="rowheader1">45.00</td>
+      <td aria-describedby="rowheader1">-</td>
+  </tr>    -->
+  <tr>  
+      <th id="rowheader1">25 Aug 97</th>
+      <td aria-labelledby="rowheader1">65.02</td>
+      <td aria-labelledby="rowheader1">112.00</td>
+      <td aria-labelledby="rowheader1">45.00</td>
+      <td aria-labelledby="rowheader1">-</td>
+  </tr>   
+  <tr>  
+      <th id="rowheader2">26 Aug 97</th>
+      <td aria-describedby="rowheader2">-</td>
+      <td aria-describedby="rowheader2">112.00</td>
+      <td aria-describedby="rowheader2">45.00 </td>
+      <td aria-describedby="rowheader2">-</td>
+  </tr>   
+  <tr>  
+      <th id="rowheader3">Subtotals</th>
+      <td><span aria-describedby="rowheader3">65.02</span></td>
+      <td><span aria-describedby="rowheader3">224.00</span></td>
+      <td><span aria-describedby="rowheader3">90.00</span></td>
+      <td><span aria-describedby="rowheader3">379.02</span></td>
+  </tr>   
+  <tr>   
+      <th colspan="5">Seattle</th>
+  </tr>   
+  <tr>  
+      <th>27 Aug 97</th>
+      <td>96.25</td>
+      <td>109.00</td>
+      <td>36.00</td>
+      <td></td>
+  </tr>   
+  <tr>  
+      <th>28 Aug 97</th>
+      <td>35.00</td>
+      <td>109.00</td>
+      <td>36.00 </td>
+      <td></td>
+  </tr>   
+  <tr>  
+      <th>Subtotals</th>
+      <td>131.25</td>
+      <td>218.00</td>
+      <td>72.00</td>
+      <td>421.25</td>
+  </tr>   
+  <tr>   
+      <th>Totals</th>
+      <td>196.27</td>
+      <td>442.00</td>
+      <td>162.00</td>
+      <td>800.27</td>
+  </tr>   
+</table>
+<p><a href="#">Link after table</a></p>
+
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>Radio buttons and checkboxes</title>
+<style type="text/css" media="screen">
+body {font-family:arial}
+fieldset {
+   border:none; margin:10px 0; padding:0;
+}
+.error {color:red;}
+.col2 legend {
+	font-weight: bold;
+}
+.col2 {
+   width:30%;padding:0 2%;float:left;
+}
+.clear {
+   float:none; clear:both;
+}
+@media screen and (max-width: 600px) {
+   .col2 {
+      width:94%;padding:0 2%;
+      float:none;
+      clear:both
+   }
+
+}
+</style>   
+<script src="jquery.js" async></script> 
+<script src="library.js" async></script> 
+<script src="flying-focus.js" async></script> 
+</head>
+
+<body>
+<h1>Form sections appearing</h1>
+<p><a href="#">Link before form</a></p>
+
+<form action="/" method="post" name="unlabelled" id="unlabelled">
+<h2>Home Insurance - Your Details</h2>
+<p>All fields are required.</p>
+<fieldset>
+<legend>Is the insurance for one person or two?</legend>
+<p><input type="radio" name="people" id="people-sole" value="s" checked="checked">
+<label for="people-sole">One person</label> </p>
+<p><input type="radio" name="people" id="people-joint" value="j">
+<label for="people-joint">Two people</label> </p>
+
+</fieldset>
+
+<fieldset class="col2" id="app1">
+<legend>First applicant</legend>
+<p>
+	<label for="name1">Your name</label><br>
+	<input type="text" name="name1" id="name1" aria-required="true">
+</p>
+<p>
+	<label for="email1">Your email address</label><br>
+	<input type="text" name="email1" id="email1" aria-required="true">
+</p>
+<p>
+	<label for="phone1">Your mobile phone number</label><br>
+	<input type="text" name="phone1" id="phone1" aria-required="true">
+</p>
+</fieldset>
+
+<fieldset class="col2" id="app2">
+<legend>Second applicant</legend>
+<p>
+	<label for="name2">Your name</label><br>
+	<input type="text" name="name2" id="name2" aria-required="true">
+</p>
+<p>
+	<label for="email2">Your email address</label><br>
+	<input type="text" name="email2" id="email2" aria-required="true">
+</p>
+<p>
+	<label for="phone2">Your mobile phone number</label><br>
+	<input type="text" name="phone2" id="phone2" aria-required="true">
+</p>
+</fieldset>
+
+<p class="clear">&nbsp;</p>
+
+
+
+<input type="submit" name="sub-lab" id="sub-lab" value="Submit">
+</form>
+
+
+</form>
+<p class="clear">&nbsp;</p>
+<p class="clear"><a href="#">Link after form</a></p>
+
+</body>
+</html>

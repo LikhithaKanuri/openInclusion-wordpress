@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Checkbox and Radio Buttons - CSS Only - Better Labels</title>
+	<style type="text/css">
+		body {
+			padding: 20px;
+			font-family: Arial;
+			background: white;
+		}
+
+		h1 {
+			font-size: 16px;
+			font-weight: normal;
+		}
+
+		h1:last-of-type {
+			margin-top: 30px;
+		}
+
+		.custom-control {
+			display: block;
+			border:none;
+		}
+		.custom-control ul{
+			margin: 0;
+			padding:0;
+		}
+		.custom-control li {
+			position: relative;
+			display: inline-block;
+			margin: 0 5px 0 0;
+		}
+
+		.custom-control input[type="checkbox"],
+		.custom-control input[type="radio"] {
+			position: absolute;
+			z-index: 1;
+			/* opacity: 0;*/
+		}
+
+		.custom-control li input[type="checkbox"]:checked + .content,
+		.custom-control li input[type="radio"]:checked + .content {
+			background: #DB0011;
+			color: white;
+		}
+
+		.custom-control li input[type="checkbox"]:not(:checked):focus + .content,
+		.custom-control li input[type="radio"]:not(:checked):focus + .content,
+		.custom-control li input[type="checkbox"]:not(:checked):hover + .content,
+		.custom-control li input[type="radio"]:not(:checked):hover + .content  { /* OPTIONAL */
+			background: #B6B7B6;
+		}
+
+		.custom-control li input[type="checkbox"]:checked:focus + .content,
+		.custom-control li input[type="radio"]:checked:focus + .content,
+		.custom-control li input[type="checkbox"]:checked:hover + .content,
+		.custom-control li input[type="radio"]:checked:hover + .content  { /* OPTIONAL */
+			background: #AF000D;
+		}
+
+		.content {
+			position:relative;
+			display: block;
+			padding: 10px 20px;
+			line-height: 28px;
+			background: #E7E7E6;
+			color: black;
+			font-size: 12px;
+			text-align: center;
+			width:auto;
+			z-index: 2;
+		}
+	</style>
+</head>
+<body>
+
+<!-- RADIO BUTTONS -->
+<h2>Radio Button Example</h2>
+<fieldset class="custom-control">
+<legend>Which pizza would you like?</legend>
+<ul>
+	<li>
+		<input type="radio" name="types" id="siciliana"  />
+		<label for="siciliana" class="content">
+			Siciliana
+		</label>
+	</li>
+	<li>
+		<input type="radio" name="types" id="napolitana"  />
+		<label for="napolitana" class="content">
+			Napolitana
+		</label>
+	</li>
+	<li>
+		<input type="radio" name="types" id="capricciosa"  />
+		<label for="capricciosa" class="content">
+			Capricciosa
+		</label>
+	</li>
+</ul>
+
+</fieldset>
+
+
+<!-- CHECK BOXES -->
+<h2>Check Box Example</h2>
+<fieldset class="custom-control">
+<legend>Which extras would you like on your pizza?</legend>
+<ul>
+	<li>
+		<input type="checkbox" name="extras" id="garlic"  />
+		<label for="garlic" class="content">
+			Garlic oil
+		</label>
+	</li>
+	<li>
+		<input type="checkbox" name="extras" id="chilli"  />
+		<label for="chilli" class="content">
+			Chilli oil
+		</label>
+	</li>
+	<li>
+		<input type="checkbox" name="extras" id="cheese"  />
+		<label for="cheese" class="content">
+			Extra cheese
+		</label>
+	</li>
+</ul>
+	
+</fieldset>
+
+
+
+</body>
+</html>

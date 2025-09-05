@@ -1,0 +1,148 @@
+body{
+	font-family: 'Poppins', Sans-serif;	
+	font-size: 1.25rem;
+	line-height:1.5;	
+}
+
+.elementor-widget.elementor-widget-icon-list .elementor-icon-list-icon{
+	top:12px;
+	position: relative;
+}
+
+
+
+/*lead slider css changes*/
+.wp_teamshowcase_slider .team-slider{
+	background: #FFFFFF;
+    padding: 10px 10px;
+    margin: 0 10px;
+    border-radius: 12px	
+}
+
+.lead-slider .teamshowcase-image-bg{
+	height:335px !important;
+	background-color:#FFFFFF !important;
+}	
+
+.lead-slider .member-name{
+	font-family: 'Poppins';
+	font-size: 1.4rem !important;
+	line-height:1.5 !important;
+	font-weight:600;
+}
+
+
+.lead-slider .member-job{
+	font-family: 'Poppins';
+	font-size:1.4rem !important;
+	line-height:1.2 !important;
+	font-weight:400;
+}
+.team-slider .member-content .member-desc{
+	display:none;
+}
+
+.lead-slider .member-content .member-desc::before{
+	margin: 0;
+	background:#FFFFFF;
+}
+
+.wp_teamshowcase_slider .slick-dots{
+	bottom: -20px !important;	
+}
+
+.wp_teamshowcase_slider button.slick-next, .wp_teamshowcase_slider button.slick-next:hover, .wp_teamshowcase_slider button.slick-next:focus{
+	/*background: url(/wp-content/uploads/next.svg) 0 0 no-repeat !important;
+    background-size: 15px 26px !important;*/
+	
+}
+
+/*ends here*/
+
+
+
+
+
+@media (min-width: 1350px){
+	#content {
+		margin: auto;
+    	width: 50%;
+	}		
+}
+
+
+@media (max-width: 425px) {
+	.youtube{
+		width:98%;
+		height:250px;
+	}
+}
+
+
+/* ...Contrast Button Css... */
+
+body.contrast .elementor-section {background-color: #000 !important;}
+body.contrast .elementor-icon-list-text, body.contrast h1, body.contrast h2, body.contrast h3, body.contrast h4, body.contrast h5, body.contrast h6 {color: #F6D678 !important; }
+body.contrast p, body.contrast .elementor-widget-container {color: #FFF !important;}
+body.contrast .spl-black-white, body.contrast .member-content {color: #000 !important;}
+body.contrast .elementor-element-dc4fd74:not(.elementor-motion-effects-element-type-background) > .elementor-widget-wrap, body.contrast .elementor-element-031b4f5:not(.elementor-motion-effects-element-type-background) > .elementor-widget-wrap, body.contrast .elementor-element-1dc0fe3:not(.elementor-motion-effects-element-type-background) > .elementor-widget-wrap 
+{background-color: #000 !important;}
+
+
+body.contrast .elementor-27018 .elementor-element.elementor-element-6bc4a10d img,
+body.contrast .elementor-27020 .elementor-element.elementor-element-377c59cd img,
+body.contrast .elementor-27020 .elementor-element.elementor-element-2c18ec73:not(.elementor-motion-effects-element-type-background),
+body.contrast .elementor-27020 .elementor-element.elementor-element-50787d28 img,
+body.contrast .elementor-27020 .elementor-element.elementor-element-5c246343,
+body.contrast .elementor-27020 .elementor-element.elementor-element-47421dd1 > .elementor-shape-bottom svg,
+body.contrast .elementor-27016 .elementor-element.elementor-element-32604b92 img
+{display: none !important;}
+
+body.contrast .elementor-27020 .elementor-element.elementor-element-ee85504:not(.elementor-motion-effects-element-type-background)
+{background-image: none !important;}
+
+body.contrast .elementor-27018 .elementor-element.elementor-element-6bc4a10d img,
+body.contrast .elementor-28455 .elementor-element.elementor-element-85d70cc > .elementor-shape-bottom svg,
+body.contrast .elementor-element.elementor-element-ff30d7a.elementor-widget.elementor-widget-image,
+body.contrast .elementor-28455 .elementor-element.elementor-element-9a49180 img,
+body.contrast .elementor-element.elementor-element-8fad5ef.elementor-widget.elementor-widget-image,
+body.contrast .elementor-28455 .elementor-element.elementor-element-f98e747 > .elementor-shape-bottom svg,
+body.contrast .elementor-28455 .elementor-element.elementor-element-f0b1e9e,
+body.contrast .elementor-27016 .elementor-element.elementor-element-32604b92 img,
+body.contrast .elementor-28455 .elementor-element.elementor-element-de4491c img
+{visibility: hidden !important;}
+
+body.contrast .elementor-28455 .elementor-element.elementor-element-c9ae77d > .elementor-widget-container,
+body.contrast .elementor-28455 .elementor-element.elementor-element-df25412 > .elementor-widget-container
+{background-color: #000 !important;}
+
+
+/* ...Contrast Button Css Ends... */
+
+
+/* ...Text-only Button Css... */
+
+body.text-only img {visibility: hidden !important;}
+body.text-only iframe {display: none !important;}
+body.text-only .elementor-28455 .elementor-element.elementor-element-dd2f730:not(.elementor-motion-effects-element-type-background), body.text-only .elementor-28455 .elementor-element.elementor-element-a773816:not(.elementor-motion-effects-element-type-background) {background-image: none;}
+body.text-only .elementor-27018 .elementor-element.elementor-element-91ea2dd img,
+body.text-only .elementor-27018 .elementor-element.elementor-element-8e66831 img,
+body.text-only .elementor-27018 .elementor-element.elementor-element-d551a48 img,
+body.text-only img.access-text-zoom, body.text-only img.access-text-only, body.text-only img.access-contrast
+{visibility: visible !important;}
+
+body.text-only .access-text-zoom .alt, body.text-only .access-text-only .alt,
+body.text-only .access-contrast .alt
+{display: none !important;}
+
+/* ...Text-only Button Css Ends... */
+
+/* ...Text-zoom Button Css... */
+
+html.zoom .elementor-element.elementor-element-50787d28.elementor-widget.elementor-widget-image
+{margin-top: 440px !important;}
+
+html.zoom .elementor-column.elementor-col-100.elementor-top-column.elementor-element.elementor-element-eea52da
+{margin-top: 150px !important;}
+
+/* ...Text-zoom Button Css Ends... */

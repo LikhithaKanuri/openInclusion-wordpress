@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>Example Forms</title>
+<style type="text/css">
+@import url(day1-bad.css);
+</style>
+
+
+
+</head>
+
+<body>
+<h1>Forms markup</h1>
+<p><a href="#">Link before form</a></p>
+
+<form class="col2" action="/" method="post" name="unlabelled" id="unlabelled">
+<h2>Badly marked up form</h2>
+<p>Your Name<br>
+<input type="text" name="name1" id="name1"></p>
+
+<p>Which pizza did you have?<br>
+<select name="pizza1" id="pizza1">
+	<option value="0" selected="selected">Please choose...</option>
+	<option value="1">Napolitana</option>
+	<option value="2">Capricciosa</option>
+	<option value="3">Siciliana</option>
+	<option value="4">Four Seasons</option>
+</select></p>
+
+<p>What extras did you have?<br>
+<input type="checkbox" name="extras" id="extras1" value="c">Chilli Oil<br>
+<input type="checkbox" name="extras" id="extras2" value="g">Garlic Oil<br>
+<input type="checkbox" name="extras" id="extras3" value="b">Black Pepper<br>
+<input type="checkbox" name="extras" id="extras4" value="p">Parmesan
+</p>
+<p>Did you have a salad?<br>
+<input type="radio" name="salad" id="salad" value="salad">
+Yes
+<input type="radio" name="salad" id="salad" value="salad">
+No<br>
+</p>
+
+<p>Add your comments on our pizza here<br>
+<textarea name="comments" id="comments"></textarea></p>
+
+<p>
+<input type="checkbox" name="tcs" id="tcs" value="tcs">
+<a href="tcs.html">I have read the terms and conditions.</a>
+</p>
+
+<input type="submit" name="sub-unlab" id="sub-unlab" value="Submit">
+</form>
+<!-- 2nd form -->
+<form class="col2" action="/" method="post" name="labelled" id="labelled">
+<h2>Form with better accessible markup</h2>
+<p><label for="postcode">Your Postcode</label><br>
+<input type="text" name="postcode" id="postcode"></p>
+
+<p><label for="dessert">Which dessert did you have?</label><br>
+<select name="dessert" id="dessert">
+	<option value="0" selected="selected">Please choose...</option>
+	<option value="1">Tiramisu</option>
+	<option value="2">Banoffee Pie</option>
+	<option value="3">Apple Crumble</option>
+	<option value="4">Cheesecake</option>
+	<option value="5">Eton Mess</option>
+	<option value="6">Ice Cream</option>
+</select></p>
+
+<fieldset><legend>Would you recommend us to your friends?</legend>
+<input type="radio" name="friends" id="friends1" value="y">
+<label for="friends1">Yes</label> 
+<input type="radio" name="friends" id="friends2" value="n">
+<label for="friends2">No</label><br>
+</fieldset>
+
+<p><label for="comments2">If not, tell us why</label><br>
+<textarea name="comments2" id="comments2"></textarea></p>
+
+<p>
+<input type="checkbox" name="tcs2" id="tcs2" value="tcs">
+<label for="tcs2">I have read the <span><a href="tcs.html">terms and conditions.</a></span></label>
+</p>
+
+<input type="submit" name="sub-lab" id="sub-lab" value="Submit">
+</form>
+
+<p class="clear">&nbsp;</p>
+<p class="clear"><a href="#">Link after form</a></p>
+
+</body>
+</html>

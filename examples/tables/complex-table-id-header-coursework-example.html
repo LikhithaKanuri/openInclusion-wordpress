@@ -1,0 +1,43 @@
+<!doctype html>
+
+<html>
+<head>
+	<title>Tables with multiple row headers</title>
+<style>
+th, td {
+   outline:1px solid blue;
+   padding:10px ;
+}
+</style>
+</head>
+
+<body>
+<p><a href="#">Before table code</a></p>
+<table>
+<caption>Table showing how the various aspects of coursework make up the final qualification</caption>
+   <tr>
+     <th rowspan="2" id="h" scope="col">Homework</th>
+     <th colspan="3" id="e" scope="col">Exams</th>
+     <th colspan="3" id="p" scope="col">Projects</th>
+   </tr>
+   <tr>
+     <th id="e1" headers="e">First</th>
+     <th id="e2" headers="e">Second</th>
+     <th id="ef" headers="e">Final</th>
+     <th id="p1" headers="p">First</th>
+     <th id="p2" headers="p">Second</th>
+     <th id="pf" headers="p">Final</th>
+   </tr>
+   <tr>
+    <td headers="h">15%</td>
+    <td headers="e e1">15%</td>
+    <td headers="e e2">15%</td>
+    <td headers="e ef">20%</td>
+    <td headers="p p1">10%</td>
+    <td headers="p p2">10%</td>
+    <td headers="p pf">15%</td>
+   </tr>
+</table>
+
+</body>
+</html>

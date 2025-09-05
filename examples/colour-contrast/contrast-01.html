@@ -1,0 +1,135 @@
+<!doctype html>
+<html class="no-js" lang="en-GB">
+<head>
+<meta charset="UTF-8" /> 
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<script src="jquery.js"></script>
+<script src="library4.js"></script>
+<title>Checking Colour Contrast</title>
+<style type="text/css">
+body {
+   font-family:arial;
+   background:white;
+}
+div {
+    text-align: left;
+    margin: 0;
+    padding: 0 2rem;
+    border: none;
+     white-space: normal;
+    line-height: normal;
+    box-sizing:border-box;
+}
+.container {
+  display:flex;
+  flex-wrap:wrap;
+}
+.block {
+  width:44%;
+  margin:1rem 2%;
+  flex:0 0 auto;
+   outline: 2px solid red;
+}
+.white-black-specified,
+.white-black-specified p,
+.white-black-specified h2{
+  color:black;
+  background:white;
+}
+.grey-black-specified,
+.grey-black-specified p,
+.grey-black-specified h2{
+  color:black;
+  background:#888;
+}
+.grey-red-unspecified {
+  background:#999;
+  color:#db2011;
+}
+.grey-red-unspecified p,
+.grey-red-unspecified h2{
+}
+.white-black-unspecified {
+  background:white;
+  color:black;
+}
+.white-black-unspecified p,
+.white-black-unspecified h2{
+}
+.white-image-specified1 {
+  background:url(garden02.jpg) repeat 0 0;
+}
+.white-image-specified1 p,
+.white-image-specified1 h2{
+  background:rgba(0,0,0,0.5);
+  color:white;
+}
+.white-image-specified2 {
+  background:#000 url(garden02.jpg) repeat 0 0;
+}
+.white-image-specified2 p,
+.white-image-specified2 h2{
+  color:white;
+}
+.white-gradient-specified{
+background: #19086f; /* Old browsers */
+background: -moz-linear-gradient(top,  #19086f 0%, #b7add7 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#19086f), color-stop(100%,#b7add7)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  #19086f 0%,#b7add7 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  #19086f 0%,#b7add7 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  #19086f 0%,#b7add7 100%); /* IE10+ */
+background: linear-gradient(top,  #19086f 0%,#b7add7 100%); /* W3C */
+   color:white;
+}
+
+
+</style>
+</head>
+
+<body>
+<h1>Checking Colour Contrast</h1>
+<div class="container">
+<div class="block white-black-specified">
+<h2>Black on white, all elements have colours specified</h2>
+<p>Here, the container and all the elements within the container have specific foreground and background colours set. Using black and white this should give the maximum possible colour contrast.</p>
+
+
+</div>
+<div class="block grey-black-specified">
+<h2>Black on grey, all elements have colours specified</h2>
+<p>Here, the container and all the elements within the container have specific foreground and background colours set. Using black text on a dark grey background the colour contrast is in the balance.</p>
+
+</div>
+<div class="block grey-red-unspecified">
+<h2>Red on grey, container specified, elements not specified</h2>
+<p>In this block, the container has foreground and background colours specified, but the elements within the block have no colours specified. So they inherit forground colour from the container. The colour combination does not have enough contrast.</p>
+
+</div>
+<div class="block white-black-unspecified">
+<h2>Black on white, container specified, elements not specified</h2>
+<p>Here, the container has background and foreground colours specified, but once again, the elements within the container do not have colours specified - so they will inherit forground colour from the container. Black on white has very good colour contrast.</p>
+
+</div>
+<div class="block white-image-specified1">
+<h2>White text sitting on semi-opaque background on image</h2>
+<p>Here, the container has a background image specified, elements within the container have colours specified including semi-transparent background.</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec in congue elit. Sed vestibulum est nulla. Vivamus mattis, urna id pharetra auctor, purus nunc varius sem, sed fermentum ipsum odio a turpis. Mauris ut mi sem. Aliquam erat volutpat. Proin condimentum ultricies mauris id lobortis. Etiam accumsan metus quis tempor malesuada. Suspendisse tempor elit nec iaculis finibus.</p>
+
+</div>
+<div class="block white-image-specified2">
+<h2>White text sitting directly on image</h2>
+<p>Here, the container has a background image specified, but also a background colour, elements within the container do not have colours specified.</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec in congue elit. Sed vestibulum est nulla. Vivamus mattis, urna id pharetra auctor, purus nunc varius sem, sed fermentum ipsum odio a turpis. Mauris ut mi sem. Aliquam erat volutpat. Proin condimentum ultricies mauris id lobortis. Etiam accumsan metus quis tempor malesuada. Suspendisse tempor elit nec iaculis finibus.</p>
+
+</div>
+<div class="block white-gradient-specified">
+<h2>White text sitting on a gradient</h2>
+<p>Here, the container has a background gradient specified, elements within the container do not have colours specified.</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec in congue elit. Sed vestibulum est nulla. Vivamus mattis, urna id pharetra auctor, purus nunc varius sem, sed fermentum ipsum odio a turpis. Mauris ut mi sem. Aliquam erat volutpat. Proin condimentum ultricies mauris id lobortis. Etiam accumsan metus quis tempor malesuada. Suspendisse tempor elit nec iaculis finibus.</p>
+
+</div>
+
+</div><!-- End of container -->
+</body>
+</html>

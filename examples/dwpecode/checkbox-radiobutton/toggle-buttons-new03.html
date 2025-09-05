@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+   <meta charset="UTF-8" /> 
+   <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+	<title>Custom input</title>
+	<link href="css/enhanced-new.css" type="text/css" rel="stylesheet" />
+	<script type="text/javascript" src="../-shared/jquery.min.js"></script>		
+	<script type="text/javascript" src="js/jQuery.customInput-new.js"></script>		
+	<script type="text/javascript" src="js/example-new.js"></script>		
+</head>
+
+<body>
+
+<p><a href="#">Link before start</a></p>
+
+
+<form action="#" method="post">	
+<p>
+<label for="yourname">Your Name:</label><br>
+<input type="text" name="yourname" id="yourname">
+</p>
+	<fieldset id="view" class="toggle">
+		<legend>Title</legend>
+		<input type="radio" name="view" id="view-mr" value="mr" />
+		<label for="view-mr">Mr</label>
+		<input type="radio" name="view" id="view-mrs" value="mrs" />
+		<label for="view-mrs">Mrs</label>
+		<input type="radio" name="view" id="view-miss" value="miss" />
+		<label for="view-miss">Miss</label>
+		<input type="radio" name="view" id="view-ms" value="ms" />
+		<label for="view-ms">Ms</label>
+		<input type="radio" name="view" id="view-other" value="other" />
+		<label for="view-other">Other</label>
+	</fieldset>
+	
+	
+	<fieldset id="show" class="toggle">
+		<legend>HSBC Bank Accounts Held</legend>
+		<input type="checkbox" name="show" id="show-premier" value="premier" />
+		<label for="show-premier">Premier</label>
+		<input type="checkbox" name="show" id="show-advance" value="advance" />
+		<label for="show-advance">Advance</label>
+		<input type="checkbox" name="show" id="show-other" value="other" />
+		<label for="show-other">Other</label>
+		<input type="checkbox" name="show" id="show-none" value="none" />
+		<label for="show-none">Not an HSBC Customer</label>
+	</fieldset>
+</form>
+	
+	
+</body>
+</html>

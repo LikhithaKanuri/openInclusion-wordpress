@@ -1,0 +1,95 @@
+div {
+    text-align: left;
+    margin: 0;
+    padding: 0;
+    border: none;
+    white-space: normal;
+    line-height: normal;
+}
+a:link, a:link {}
+a:hover, a:focus {background: black; color: white}
+
+.srt {
+   clip: rect(1px, 1px, 1px, 1px); 
+   height: 1px; 
+   width: 1px; 
+   overflow: hidden; 
+   position: absolute !important;
+}
+/* Accordions */
+.acc-group, .intro {
+}
+.js .acc-q {
+   border:1px solid black;
+   padding:5px 35px 5px 5px;
+   margin:25px 0 0 0;
+   background: #ccc url(../images/nav-highlight02.png) right center no-repeat;
+   cursor:pointer;
+}
+.js .acc-q:hover,
+.js .acc-q:focus {
+   background-color:yellow;
+}
+.js .acc-q.expanded {
+   border:1px solid black;
+   padding:5px 35px 5px 5px;
+   margin:25px 0 0 0;
+   background-image: url(../images/nav-highlight03.png);
+}
+.js .acc-a {
+   padding:5px;
+}
+.js .acc-a:focus {
+   border:1px solid #999;
+   background:#eee;
+}
+.js .acc-a p{
+   margin-top:0;
+}
+/* Forms */
+
+
+.contact{border:none; margin:0}
+
+.contact fieldset {
+  border: none;
+  margin:1em 0;
+  padding:0;
+}
+.contact .acc-drop-legend {
+  border:1px solid black;
+}
+.contact .acc-drop-radio-group {
+  outline:1px solid black;
+}
+.contact span.mand,
+.contact ul {list-style-type: none; margin: 0; padding: 0}
+.contact ul li {list-style-type: none; padding: 0; background:none; margin: 0 0 2em 0; clear: left;}
+.contact ul li li{margin: 0;}
+.contact ul li.short {clear: none; float:left; margin-left:3%;margin-right:0; width:47%}
+.contact ul li.short.clear {clear: both; float:left; margin-right:3%; margin-left:0; width:47%}
+.contact ul.dob {display:table; width:100%}
+.contact ul.dob li {display:table-cell; padding-left:2%;}
+.contact ul.dob li:first-child {padding-left:0;}
+.contact ul.dob li.dob-d {width:5em}
+.contact ul.dob li.dob-y {width:6em}
+.contact ul li.check {clear: left; margin:0.4em 0}
+.contact ul li.check input {clear:left; float: left; width:15px;margin-top:3px;margin-right:5px}
+.contact ul li.check label {margin-left:2em; width:auto}
+.contact ul li.submit {padding-top: 0.5em}
+.contact label {display: block; margin: 0; text-align: left; line-height:1.8em}
+.contact label.valid .text,
+.contact legend.valid {display:block;padding-right:8%; width:92%;}
+.contact legend.valid,
+.contact label.valid {
+   background:transparent url(images/form-tick-temp.png) no-repeat top right;
+}
+.contact input, .contact select, .contact textarea {width:98%;}
+.contact li.submit input {width:auto;  cursor:pointer}
+.contact .clarify {font-size:80%}
+.contact .err-img {border:none}
+.contact .errors,
+.contact .fieldseterrors {
+   color:#CC063B;
+}
+

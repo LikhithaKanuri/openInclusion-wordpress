@@ -1,0 +1,1 @@
+<?php/* Template Name: Home Page*/?><?php $homePage = true;get_template_part( 'layout' );  ?>

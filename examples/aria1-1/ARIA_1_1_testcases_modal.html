@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>ARIA 1.1 Tests - aria-Modal</title>
+
+<style type="text/css">
+
+*	{
+	font-family: sans-serif;
+}
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#data_table {
+	font-family: sans-serif;
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+}
+</style>
+
+
+
+</head>
+
+<body>
+<h1>ARIA 1.1 Test cases</h1>
+
+<h2><code>aria-modal</code> Tests</h2>
+
+<p><strong>NOTE ON TEST SUITE</strong> Tests were undertaken on these code examples using IE 11, Safari 10 and latest builds of Chrome and Firefox.
+	AT used was JAWS 18, NVDA, and VoiceOver.</p>
+
+
+	<!-- Trigger/Open The Modal -->
+<button id="testButton" onclick="moveFocus()">Open ARIA Modal test</button>
+
+<!-- The Modal -->
+<div id="itsModal" class="modal" tabindex="0">
+
+  <!-- Modal content -->
+  <div class="content" role="dialog" aria-modal="true">
+    <span class="close" role="button" aria-label="Close dialog" tabindex="0">&times;</span>
+    <h1 id="focus_modal" tabindex="-1">ARIA Modal test </h1>
+    <p>The <code>aria-modal</code>  attribute is used to indicate that the presence of a "modal" element precludes usage of other content on the page.</p>
+    <ul>
+    <li><a href="#" id="focus_me1">Here is focusable element 1</a></li>
+    <li><a href="#" id="focus_me2">Here is a focusable element 2</a></li>
+    <li><a href="#" id="focus_me3">Here is a focusable element 3</a></li>
+  </div>
+
+</div>
+
+<h2>Some other content on the page that will be ignored</h2>
+<p>Am I being ignored or hidden because of the presence of the <code>aria-modal</code> attribute?</p>
+
+<script>
+// Get the modal
+var modal = document.getElementById('itsModal');
+
+// Get the button that opens the modal
+var button = document.getElementById("testButton");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+
+// When the user clicks on the button, open the modal, and move focus
+button.onclick = function() {
+    modal.style.display = "block";
+    document.getElementById("focus_modal").focus();
+}
+
+
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+    modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
+
+</script>
+
+
+<h2><code>aria-modal</code> screen reader test results</h2>
+
+<table id="data_table"><caption>Screen Reader Test Results for <code>aria-modal</code> </caption>
+<td><th>IE 11</th> <th>Firefox</th><th>Chrome</th> <th>Safari 10.1</th>
+<tr>
+<th>JAWS 18</th> <td>Not supported</td> <td>Not supported ^</td> <td>Not supported^</td> <td>x</td> 
+</tr>
+<tr>
+	<th>NVDA</th><td> Not supported</td> <td>Not supported</td> <td>Not supported</td> <td>x</td> 
+</tr>
+<th>VoiceOver</th><td>x</td>  <td>x</td> <td>x</td> <td>Not supported</td> 
+</table>
+
+<p> ^: These browsers handle dialog boxes well - as focus is contained when open.</p>
+
+
+</body>
+</html>

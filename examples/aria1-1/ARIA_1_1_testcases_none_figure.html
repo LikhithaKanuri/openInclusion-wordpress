@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>ARIA role="none" and Figure - ARIA 1.1 Tests</title>
+
+<style type="text/css">
+
+*	{
+	font-family: sans-serif;
+}
+
+.layout {
+	font-family: sans-serif;
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+}
+
+.supported  {
+
+  color: #008000;
+}
+</style>
+
+</head>
+
+<body>
+<h1>ARIA 1.1 Test cases- role none and figure</h1>
+
+<h2>ARIA <code>role="none"</code> Tests</h2>
+
+<p><strong>NOTE ON TEST SUITE</strong> Tests were undertaken on these code examples using IE 11, Safari 10 and latest builds of Chrome and Firefox.
+	AT used was JAWS 18, NVDA, and VoiceOver.</p>
+
+
+<p>The ARIA <code>role="none"</code> attribute is synonymous with the presentation role, due to author confusion surrounding the intended meaning of the word "presentation" or "presentational." Many individuals erroneously consider role="presentation" to be synonymous with aria-hidden="true", and we believe role="none" conveys the actual meaning more unambiguously.</p>
+
+<h2><code>role="none"</code> example</h2>
+
+
+<table class="layout" role="none"><caption>Screen Reader Test Table for ARIA <code>role="none"</code></caption>
+<td><th>IE 11</th> <th>Firefox</th><th>Chrome</th> <th>Safari 10.1</th>
+<tr>
+<th>JAWS 18</th> <td class="supported">Supported</td> <td class="supported">Supported</td> <td>Not supported</td> <td>x</td> 
+</tr>
+<tr>
+  <th>NVDA</th><td> Not supported</td> <td class="supported">Supported</td> <td class="supported">Supported</td> <td>x</td> 
+</tr>
+<th>VoiceOver</th><td>x</td>  <td>x</td><td>x</td>  <td class="supported">Supported</td> 
+</table>
+
+<h2>Screen reader test results</h2>
+
+<table class="layout"><caption>Screen Reader Test Results for <code>role="none"</code></caption>
+<td><th>IE 11</th> <th>Firefox</th><th>Chrome</th> <th>Safari 10.1</th>
+<tr>
+<th>JAWS 18</th> <td class="supported">Supported</td> <td class="supported">Supported</td> <td class="supported">Supported</td> <td>x</td> 
+</tr>
+<tr>
+	<th>NVDA</th><td> Not supported</td> <td>Not supported</td> <td>Not supported</td> <td>x</td> 
+</tr>
+<th>VoiceOver</th><td>x</td>  <td>x</td><td>x</td>  <td>Not supported</td> 
+</table>
+
+
+<h2><code>figure</code> example</h2>
+<p>First example uses the <code>figure</code> element and <code>figcaption</code> from HTML5</p>
+
+<figure>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Alice_par_John_Tenniel_30.png" alt="From Alice in Wonderland by Lewis Carroll - using HTML5 figure element">
+  <figcaption>Alice trying to play croquet with a Flamingo.</figcaption>
+
+</figure>
+
+<h2>Second example is the ARIA <code>role="figure"</code></h2>
+
+<p>From reading the ARIA 1.1 spec its not clear if the aria-describedby should be referencing the <code><div></code> with the <code>role="figure"</code> or not.</p>
+
+<div role="figure">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Alice_par_John_Tenniel_30.png" alt="From Alice in Wonderland by Lewis Carroll using the ARIA role=figure" aria-describedby="alice_desc">
+  <p id="alice_desc">Alice trying to play croquet with a Flamingo.</p>
+
+  <div role="figure" aria-describedby="alice_desc">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Alice_par_John_Tenniel_30.png" alt="From Alice in Wonderland by Lewis Carroll using the ARIA role=figure">
+  <p id="alice_desc">Alice trying to play croquet with a Flamingo.</p>
+
+
+
+<table class="layout"><caption>Screen Reader Test Results for ARIA <code>role="figure"</code></caption>
+<td><th>IE 11</th> <th>Firefox</th><th>Chrome</th> <th>Safari 10.1</th>
+<tr>
+<th>JAWS 18</th> <td>Not supported</td> <td>Not supported</td> <td>Not supported</td> <td>x</td> 
+</tr>
+<tr>
+	<th>NVDA</th><td> Not supported</td> <td>Not supported</td> <td>Not supported</td> <td>x</td> 
+</tr>
+<th>VoiceOver</th><td>x</td>  <td>x</td><td>x</td>  <td>Not supported</td> 
+</table>
+
+<p>NOTE: Role="figure" tests – </p>
+<ul>
+<li>NVDA IE/FF/Chrome – works with aria-describedby on the <img> element.</li>
+<li>JAWS IE/ – does not work with aria-describedby on the <img> element..</li>
+<li>JAWS FF/Chrome – does work with aria-describedby on the <img> element..</li>
+</ul>
+
+
+</body>
+</html>

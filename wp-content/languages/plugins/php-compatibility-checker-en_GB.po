@@ -1,0 +1,187 @@
+# Translation of Plugins - PHP Compatibility Checker - Stable (latest release) in English (UK)
+# This file is distributed under the same license as the Plugins - PHP Compatibility Checker - Stable (latest release) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2023-06-04 23:21:43+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: GlotPress/4.0.0-alpha.11\n"
+"Language: en_GB\n"
+"Project-Id-Version: Plugins - PHP Compatibility Checker - Stable (latest release)\n"
+
+#: lib/class-php-compatibility-checker.php:485
+msgid "close"
+msgstr "close"
+
+#: lib/class-php-compatibility-checker.php:474
+msgid "Message:"
+msgstr "Message:"
+
+#: lib/class-php-compatibility-checker.php:471
+msgid "Response status:"
+msgstr "Response status:"
+
+#: lib/class-php-compatibility-checker.php:464
+msgid "Click on PHP Version to see errors and warnings"
+msgstr "Click on PHP Version to see errors and warnings"
+
+#: lib/class-php-compatibility-checker.php:332
+msgid "Now scanning:"
+msgstr "Now scanning:"
+
+#: lib/class-php-compatibility-checker.php:62
+msgid "Looks like you are using a development version of <strong>PHP Compatibility Checker</strong>. Please run <code>make build</code> to build assets."
+msgstr "Looks like you are using a development version of <strong>PHP Compatibility Checker</strong>. Please run <code>make build</code> to build assets."
+
+#. Author URI of the plugin
+msgid "https://wpengine.com/"
+msgstr "https://wpengine.com/"
+
+#. Description of the plugin
+msgid "The WP Engine PHP Compatibility Checker can be used by any WordPress website on any web host to check PHP version compatibility."
+msgstr "The WP Engine PHP Compatibility Checker can be used by any WordPress website on any web host to check PHP version compatibility."
+
+#: lib/class-php-compatibility-checker.php:510
+msgid "Start Scan"
+msgstr "Start Scan"
+
+#: lib/class-php-compatibility-checker.php:435
+msgid "Submit to Codeable"
+msgstr "Submit to Codeable"
+
+#: lib/class-php-compatibility-checker.php:432
+msgid "Automatically submit this error report to Codeable to get a quick quote from their vetted WordPress developers."
+msgstr "Automatically submit this error report to Codeable to get a quick quote from their vetted WordPress developers."
+
+#: lib/class-php-compatibility-checker.php:431
+msgid "Get PHP 8 ready with Codeable"
+msgstr "Get PHP 8 ready with Codeable"
+
+#: lib/class-php-compatibility-checker.php:427
+msgid "Find a WP Engine Partner"
+msgstr "Find a WP Engine Partner"
+
+#: lib/class-php-compatibility-checker.php:426
+msgid "Our agency partners can help make your site PHP 8 compatible."
+msgstr "Our agency partners can help make your site PHP 8 compatible."
+
+#: lib/class-php-compatibility-checker.php:425
+msgid "Get help from WP Engine partners"
+msgstr "Get help from WP Engine partners"
+
+#: lib/class-php-compatibility-checker.php:423
+msgid "Need help making this site PHP 8 compatible?"
+msgstr "Need help making this site PHP 8 compatible?"
+
+#: lib/class-php-compatibility-checker.php:415
+msgid "Click here to upgrade to PHP 7"
+msgstr "Click here to upgrade to PHP 7"
+
+#: lib/class-php-compatibility-checker.php:415
+msgid "Already a WP Engine customer?"
+msgstr "Already a WP Engine customer?"
+
+#: lib/class-php-compatibility-checker.php:414
+msgid "Get PHP 7 Hosting"
+msgstr "Get PHP 7 Hosting"
+
+#: lib/class-php-compatibility-checker.php:412
+msgid "Upgrade to PHP 7 for free"
+msgstr "Upgrade to PHP 7 for free"
+
+#: lib/class-php-compatibility-checker.php:409
+msgid "Speed up your site and improve your conversion opportunities by upgrading to PHP 7 on the WP Engine platform."
+msgstr "Speed up your site and improve your conversion opportunities by upgrading to PHP 7 on the WP Engine platform."
+
+#: lib/class-php-compatibility-checker.php:406
+msgid "Make your site 2x faster with PHP 7 WordPress hosting"
+msgstr "Make your site 2x faster with PHP 7 WordPress hosting"
+
+#: lib/class-php-compatibility-checker.php:404
+msgid "Make your site 2x faster by upgrading to PHP 7"
+msgstr "Make your site 2x faster by upgrading to PHP 7"
+
+#. translators: %s: GitHub Wiki URL
+#: lib/class-php-compatibility-checker.php:388
+msgid "Report false positives <a target=\"_blank\" href=\"%s\">on our GitHub repo</a>."
+msgstr "Report false positives <a target=\"_blank\" href=\"%s\">on our GitHub repo</a>."
+
+#: lib/class-php-compatibility-checker.php:383
+msgid "PHP Warnings could cause compatibility issues with future PHP versions and/or spam your logs."
+msgstr "PHP Warnings could cause compatibility issues with future PHP versions and/or spam your logs."
+
+#: lib/class-php-compatibility-checker.php:382
+msgid "This tool does not execute your theme or plugin code, so it cannot detect runtime compatibility issues."
+msgstr "This tool does not execute your theme or plugin code, so it cannot detect runtime compatibility issues."
+
+#: lib/class-php-compatibility-checker.php:380
+msgid "Limitations &amp; Caveats"
+msgstr "Limitations &amp; Caveats"
+
+#. translators: %s: hosting URL
+#: lib/class-php-compatibility-checker.php:370
+msgid "<strong>Attention:</strong> Not all errors are show-stoppers. <a target=\"_blank\" href=\"%s\">Use LocalWP to test this site on PHP 8</a> to see if it just works!"
+msgstr "<strong>Attention:</strong> Not all errors are show-stoppers. <a target=\"_blank\" href=\"%s\">Use LocalWP to test this site on PHP 8</a> to see if it just works!"
+
+#: lib/class-php-compatibility-checker.php:355
+msgid "View results as raw text"
+msgstr "View results as raw text"
+
+#: lib/class-php-compatibility-checker.php:352
+msgid "Clear results"
+msgstr "Clear results"
+
+#: lib/class-php-compatibility-checker.php:351
+msgid "Download Report"
+msgstr "Download Report"
+
+#: lib/class-php-compatibility-checker.php:347
+msgid "Scan Results for PHP Compatibility"
+msgstr "Scan Results for PHP Compatibility"
+
+#: lib/class-php-compatibility-checker.php:320
+msgid "Scan all plugins and themes"
+msgstr "Scan all plugins and themes"
+
+#: lib/class-php-compatibility-checker.php:319
+msgid "Only scan active plugins and theme"
+msgstr "Only scan active plugins and theme"
+
+#: lib/class-php-compatibility-checker.php:316
+msgid "Plugin / Theme Status"
+msgstr "Plugin / Theme Status"
+
+#: lib/class-php-compatibility-checker.php:312
+msgid "Scan Options"
+msgstr "Scan Options"
+
+#: lib/class-php-compatibility-checker.php:309
+msgid "This tool will lint your theme and plugin code on this site and provide you a report of compatibility issues. These issues are categorized into errors and warnings and will list the file and line number of the offending code, as well as the info about why that line of code is incompatible with the chosen version of PHP. This tool will also suggest updates to themes and plugins, as a new version may offer compatible code."
+msgstr "This tool will lint your theme and plugin code on this site and provide you a report of compatibility issues. These issues are categorised into errors and warnings and will list the file and line number of the offending code, as well as the info about why that line of code is incompatible with the chosen version of PHP. This tool will also suggest updates to themes and plugins, as a new version may offer compatible code."
+
+#: lib/class-php-compatibility-checker.php:308
+msgid "The PHP Compatibility Checker can be used on any WordPress website on any web host."
+msgstr "The PHP Compatibility Checker can be used on any WordPress website on any web host."
+
+#: lib/class-php-compatibility-checker.php:284
+msgid "PHP Compatibility"
+msgstr "PHP Compatibility"
+
+#: lib/class-php-compatibility-checker.php:328
+msgid "Scan site"
+msgstr "Scan site"
+
+#. Author of the plugin
+msgid "WP Engine"
+msgstr "WP Engine"
+
+#. Plugin URI of the plugin
+msgid "https://wpengine.com"
+msgstr "https://wpengine.com/"
+
+#. Plugin Name of the plugin
+#: lib/class-php-compatibility-checker.php:306
+msgid "PHP Compatibility Checker"
+msgstr "PHP Compatibility Checker"

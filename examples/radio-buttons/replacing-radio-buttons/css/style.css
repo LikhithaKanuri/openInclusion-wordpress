@@ -1,0 +1,72 @@
+/* HTML5 Boilerplate accessible hidden styles */
+[type="radio"] {
+  border: 0; 
+  clip: rect(0 0 0 0); 
+  height: 1px;
+  margin: -1px; 
+  overflow: hidden; 
+  padding: 0; 
+  position: absolute; 
+  width: 1px;
+}
+
+/* One radio button per line */
+label {
+  cursor: pointer;
+  display: block;
+  line-height: 1.8;
+}
+
+/* the basic, unchecked style */
+[type="radio"] + label:before {
+  content: '';
+  display: inline-block;
+  width: .75em;
+  height: .75em;
+  vertical-align: middle;
+  border-radius: 100%;
+  border: .05em solid black;
+  box-shadow: inset .05em .05em .1em black;
+  margin-right: 0.5em;
+  -webkit-transition: 0.35s ease all;
+  transition: 0.35s ease all;
+  outline-offset: .1em;
+}
+
+/* the checked style using the :checked pseudo class */
+[type="radio"]:checked + label:before {
+  background: #09c;
+}
+
+/* never forget focus styling */
+[type="radio"]:focus + label:before {
+  outline: thin dotted black;
+}
+
+/* Nothing to see here. */
+body {
+  margin: 0;
+  font-family: sans-serif;
+  font-size: 18px;
+}
+
+fieldset {
+  border: 1px solid #000;
+  padding: 1em;
+  border-radius: 0.5em;
+  width: auto;
+  max-width: 15em;
+  margin: 3em auto;
+}
+
+legend {
+  color: #fff;
+  background: #000;
+  padding: 0.25em 1em;
+  border-radius: 1em;
+}
+
+.by {
+  font-size: .75em;
+  text-align: center;
+}

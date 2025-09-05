@@ -1,0 +1,54 @@
+<!doctype html>
+<html class="no-js" lang="en-GB">
+<head>
+<meta charset="UTF-8" /> 
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+<title>Tabindex values</title>
+<style type="text/css">
+div {
+    text-align: left;
+    margin: 0;
+    padding: 0;
+    border: none;
+    white-space: normal;
+    line-height: normal;
+}
+a:link, a:link {}
+a:hover, a:focus {background: black; color: white}
+
+</style>
+</head>
+
+<body>
+<h1>Tabindex Values</h1>
+<ul class="">
+<li><a href="#subhead1">Link to First Subheading</a></li>
+<li><a href="#subhead2">Link to Second Subheading</a></li>
+<li><a href="#subhead3">Link to Third Subheading</a></li>
+<li><a href="#container1">Link to Container</a></li>
+</ul>
+
+<h2 id="subhead1" tabindex="0">First Subheading - tabindex="0"</h2>
+<p>Look in thy glass, and tell the face thou viewest<br>
+Now is the time that face should form another; <br>
+Whose fresh repair if now thou not renewest, <br>
+Thou dost <a href="#">beguile the world</a>, unbless some mother.</p>
+
+<h2 id="subhead2">First Subheading - tabindex not set</h2>
+<p>Thou art thy mother's glass, and she in thee<br>
+Calls back the <a href="#">lovely April</a> of her prime: <br>
+So thou through windows of thine age shall see.</p>
+
+<h2 id="subhead3" tabindex="-1">First Subheading - tabindex="-1"</h2>
+<p>Despite of wrinkles this thy golden time. <br>
+But if thou live, remember'd not to be, <br>
+Die single, and <a href="#">thine image</a> dies with thee.</p>
+
+<div id="container1" tabindex="-1">
+<h2>Shakespeare's Sonnets</h2>
+<p>The general subject is continued from Sonnets 1 and 2, with the poet presenting a new argument as to why his young friend should start a family. The <a href="#">young man</a> need only look at his own mother to see how important his youth and beauty are to her, as a constant reminder of "the lovely April of her prime".</p>
+</div>
+</body>
+</html>

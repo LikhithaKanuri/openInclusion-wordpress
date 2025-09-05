@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>Radio buttons and checkboxes</title>
+<style type="text/css" media="screen">
+body {font-family:arial}
+fieldset {
+   border:none; margin:10px 0; padding:0;
+}
+.error {color:red;}
+fieldset.error {
+	border: 1px solid red;
+    color:black;
+}
+.col2 {
+   width:30%;padding:0 2%;float:left;
+}
+.clear {
+   float:none; clear:both;
+}
+@media screen and (max-width: 600px) {
+   .col2 {
+      width:94%;padding:0 2%;
+      float:none;
+      clear:both
+   }
+
+}
+</style>   
+<script src="flying-focus.js" async></script> 
+</head>
+
+<body>
+<h1>Radio buttons and checkboxes</h1>
+<p><a href="#">Link before form</a></p>
+
+<form class="col2" action="/" method="post" name="unlabelled" id="unlabelled">
+<h2>Radio button group</h2>
+
+<fieldset>
+<legend aria-required="true">Please tell us what you thought of the meal (required)</legend>
+<p><input type="radio" name="meala" id="meala01">
+<label for="meala01">Very good</label> </p>
+
+<p><input type="radio" name="meala" id="meala02">
+<label for="meala02">Quite good</label> </p>
+
+<p><input type="radio" name="meala" id="meala03">
+<label for="meala03">Neither good nor bad</label> </p>
+
+<p><input type="radio" name="meala" id="meala04">
+<label for="meala04">Quite bad</label> </p>
+
+<p><input type="radio" name="meala" id="meala05">
+<label for="meala05">Very bad</label> </p>
+</fieldset>
+
+
+<p>&nbsp;</p>
+
+
+
+<input type="submit" name="sub-lab" id="sub-lab" value="Submit">
+</form>
+
+
+<form class="col2" action="/" method="post" name="unlabelled" id="unlabelled2">
+<h2>Checkbox group</h2>
+
+<!-- <p><label for="test">Test field</label><br><input type="text" name="test" id="test"></p> -->
+<fieldset>
+<legend>What are your favourite TV programmes (please choose up to two)</legend>
+
+<p><input type="checkbox" name="tva" id="tva01">
+<label for="tva01">Doctor Who</label> </p>
+
+<p><input type="checkbox" name="tva" id="tva02">
+<label for="tva02">Britain's Got Talent</label> </p>
+
+<p><input type="checkbox" name="tva" id="tva03">
+<label for="tva03">Hinterland</label> </p>
+
+<p><input type="checkbox" name="tva" id="tva04">
+<label for="tva04">Mrs Brown's Boys</label> </p>
+
+<p><input type="checkbox" name="tva" id="tva05">
+<label for="tva05">Casualty</label> </p>
+
+<p><input type="checkbox" name="tva" id="tva06">
+<label for="tva06">Masterchef</label> </p>
+
+</fieldset>
+
+
+<p>&nbsp;</p>
+
+
+
+<input type="submit" name="sub-lab" id="sub-lab2" value="Submit">
+</form>
+<p class="clear">&nbsp;</p>
+<p class="clear"><a href="#">Link after form</a></p>
+
+</body>
+</html>

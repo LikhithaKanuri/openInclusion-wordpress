@@ -1,0 +1,207 @@
+<!doctype html>
+<html>
+<head>
+   <meta charset="UTF-8" /> 
+   <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+	<title>Tab Panels (Thierry's Idea) 01</title>
+	<link href="tab-panel-01.css" type="text/css" rel="stylesheet" />
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>		
+	<script type="text/javascript" src="tab-panel-01.js"></script>		
+</head>
+
+<body>
+
+      <h1>Awesome Accessible Tabpanel</h1>
+            <small>By @pankajparashar | Based on @thierrykoblentz's article</small>
+
+      <div id="tabpanel" class="widget" dir="">
+        <h3 class="selected">Color</h3>
+        <div>
+          <div class="content">
+                <ul>
+                    <li>
+                        <label>
+                            <input type="radio" name="color" value="color1" />
+                                Blue
+                        </label>
+      </li>
+                    <li>
+                        <label>
+                            <input type="radio" name="color" value="color2" />
+                                White
+                        </label>
+      </li>
+                    <li>
+                        <label>
+                            <input type="radio" name="color" value="color3" />
+                                Red
+                        </label>
+      </li>
+             </ul>
+          </div>
+        </div>
+        <h3>Size</h3>
+        <div>
+            <div class="content">
+                <ul>
+                    <li>
+                        <label>
+                            <input type="checkbox" name="size" value="xs" />
+                            X-Small
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="checkbox" name="size" value="xs" />
+                            X-Small
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="checkbox" name="size" value="s" />
+                            Small
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="checkbox" name="size" value="m" />
+                            Medium
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="checkbox" name="size" value="l" />
+                            Large
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="checkbox" name="size" value="xl" />
+                            X-Large
+                        </label>
+                    </li>
+            </ul>
+        </div>
+      </div>
+        <h3>Material</h3>
+        <div>
+            <div class="content">
+              <ul>
+                <li>
+                  <label>
+                    <input type="radio" name="material" value="whool" />
+                      Whool
+                  </label>
+                </li>
+                <li>
+                  <label>
+                    <input type="radio" name="material" value="coton" />
+                      Coton
+                  </label>
+                </li>
+                <li>
+                  <label>
+                    <input type="radio" name="material" value="silk" />
+                      Silk
+                  </label>
+                </li>
+             </ul>
+            </div>
+        </div>
+        <h3>Variable height <br>tab</h3>
+        <div>
+          <div class="content">
+              <p>
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo impedit expedita praesentium illum sunt voluptates itaque et placeat, est, fugit nesciunt voluptatem consequuntur, reiciendis beatae ducimus. Ex earum nihil, eum..
+              </p>
+          </div>
+        </div>
+        <h3>Blank panel</h3>
+        <div>
+          <div class="content">
+          </div>
+        </div>
+      </div>
+
+<p>Here is a <a href="http://cssmojo.com/tab-panel-the-right-way/">link to the article</a>. This link is here to better test the sequential navigation.</p>
+
+
+
+
+
+
+      <h2 id="features">Features</h2>
+      <ol>
+        <li>Supports keyboard navigation.</li>
+        <li>First class support for screen readers. Designed with accessibility in mind.</li>
+        <li>RTL support.</li>
+        <li>Markup is devoid of any jump links.</li>
+        <li>Tabpanel switches to an Accordion when the last tab header wraps (<code>:resize</code>, <code>:load</code>).</li>
+        <li>Can work as an Accordion out of the box with a simple change in parameter.</li>
+        <li>Obviously works equally well with Mouse and Touch devices too.</li>
+        <li>Shows all the content when JS is disabled.</li>
+      </ol>
+
+
+
+      <h2>Keyboard Shortcuts</h2>
+<p>Assuming the focus is on the widget.</p>
+
+
+  <table class="table table--shaded">
+    <thead class="table__head">
+      <tr class="table__row">
+        <td class="UserTable__name table__cell table__cell--no-wrap">Shortcut</td>
+        <td class="table__cell table__cell--remainder">Description</td>
+      </tr>
+    </thead>
+    <tbody class="table__body">
+            
+            
+      <tr class="table__row">        
+        <td class="UserTable__name table__cell table__cell--no-wrap"><kbd>Right</kbd>/<kbd>Down</kbd></td>
+        <td class="table__cell table__cell--remainder">Open the next tab/panel in cyclic order.</td>
+      </tr>
+
+                  <tr class="table__row">        
+        <td class="UserTable__name table__cell table__cell--no-wrap"><kbd>Left</kbd>/<kbd>Up</kbd></td>
+        <td class="table__cell table__cell--remainder">Open the previous tab/panel in reverse cyclic order.</td>
+      </tr>
+
+            
+                  <tr class="table__row">        
+        <td class="UserTable__name table__cell table__cell--no-wrap"><kbd>Home</kbd> <br /> <kbd>Fn+Left</kbd> </td>
+        <td class="table__cell table__cell--remainder">Open the first tab/panel.</td>
+      </tr>
+
+            
+                  <tr class="table__row">        
+        <td class="UserTable__name table__cell table__cell--no-wrap"><kbd>End</kbd><br /> <kbd>Fn+Right</kbd></td>
+        <td class="table__cell table__cell--remainder">Open the last tab/panel.</td>
+      </tr>
+    
+
+            
+                              <tr class="table__row">        
+        <td class="UserTable__name table__cell table__cell--no-wrap"><kbd>Tab</kbd></td>
+        <td class="table__cell table__cell--remainder">Focus the DOM tree in source order. Doesn't open a new tab/panel until you click/touch or press <kbd>Enter</kbd>/<kbd>Space</kbd>.</td>
+      </tr>
+
+            
+                                          <tr class="table__row">        
+        <td class="UserTable__name table__cell table__cell--no-wrap"><kbd>Esc</kbd></td>
+        <td class="table__cell table__cell--remainder">Skip to the end of the widget to escape the widget or focus the first tab/panel. Doesn't open a new tab/panel until you click/touch or press <kbd>Enter</kbd>/<kbd>Space</kbd>.</td>
+      </tr>
+
+
+                                                      <tr class="table__row">        
+        <td class="UserTable__name table__cell table__cell--no-wrap"><kbd>Enter</kbd>/<kbd>Space</kbd></td>
+        <td class="table__cell table__cell--remainder">Open the focussed tab. If the widget type is accordion then toggle the visiblity of the panel.</td>
+      </tr>
+
+    </tbody>
+  </table>
+	
+</body>
+</html>

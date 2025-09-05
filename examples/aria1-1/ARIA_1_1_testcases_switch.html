@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>ARIA role="none" and Figure - ARIA 1.1 Tests</title>
+
+<style type="text/css">
+
+*	{
+	font-family: sans-serif;
+}
+
+.layout {
+	font-family: sans-serif;
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+}
+
+.supported 	{
+
+	color: #008000;
+}
+</style>
+
+<script type="text/javascript">
+
+var hit_switch = getElementByID('check_on_off');
+
+hit_switch.onClick = function () 	{
+
+hit_switch.setAttribute('true');
+
+}
+
+
+
+</script>
+
+</head>
+
+<body>
+<h1>ARIA 1.1 Test cases- role switch</h1>
+
+<h2>ARIA <code>role="switch"</code> Tests</h2>
+
+<p><strong>NOTE ON TEST SUITE</strong> Tests were undertaken on these code examples using IE 11, Safari 10 and latest builds of Chrome and Firefox.
+	AT used was JAWS 18, NVDA, and VoiceOver.</p>
+
+<p>The ARIA <code>role="switch"</code> attribute is synonymous with the presentation role, due to author confusion surrounding the intended meaning of the word "presentation" or "presentational." Many individuals erroneously consider role="presentation" to be synonymous with aria-hidden="true", and we believe role="none" conveys the actual meaning more unambiguously.</p>
+
+<h2><code>role="switch"</code> examples</h2>
+
+<!--The element with the switch role must be the only focusable element and you can use onClick events to //toggle and update the aria-checked value from true to false. -->
+
+<h2>Role switch on Checkbox</h2>
+
+<input id="check_on_off" type="checkbox" role="switch" aria-checked="false">
+<label for="check_on_off">Hit me</label>
+
+
+
+<table class="layout"><caption>Screen Reader Test Results for ARIA <code>role="switch"</code></caption>
+<td><th>IE 11</th> <th>Firefox</th><th>Chrome</th> <th>Safari 10.1</th>
+<tr>
+<th>JAWS 18</th> <td class="supported">Supported</td> <td class="supported">Supported</td> <td>Not supported</td> <td>x</td> 
+</tr>
+<tr>
+	<th>NVDA</th><td> Not supported</td> <td>Not supported</td> <td>Not supported</td> <td>x</td> 
+</tr>
+<th>VoiceOver</th><td>x</td>  <td>x</td><td>x</td>  <td class="supported">Supported</td> 
+</table>
+
+<p>NOTES: Switch works very well with Chrome/FF/JAWS 18. NVDA treats the switch as a regular checkbox</p>
+
+
+</body>
+</html>

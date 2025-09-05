@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Chekcbox and Radio Buttons</title>
+	<style type="text/css">
+		body {
+			padding: 20px;
+			font-family: Arial;
+			background: white;
+		}
+
+		h1 {
+			font-size: 16px;
+			font-weight: normal;
+		}
+
+		h1:last-of-type {
+			margin-top: 30px;
+		}
+
+		.custom-control {
+			display: inline-block;
+			font-size: 0;
+		}
+		.custom-control label {
+			position: relative;
+			display: inline-block;
+			margin: 0 5px;
+		}
+
+		.custom-control input[type="checkbox"],
+		.custom-control input[type="radio"] {
+			position: absolute;
+			opacity: 0;
+		}
+
+		.custom-control label input[type="checkbox"]:checked + .content,
+		.custom-control label input[type="radio"]:checked + .content {
+			background: #DB0011;
+			color: white;
+		}
+
+		.custom-control label input[type="checkbox"]:not(:checked):focus + .content,
+		.custom-control label input[type="radio"]:not(:checked):focus + .content,
+		.custom-control label input[type="checkbox"]:not(:checked):hover + .content,
+		.custom-control label input[type="radio"]:not(:checked):hover + .content  { /* OPTIONAL */
+			background: #B6B7B6;
+		}
+
+		.custom-control label input[type="checkbox"]:checked:focus + .content,
+		.custom-control label input[type="radio"]:checked:focus + .content,
+		.custom-control label input[type="checkbox"]:checked:hover + .content,
+		.custom-control label input[type="radio"]:checked:hover + .content  { /* OPTIONAL */
+			background: #AF000D;
+		}
+
+		.content {
+			display: block;
+			padding: 10px 20px;
+			line-height: 28px;
+			background: #E7E7E6;
+			color: black;
+			font-size: 12px;
+			text-align: center;
+		}
+	</style>
+</head>
+<body>
+
+<!-- CHECK BOXES -->
+<h1>Check Box Example</h1>
+<div class="custom-control">
+	<label>
+		<input type="checkbox" checked />
+		<span class="content">
+			Checkbox 1
+		</span>
+	</label>
+
+	<label>
+		<input type="checkbox"/>
+		<span class="content">
+			Checkbox 1
+		</span>
+	</label>
+
+	<label>
+		<input type="checkbox"/>
+		<span class="content">
+			Checkbox 1
+		</span>
+	</label>
+	
+</div>
+
+
+<!-- RADIO BUTTONS -->
+<h1>Radio Button Example</h1>
+<div class="custom-control">
+	<label>
+		<input type="radio" name="Example" checked />
+		<span class="content">
+			Radio Button 1
+		</span>
+	</label>
+
+	<label>
+		<input type="radio" name="Example" />
+		<span class="content">
+			Radio Button 2
+		</span>
+	</label>
+
+	<label>
+		<input type="radio" name="Example" />
+		<span class="content">
+			Radio Button 3
+		</span>
+	</label>
+</div>
+
+
+</body>
+</html>

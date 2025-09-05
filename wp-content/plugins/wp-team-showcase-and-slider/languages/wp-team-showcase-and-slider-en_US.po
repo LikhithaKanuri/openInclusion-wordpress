@@ -1,0 +1,556 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WP Team Showcase and Slider\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-10-28 12:14+0000\n"
+"PO-Revision-Date: 2023-08-22 10:41+0000\n"
+"Last-Translator: \n"
+"Language-Team: English (United States)\n"
+"Language: en_US\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.4.4; wp-5.5.1"
+
+#: includes/admin/metabox/tsas-post-setting-metabox-pro.php:23
+msgid "2 (Grid, Slider)."
+msgstr ""
+
+#: includes/admin/metabox/tsas-post-setting-metabox-pro.php:39
+msgid "2. In lite version only 1 popup design."
+msgstr ""
+
+#: includes/admin/metabox/tsas-post-setting-metabox-pro.php:31
+msgid "25+. In lite version only 3 design."
+msgstr ""
+
+#: includes/tsas-post-type.php:69
+msgid "Add New Category"
+msgstr ""
+
+#: includes/tsas-post-type.php:17 includes/tsas-post-type.php:18
+msgid "Add New Member"
+msgstr ""
+
+#: includes/tsas-post-type.php:64
+msgid "All Category"
+msgstr ""
+
+#: includes/admin/wp-tsas-how-it-work.php:67
+msgid "All Shortcodes"
+msgstr ""
+
+#: includes/admin/metabox/tsas-post-setting-metabox-pro.php:89
+msgid "Arrange your desired slides with your desired order and display."
+msgstr ""
+
+#: includes/admin/metabox/tsas-post-setting-metabox-pro.php:80
+msgid "Arrange your desired Social with your desired order and display."
+msgstr ""
+
+#: includes/admin/class-tsas-admin.php:66
+msgid "Bundle Deal"
+msgstr ""
+
+#: includes/admin/class-tsas-admin.php:66
+msgid "Bundle Deal - Team Showcase and Slider"
+msgstr ""
+
+#: includes/tsas-post-type.php:61 includes/tsas-post-type.php:62
+#: includes/tsas-post-type.php:71
+msgid "Category"
+msgstr ""
+
+#: includes/tsas-functions.php:235
+msgid "Delicious"
+msgstr ""
+
+#: includes/tsas-functions.php:34
+msgid "Design 1"
+msgstr ""
+
+#: includes/tsas-functions.php:35
+msgid "Design 2"
+msgstr ""
+
+#: includes/tsas-functions.php:36
+msgid "Design 3"
+msgstr ""
+
+#: includes/admin/metabox/tsas-post-setting-metabox-pro.php:28
+msgid "Designs"
+msgstr ""
+
+#: includes/admin/metabox/tsas-post-setting-metabox-pro.php:63
+msgid "Distance between two team columns."
+msgstr ""
+
+#: includes/admin/metabox/tsas-post-setting-metabox-pro.php:105
+msgid ""
+"Do not display the team & Do not display the team for particular categories."
+msgstr ""
+
+#: includes/admin/metabox/tsas-post-setting-metabox-pro.php:86
+msgid "Drag & Drop Slide Order Change"
+msgstr ""
+
+#: includes/admin/metabox/tsas-post-setting-metabox-pro.php:77
+msgid "Drag & Drop Social Link "
+msgstr ""
+
+#. Description of the plugin
+msgid ""
+"Easy to add and display your employees, team members in Grid view, Slider "
+"view and in widget. Also work with Gutenberg shortcode block."
+msgstr ""
+
+#: includes/tsas-post-type.php:67
+msgid "Edit Category"
+msgstr ""
+
+#: includes/tsas-post-type.php:19
+msgid "Edit Member"
+msgstr ""
+
+#: includes/tsas-functions.php:251
+msgid "Email"
+msgstr ""
+
+#: includes/tsas-functions.php:236
+msgid "Enter Delicious link."
+msgstr ""
+
+#: includes/tsas-functions.php:252
+msgid "Enter email address."
+msgstr ""
+
+#: includes/tsas-functions.php:170
+msgid "Enter facebook link."
+msgstr ""
+
+#: includes/tsas-functions.php:228
+msgid "Enter Flickr link."
+msgstr ""
+
+#: includes/tsas-functions.php:240
+msgid "Enter Foursquare link."
+msgstr ""
+
+#: includes/tsas-functions.php:178
+msgid "Enter google link."
+msgstr ""
+
+#: includes/tsas-functions.php:212
+msgid "Enter Instagram link."
+msgstr ""
+
+#: includes/tsas-functions.php:186
+msgid "Enter linkedin link."
+msgstr ""
+
+#: includes/tsas-functions.php:260
+msgid "Enter phone number."
+msgstr ""
+
+#: includes/tsas-functions.php:220
+msgid "Enter Pinterest link."
+msgstr ""
+
+#: includes/tsas-functions.php:232
+msgid "Enter Reddit link."
+msgstr ""
+
+#: includes/tsas-functions.php:264
+msgid "Enter Skype id."
+msgstr ""
+
+#: includes/tsas-functions.php:126
+msgid "Enter team member department."
+msgstr ""
+
+#: includes/tsas-functions.php:134
+msgid "Enter team member designation."
+msgstr ""
+
+#: includes/tsas-functions.php:150
+msgid "Enter team member experience."
+msgstr ""
+
+#: includes/tsas-functions.php:142
+msgid "Enter team member skills."
+msgstr ""
+
+#: includes/tsas-functions.php:224
+msgid "Enter Tumblr link."
+msgstr ""
+
+#: includes/tsas-functions.php:193
+msgid "Enter twitter link."
+msgstr ""
+
+#: includes/tsas-functions.php:244
+msgid "Enter Vine link."
+msgstr ""
+
+#: includes/tsas-functions.php:256
+msgid "Enter website link."
+msgstr ""
+
+#: includes/tsas-functions.php:248
+msgid "Enter WordPress profile link."
+msgstr ""
+
+#: includes/tsas-functions.php:216
+msgid "Enter YouTube link."
+msgstr ""
+
+#: includes/admin/supports/gutenberg-block.php:180
+msgid "Essential Plugin Blocks"
+msgstr ""
+
+#: includes/admin/settings/premium.php:15
+msgid "Essential Plugin Bundle"
+msgstr ""
+
+#: includes/admin/settings/trail-premium.php:15
+msgid "Essential Plugin Bundle Free Trial"
+msgstr ""
+
+#: includes/admin/metabox/tsas-post-setting-metabox-pro.php:102
+msgid "Exclude Team and Exclude Some Categories"
+msgstr ""
+
+#: includes/tsas-functions.php:169
+msgid "Facebook Link"
+msgstr ""
+
+#: includes/tsas-functions.php:227
+msgid "Flickr"
+msgstr ""
+
+#: includes/tsas-functions.php:239
+msgid "Foursquare"
+msgstr ""
+
+#: includes/admin/wp-tsas-how-it-work.php:55
+msgid "Getting Started"
+msgstr ""
+
+#: includes/tsas-functions.php:177
+msgid "Google Link"
+msgstr ""
+
+#: includes/admin/wp-tsas-how-it-work.php:156
+msgid "Grab Team Showcase Now"
+msgstr ""
+
+#: includes/admin/metabox/tsas-post-setting-metabox-pro.php:97
+msgid ""
+"Gutenberg Block, Elementor, Bevear Builder, SiteOrigin, Divi, Visual "
+"Composer and Fusion Page Builder Support"
+msgstr ""
+
+#: includes/admin/wp-tsas-how-it-work.php:90
+msgid "Gutenberg Support"
+msgstr ""
+
+#: includes/admin/wp-tsas-how-it-work.php:116
+msgid "Help to improve this plugin!"
+msgstr ""
+
+#: includes/admin/wp-tsas-how-it-work.php:98
+msgid "How it Work"
+msgstr ""
+
+#: includes/admin/class-tsas-admin.php:61
+msgid "How It Works"
+msgstr ""
+
+#: includes/admin/wp-tsas-how-it-work.php:36
+#: includes/admin/wp-tsas-how-it-work.php:47
+msgid "How It Works - Display and Shortcode"
+msgstr ""
+
+#: includes/admin/class-tsas-admin.php:61
+msgid "How it works, our plugins and offers"
+msgstr ""
+
+#. URI of the plugin
+#. Author URI of the plugin
+msgid ""
+"https://www.essentialplugin.com/wordpress-plugin/wp-team-showcase-slider/"
+msgstr ""
+
+#: includes/admin/class-tsas-admin.php:163
+msgid "Image"
+msgstr ""
+
+#: includes/tsas-functions.php:211
+msgid "Instagram"
+msgstr ""
+
+#: wp-team-showcase-and-slider.php:170
+#, php-format
+msgid ""
+"It looks like you had PRO version %s of this plugin activated. To avoid "
+"conflicts the extra version has been deactivated and we recommend you delete "
+"it."
+msgstr ""
+
+#: includes/admin/metabox/tsas-post-setting-metabox-pro.php:20
+msgid "Layouts"
+msgstr ""
+
+#: includes/admin/metabox/tsas-post-setting-metabox-pro.php:71
+msgid ""
+"Limit the number of social icons. Default value is 6. In popup all social "
+"icon will be displayed."
+msgstr ""
+
+#: includes/tsas-functions.php:185
+msgid "Linkedin Link"
+msgstr ""
+
+#: includes/tsas-functions.php:125
+msgid "Member Department"
+msgstr ""
+
+#: includes/tsas-functions.php:133
+msgid "Member Designation"
+msgstr ""
+
+#: includes/tsas-functions.php:149
+msgid "Member Experience"
+msgstr ""
+
+#: includes/admin/class-tsas-admin.php:442
+msgid "More Premium - Settings"
+msgstr ""
+
+#: includes/tsas-post-type.php:70
+msgid "New Category Name"
+msgstr ""
+
+#: includes/tsas-post-type.php:20
+msgid "New Member"
+msgstr ""
+
+#: includes/tsas-post-type.php:23
+msgid "No Member found"
+msgstr ""
+
+#: includes/tsas-post-type.php:24
+msgid "No Members found in Trash"
+msgstr ""
+
+#: includes/admin/metabox/tsas-post-setting-metabox-pro.php:60
+msgid "Offset "
+msgstr ""
+
+#: includes/admin/metabox/tsas-post-setting-metabox-pro.php:94
+msgid "Page Builder Support"
+msgstr ""
+
+#: includes/tsas-post-type.php:65 includes/tsas-post-type.php:66
+msgid "Parent Category"
+msgstr ""
+
+#: includes/tsas-functions.php:259
+msgid "Phone"
+msgstr ""
+
+#: includes/tsas-functions.php:219
+msgid "Pinterest"
+msgstr ""
+
+#: includes/admin/metabox/tsas-post-setting-metabox-pro.php:55
+msgid ""
+"Play with all shortcode parameters with preview panel. No documentation "
+"required."
+msgstr ""
+
+#: includes/admin/metabox/tsas-post-setting-metabox-pro.php:36
+msgid "Popup Theme Design "
+msgstr ""
+
+#: includes/admin/metabox/tsas-post-setting-metabox-pro.php:20
+#: includes/admin/metabox/tsas-post-setting-metabox-pro.php:28
+#: includes/admin/metabox/tsas-post-setting-metabox-pro.php:36
+#: includes/admin/metabox/tsas-post-setting-metabox-pro.php:44
+#: includes/admin/metabox/tsas-post-setting-metabox-pro.php:52
+#: includes/admin/metabox/tsas-post-setting-metabox-pro.php:60
+#: includes/admin/metabox/tsas-post-setting-metabox-pro.php:68
+#: includes/admin/metabox/tsas-post-setting-metabox-pro.php:77
+#: includes/admin/metabox/tsas-post-setting-metabox-pro.php:86
+#: includes/admin/metabox/tsas-post-setting-metabox-pro.php:94
+#: includes/admin/metabox/tsas-post-setting-metabox-pro.php:102
+msgid "PRO"
+msgstr ""
+
+#: includes/tsas-functions.php:231
+msgid "Reddit"
+msgstr ""
+
+#: includes/tsas-post-type.php:63
+msgid "Search Category"
+msgstr ""
+
+#: includes/tsas-post-type.php:22
+msgid "Search Members"
+msgstr ""
+
+#: includes/admin/metabox/tsas-post-setting-metabox-pro.php:52
+msgid "Shortcode Generator "
+msgstr ""
+
+#: includes/tsas-functions.php:141
+msgid "Skills"
+msgstr ""
+
+#: includes/tsas-functions.php:263
+msgid "Skype"
+msgstr ""
+
+#: includes/admin/class-tsas-admin.php:333
+msgid "Social Details"
+msgstr ""
+
+#: includes/admin/metabox/tsas-post-setting-metabox-pro.php:68
+msgid "Social Service Limit "
+msgstr ""
+
+#: includes/admin/wp-tsas-how-it-work.php:102
+msgid "Step-1. Go to the Gutenberg editor of your page."
+msgstr ""
+
+#: includes/admin/wp-tsas-how-it-work.php:59
+msgid ""
+"Step-1: This plugin create a Team Showcase tab in WordPress menu section"
+msgstr ""
+
+#: includes/admin/wp-tsas-how-it-work.php:103
+msgid "Step-2. Search \"Team\" keyword in the Gutenberg block list."
+msgstr ""
+
+#: includes/admin/wp-tsas-how-it-work.php:60
+msgid ""
+"Step-2: Now, paste below shortcode in any post or page and your WP Team "
+"Showcase and Slider is ready !!!"
+msgstr ""
+
+#: includes/admin/wp-tsas-how-it-work.php:104
+msgid ""
+"Step-3. Add any block of Team and you will find its relative options on the "
+"right end side."
+msgstr ""
+
+#: includes/admin/class-tsas-admin.php:196
+msgid "Team Category Shortcode"
+msgstr ""
+
+#: includes/admin/class-tsas-admin.php:236
+msgid "Team Details"
+msgstr ""
+
+#: includes/tsas-post-type.php:15 includes/tsas-post-type.php:16
+msgid "Team Showcase"
+msgstr ""
+
+#: includes/admin/wp-tsas-how-it-work.php:70
+msgid "Team Showcase Grid"
+msgstr ""
+
+#: includes/shortcodes/tsas-shortcode.php:23
+#: includes/shortcodes/tsas-shortcode.php:31
+#: includes/shortcodes/tsas-slider-shortcode.php:23
+#: includes/shortcodes/tsas-slider-shortcode.php:31
+msgid "Team Showcase Grid View - Shortcode"
+msgstr ""
+
+#: includes/admin/wp-tsas-how-it-work.php:71
+msgid "Team Showcase Slider"
+msgstr ""
+
+#: includes/admin/settings/trail-premium.php:15
+msgid "Team Showcase with "
+msgstr ""
+
+#: wp-team-showcase-and-slider.php:169
+#, php-format
+msgid "Thank you for activating %s"
+msgstr ""
+
+#: includes/tsas-functions.php:223
+msgid "Tumblr"
+msgstr ""
+
+#: includes/tsas-functions.php:192
+msgid "Twitter Link"
+msgstr ""
+
+#: includes/tsas-post-type.php:68
+msgid "Update Category"
+msgstr ""
+
+#: includes/admin/class-tsas-admin.php:65
+msgid "Upgrade To Premium "
+msgstr ""
+
+#: includes/admin/class-tsas-admin.php:65
+msgid "Upgrade To PRO - Team Showcase and Slider"
+msgstr ""
+
+#: includes/admin/wp-tsas-how-it-work.php:132
+msgid "Upgrate to Pro"
+msgstr ""
+
+#: includes/admin/class-tsas-admin.php:369
+#: includes/admin/metabox/tsas-post-setting-metabox-pro.php:13
+#, php-format
+msgid ""
+"Utilize this <a href=\"%s\" target=\"_blank\">Premium Features (With Risk-"
+"Free 30 days money back guarantee)</a> to get best of this plugin with "
+"Annual or Lifetime bundle deal."
+msgstr ""
+
+#: includes/tsas-post-type.php:21
+msgid "View Member"
+msgstr ""
+
+#: includes/tsas-functions.php:243
+msgid "Vine"
+msgstr ""
+
+#: includes/tsas-functions.php:255
+msgid "Website"
+msgstr ""
+
+#: includes/tsas-functions.php:247
+msgid "WordPress"
+msgstr ""
+
+#. Author of the plugin
+msgid "WP OnlineSupport, Essential Plugin"
+msgstr ""
+
+#. Name of the plugin
+msgid "WP Team Showcase and Slider"
+msgstr ""
+
+#: includes/admin/settings/premium.php:15
+msgid "WP Team Showcase and Slider with "
+msgstr ""
+
+#: includes/admin/metabox/tsas-post-setting-metabox-pro.php:44
+msgid "WP Templating Features "
+msgstr ""
+
+#: includes/admin/metabox/tsas-post-setting-metabox-pro.php:47
+msgid "You can modify plugin html/designs in your current theme."
+msgstr ""
+
+#: includes/tsas-functions.php:215
+msgid "YouTube"
+msgstr ""

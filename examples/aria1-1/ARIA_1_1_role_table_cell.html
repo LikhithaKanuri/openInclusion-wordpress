@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Error message and details - ARIA 1.1 Tests</title>
+
+<style type="text/css">
+
+*	{
+	font-family: sans-serif;
+}
+*, *:before, *:after {
+  -webkit-box-sizing: border-box; 
+  -moz-box-sizing: border-box; 
+  box-sizing: border-box;
+}
+.layout {
+	font-family: sans-serif;
+    background-color: #fefefe;
+    margin: 30px auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+}
+
+.div-table {
+  background: #ccc;
+  max-width: 600px;
+}
+div[role="columnheader"], div[role="rowheader"] {
+  background: #333;
+  color:#fff;
+  outline:1px solid #fff;
+  padding:3px;
+}
+div[role="cell"] {
+  outline:1px solid #fff;
+  padding:3px;
+}
+
+.col3 div[role="row"] div {
+  display: inline-block;
+  width:32%;
+}
+.col4 div[role="row"] div {
+  display: inline-block;
+  width:24%;
+}
+
+
+</style>
+
+</head>
+
+<body>
+<h1>ARIA 1.1 Test cases</h1>
+
+<h2><code>role="table" and role="cell"</code> Tests</h2>
+
+<p><strong>NOTE ON TEST SUITE</strong> Tests were undertaken on these code examples using IE 11, Safari 10 and latest builds of Chrome and Firefox.
+	AT used was JAWS 18, NVDA, and VoiceOver.</p>
+
+
+<p></p>
+
+
+<div class="layout">
+<h3 id="div-table-caption">Events list table done with ARIA</h3>
+  <div class="div-table col3" role="table" aria-labelledby="div-table-caption">
+    <div role="row">
+      <div role="columnheader">Date</div>
+      <div role="columnheader">Event</div>
+      <div role="columnheader">Venue</div>
+    </div>
+
+    <div role="row">
+      <div role="cell">12 February</div>
+      <div role="cell">Waltz with Strauss</div>
+      <div role="cell">Main Hall</div>
+    </div>
+
+    <div role="row">
+      <div role="cell">24 February</div>
+      <div role="cell">Coldplay</div>
+      <div role="cell">Snug Bar</div>
+    </div>
+
+    <div role="row">
+      <div role="cell">02 March</div>
+      <div role="cell">Granary Death Machine</div>
+      <div role="cell">Peace Lounge</div>
+    </div>
+
+
+  </div>
+</div>
+
+<a href="#">Link between tables</a>
+
+<div class="layout">
+<h3 id="div-table-caption2">Products list table done with ARIA</h3>
+  <div class="div-table col4" role="table" aria-labelledby="div-table-caption2">
+    <div role="row">
+      <div role="columnheader">Product Name</div>
+      <div role="columnheader">Product SKU</div>
+      <div role="columnheader">Cost Price (GBP)</div>
+      <div role="columnheader">Current Stock</div>
+    </div>
+
+    <div role="row">
+      <div role="rowheader">Italian Lace Trench Coat</div>
+      <div role="cell">264768</div>
+      <div role="cell">&pound;1725.34</div>
+      <div role="cell">37</div>
+    </div>
+
+    <div role="row">
+      <div role="rowheader">Sparkly Blue Trench Coat</div>
+      <div role="cell">564733</div>
+      <div role="cell">&pound;1129.56</div>
+      <div role="cell">64</div>
+    </div>
+
+     <div role="row">
+      <div role="rowheader">Blue Quilted Anorak</div>
+      <div role="cell">894523</div>
+      <div role="cell">&pound;23.92</div>
+      <div role="cell">17</div>
+    </div>
+    
+    <div role="row">
+      <div role="rowheader">"Paddington" Blue Duffel Coat</div>
+      <div role="cell">678945</div>
+      <div role="cell">&pound;67.29</div>
+      <div role="cell">6</div>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+
+<h2>Screen reader test results</h2>
+
+<table class="layout"><caption>Screen Reader Test Results for <code>aria tables</code></caption>
+<td><th>IE 11</th> <th>Firefox</th><th>Chrome</th> <th>Safari 10.1</th>
+<tr>
+<th>JAWS 18</th> <td>?</td> <td>?</td> <td>?</td> <td>x</td> 
+</tr>
+<tr>
+	<th>NVDA</th><td>?</td> <td>?</td> <td>?</td> <td>x</td> 
+</tr>
+<th>VoiceOver</th><td>x</td>  <td>x</td><td>x</td>  <td>?</td> 
+</table>
+
+
+
+
+</body>
+</html>

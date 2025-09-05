@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>Example Forms</title>
+<style type="text/css" media="screen">
+body {font-family:arial}
+fieldset {
+   border:none; margin:10px 0; padding:0;
+}
+.col2 {
+   width:30%;padding:0 2%;float:left;
+}
+.clear {
+   float:none; clear:both;
+}
+@media screen and (max-width: 600px) {
+   .col2 {
+      width:94%;padding:0 2%;
+      float:none;
+      clear:both
+   }
+
+}
+</style>   
+<script src="flying-focus.js" async></script> 
+</head>
+
+<body>
+<h1>Datalist markup</h1>
+<p><a href="#">Link before form</a></p>
+
+<form class="col2" action="/" method="post" name="unlabelled" id="unlabelled">
+<h2>Form 1</h2>
+
+
+<p><label for="work">How did you get to Bristol?</label><br>
+<select name="work" id="work">
+	<option value="0" selected="selected">Please choose...</option>
+	<option value="1">Walk</option>
+	<option value="2">Car</option>
+	<option value="3">Bus</option>
+	<option value="4">Train</option>
+	<option value="5">Helicopter</option>
+</select></p>
+
+
+<p><label for="search">Search for towns in Surrey</label><br>
+<input id="search" type="text" list="suggestions">
+<datalist id="suggestions">
+<option value="Burpham">
+<option value="Byfleet">
+<option value="Camberly">
+<option value="Guildford">
+<option value="Ripley">
+<option value="Send">
+<option value="West Byfleet">
+<option value="Woking">
+<option value="Worplesdon">
+</datalist></p>
+
+
+
+<p class="clear">&nbsp;</p>
+<p class="clear"><a href="#">Link after form</a></p>
+
+</body>
+</html>

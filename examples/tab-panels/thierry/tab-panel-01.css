@@ -1,0 +1,243 @@
+      /* NOTE: The styles were added inline because Prefixfree needs access to your styles and they must be inlined if they are on local disk! */
+      /**
+ * The very clever styling, which allows to display headings side-by-side even though there are divs in between them, is from Vesa Piittinen (https://codepen.io/Merri/)
+ *
+ */
+
+.accordion .tab:before {
+    content: '';
+    display: inline-block;
+    position: relative;
+    border: 9px solid transparent;/*adjust size*/
+    border-left-color: #333;
+  }
+.accordion .tab.selected:before {
+    display: inline-block;
+    top: 7px;
+    left: -5px;
+    border-color: transparent;/*adjust size*/
+    border-top-color: #333;
+  }
+
+
+/**
+ * to position the skip link properly
+ */
+.widget {
+  position: relative;
+}
+/**
+ * to contain the floats
+ */
+.tabpanel:after {
+  content: '';
+  display: block;
+  clear: left;
+}
+/**
+ * the width is there to make floats *drop*
+ */
+.tabpanel .panel > div {
+  float: left;
+  width: 100%;
+}
+/**
+ * to show the tabs next to each other
+ */
+.tabpanel .tab {
+  display: inline-block;
+}
+/**
+ * we don't want "text" and pointer would not be appropriate
+ */
+.tabpanel .tab {
+  cursor: default;
+}
+
+
+/**
+ * This is how we hide the panels
+ */
+.panel {
+  display: none;
+}
+/**
+ * This is how we reveal the panel that follows the 'selected' tab
+ */
+.selected + .panel {
+  display: inline;
+}
+
+#skip-widget {
+  display: block;
+  position: absolute;
+  height: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+#skip-widget:focus {
+  bottom: 0;
+  height: auto;
+  width: auto;
+  left: 0;
+  right: 0;
+}
+
+#skip-widget:focus {
+  padding: 5px;
+  background-color: #ccc;   
+}
+
+
+.accordion #skip-widget:focus {
+    bottom: -3.5em;
+}
+
+/**
+ * RULES BELOW ARE ONLY RELATED TO HOW THINGS LOOK
+ */
+
+
+
+
+.tab {
+  margin: 0;
+  padding: 10px 15px;
+  font-weight: bold;
+  background-color: #ec9;
+  border: 1px solid #555;   
+    color: black;
+}
+
+.tabpanel .tab {
+  margin: .2em 1px -1px 0;
+}
+.tabpanel .tab,
+.tabpanel .panel > div {
+  box-sizing: border-box;
+}
+.selected + .panel > div {
+  padding: 10px;
+  border: 1px solid #333;
+}
+.tabpanel .selected + .panel > div {
+  border-radius: 0 4px 4px 4px;
+}
+
+.tabpanel .selected {
+  color: black;
+  background-color: #f5f7f9;    
+    
+  border-bottom: 1px solid #f5f7f9;
+}
+
+
+/*
+ * --------
+ * COSMETIC
+ * --------
+ * Not needed for the demo
+ *
+ **/
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 2em auto;
+    max-width: 720px;
+    font: 100%/1.5 -apple-system, BlinkMacSystemFont, 'Roboto', "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+    background-color: #f5f7f9;
+    padding: 0 1em;
+}
+
+#features {
+    margin-top: 1.5em;
+}
+h1 {
+    text-align: center;
+    position: relative;
+    margin-bottom: .25em;
+}
+
+small {    
+    display:block;
+    width: 100%;
+    font-size: 16px;
+    font-weight: normal;
+    color: #9ab;
+    text-align: center; 
+        margin-bottom: 2.5em;
+}
+
+kbd, code {
+    font-family: "Inconsolata", monospace;
+    color: #346;
+    padding: 2px;
+    background-color: #fff;
+}
+
+[type=checkbox]:checked + label {
+    color: red;
+    text-decoration: line-through;
+}
+
+.table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.table--bordered {
+  border: 1px solid #d7d7d7;
+}
+
+.table--shaded {
+  border-bottom: 2px solid #c6d5e3;
+}
+
+.table__head {
+  border-bottom: 2px solid #c6d5e3;
+}
+.table--shaded .table__head {
+}
+
+.table__row:not(:last-of-type) {
+  border-bottom: 1px solid #eaeaea;
+}
+
+.table__cell {
+  padding: 10px 12px;
+}
+.table__head .table__cell {
+  padding: 10px 12px 8px;
+}
+.table--bordered .table__cell:not(:last-of-type) {
+  border-right: 1px solid #eaeaea;
+}
+.table__head .table__cell {
+  font-weight: 700;
+}
+
+.table__cell--checkbox {
+  max-width: 25px;
+  padding: 16px 0 14px 12px;
+}
+.table__head .table__cell--checkbox {
+  padding: 10px 0 8px 12px;
+}
+
+.table__cell--no-wrap {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.table__cell--remainder {
+  width: 99%;
+}
+
+.UserTable__name {
+  max-width: 200px;
+}

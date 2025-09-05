@@ -1,0 +1,121 @@
+[30-Oct-2019 07:48:33 UTC] PHP Fatal error:  Uncaught iSDKException: ERROR: 8 - CURL error:  in /home/crcloud/public_html/tax2u.co.uk/UTR/lib/infusion/iSDK.php:81
+Stack trace:
+#0 /home/crcloud/public_html/tax2u.co.uk/UTR/lib/infusion/process.php(38): iSDK->cfgCon('connectionName')
+#1 {main}
+  thrown in /home/crcloud/public_html/tax2u.co.uk/UTR/lib/infusion/iSDK.php on line 81
+[30-Oct-2019 07:48:40 UTC] PHP Fatal error:  Uncaught iSDKException: ERROR: 8 - CURL error: OpenSSL SSL_connect: SSL_ERROR_SYSCALL in connection to qg350.infusionsoft.com:443  in /home/crcloud/public_html/tax2u.co.uk/UTR/lib/infusion/iSDK.php:81
+Stack trace:
+#0 /home/crcloud/public_html/tax2u.co.uk/UTR/lib/infusion/process.php(38): iSDK->cfgCon('connectionName')
+#1 {main}
+  thrown in /home/crcloud/public_html/tax2u.co.uk/UTR/lib/infusion/iSDK.php on line 81
+[30-Oct-2019 07:48:41 UTC] PHP Fatal error:  Uncaught iSDKException: ERROR: 8 - CURL error: OpenSSL SSL_connect: SSL_ERROR_SYSCALL in connection to qg350.infusionsoft.com:443  in /home/crcloud/public_html/tax2u.co.uk/UTR/lib/infusion/iSDK.php:81
+Stack trace:
+#0 /home/crcloud/public_html/tax2u.co.uk/UTR/lib/infusion/process.php(38): iSDK->cfgCon('connectionName')
+#1 {main}
+  thrown in /home/crcloud/public_html/tax2u.co.uk/UTR/lib/infusion/iSDK.php on line 81
+[30-Oct-2019 07:48:45 UTC] PHP Fatal error:  Uncaught iSDKException: ERROR: 8 - CURL error: OpenSSL SSL_connect: SSL_ERROR_SYSCALL in connection to qg350.infusionsoft.com:443  in /home/crcloud/public_html/tax2u.co.uk/UTR/lib/infusion/iSDK.php:81
+Stack trace:
+#0 /home/crcloud/public_html/tax2u.co.uk/UTR/lib/infusion/process.php(38): iSDK->cfgCon('connectionName')
+#1 {main}
+  thrown in /home/crcloud/public_html/tax2u.co.uk/UTR/lib/infusion/iSDK.php on line 81
+[30-Oct-2019 07:48:58 UTC] PHP Fatal error:  Uncaught iSDKException: ERROR: 8 - CURL error: OpenSSL SSL_connect: SSL_ERROR_SYSCALL in connection to qg350.infusionsoft.com:443  in /home/crcloud/public_html/tax2u.co.uk/UTR/lib/infusion/iSDK.php:81
+Stack trace:
+#0 /home/crcloud/public_html/tax2u.co.uk/UTR/lib/infusion/process.php(38): iSDK->cfgCon('connectionName')
+#1 {main}
+  thrown in /home/crcloud/public_html/tax2u.co.uk/UTR/lib/infusion/iSDK.php on line 81
+[30-Oct-2019 07:50:26 UTC] PHP Fatal error:  Uncaught iSDKException: ERROR: 8 - CURL error: Failed to connect to qg350.infusionsoft.com port 443: Connection timed out in /home/crcloud/public_html/tax2u.co.uk/UTR/lib/infusion/iSDK.php:81
+Stack trace:
+#0 /home/crcloud/public_html/tax2u.co.uk/UTR/lib/infusion/process.php(38): iSDK->cfgCon('connectionName')
+#1 {main}
+  thrown in /home/crcloud/public_html/tax2u.co.uk/UTR/lib/infusion/iSDK.php on line 81
+[11-Nov-2019 09:13:37 UTC] PHP Fatal error:  Uncaught InvalidArgumentException: Trailing data in /home/crcloud/public_html/tax2u.co.uk/UTR/vendor/nesbot/carbon/src/Carbon/Carbon.php:917
+Stack trace:
+#0 /home/crcloud/public_html/tax2u.co.uk/UTR/lib/infusion/process.php(457): Carbon\Carbon::createFromFormat('Y-d-m', '16-10-2019')
+#1 {main}
+  thrown in /home/crcloud/public_html/tax2u.co.uk/UTR/vendor/nesbot/carbon/src/Carbon/Carbon.php on line 917
+[11-Nov-2019 09:13:44 UTC] PHP Fatal error:  Uncaught InvalidArgumentException: Trailing data in /home/crcloud/public_html/tax2u.co.uk/UTR/vendor/nesbot/carbon/src/Carbon/Carbon.php:917
+Stack trace:
+#0 /home/crcloud/public_html/tax2u.co.uk/UTR/lib/infusion/process.php(457): Carbon\Carbon::createFromFormat('Y-d-m', '16-10-2019')
+#1 {main}
+  thrown in /home/crcloud/public_html/tax2u.co.uk/UTR/vendor/nesbot/carbon/src/Carbon/Carbon.php on line 917
+[11-Nov-2019 09:13:58 UTC] PHP Fatal error:  Uncaught InvalidArgumentException: Trailing data in /home/crcloud/public_html/tax2u.co.uk/UTR/vendor/nesbot/carbon/src/Carbon/Carbon.php:917
+Stack trace:
+#0 /home/crcloud/public_html/tax2u.co.uk/UTR/lib/infusion/process.php(457): Carbon\Carbon::createFromFormat('Y-d-m', '16-10-2019')
+#1 {main}
+  thrown in /home/crcloud/public_html/tax2u.co.uk/UTR/vendor/nesbot/carbon/src/Carbon/Carbon.php on line 917
+[11-Nov-2019 09:14:03 UTC] PHP Fatal error:  Uncaught InvalidArgumentException: Trailing data in /home/crcloud/public_html/tax2u.co.uk/UTR/vendor/nesbot/carbon/src/Carbon/Carbon.php:917
+Stack trace:
+#0 /home/crcloud/public_html/tax2u.co.uk/UTR/lib/infusion/process.php(457): Carbon\Carbon::createFromFormat('Y-d-m', '16-10-2019')
+#1 {main}
+  thrown in /home/crcloud/public_html/tax2u.co.uk/UTR/vendor/nesbot/carbon/src/Carbon/Carbon.php on line 917
+[11-Nov-2019 09:22:39 UTC] PHP Fatal error:  Uncaught InvalidArgumentException: Trailing data in /home/crcloud/public_html/tax2u.co.uk/UTR/vendor/nesbot/carbon/src/Carbon/Carbon.php:917
+Stack trace:
+#0 /home/crcloud/public_html/tax2u.co.uk/UTR/lib/infusion/process.php(457): Carbon\Carbon::createFromFormat('Y-d-m', '16-10-2019')
+#1 {main}
+  thrown in /home/crcloud/public_html/tax2u.co.uk/UTR/vendor/nesbot/carbon/src/Carbon/Carbon.php on line 917
+[11-Nov-2019 09:23:00 UTC] PHP Fatal error:  Uncaught InvalidArgumentException: Trailing data in /home/crcloud/public_html/tax2u.co.uk/UTR/vendor/nesbot/carbon/src/Carbon/Carbon.php:917
+Stack trace:
+#0 /home/crcloud/public_html/tax2u.co.uk/UTR/lib/infusion/process.php(457): Carbon\Carbon::createFromFormat('Y-d-m', '16-10-2019')
+#1 {main}
+  thrown in /home/crcloud/public_html/tax2u.co.uk/UTR/vendor/nesbot/carbon/src/Carbon/Carbon.php on line 917
+[11-Nov-2019 09:23:10 UTC] PHP Fatal error:  Uncaught InvalidArgumentException: Trailing data in /home/crcloud/public_html/tax2u.co.uk/UTR/vendor/nesbot/carbon/src/Carbon/Carbon.php:917
+Stack trace:
+#0 /home/crcloud/public_html/tax2u.co.uk/UTR/lib/infusion/process.php(457): Carbon\Carbon::createFromFormat('Y-d-m', '16-10-2019')
+#1 {main}
+  thrown in /home/crcloud/public_html/tax2u.co.uk/UTR/vendor/nesbot/carbon/src/Carbon/Carbon.php on line 917
+[20-Nov-2019 10:16:48 UTC] PHP Fatal error:  Uncaught InvalidArgumentException: Unexpected data found.
+Unexpected data found.
+Trailing data in /home/crcloud/public_html/tax2u.co.uk/UTR/vendor/nesbot/carbon/src/Carbon/Carbon.php:917
+Stack trace:
+#0 /home/crcloud/public_html/tax2u.co.uk/UTR/lib/infusion/process.php(462): Carbon\Carbon::createFromFormat('Y-d-m', '19/11/2019')
+#1 {main}
+  thrown in /home/crcloud/public_html/tax2u.co.uk/UTR/vendor/nesbot/carbon/src/Carbon/Carbon.php on line 917
+[25-Nov-2019 20:41:47 UTC] PHP Fatal error:  Uncaught InvalidArgumentException: Unexpected data found.
+Unexpected data found.
+Trailing data in /home/crcloud/public_html/tax2u.co.uk/UTR/vendor/nesbot/carbon/src/Carbon/Carbon.php:917
+Stack trace:
+#0 /home/crcloud/public_html/tax2u.co.uk/UTR/lib/infusion/process.php(462): Carbon\Carbon::createFromFormat('Y-d-m', '22/02/2019')
+#1 {main}
+  thrown in /home/crcloud/public_html/tax2u.co.uk/UTR/vendor/nesbot/carbon/src/Carbon/Carbon.php on line 917
+[26-Nov-2019 14:57:16 UTC] PHP Fatal error:  Uncaught InvalidArgumentException: Unexpected data found.
+Unexpected data found.
+Trailing data in /home/crcloud/public_html/tax2u.co.uk/UTR/vendor/nesbot/carbon/src/Carbon/Carbon.php:917
+Stack trace:
+#0 /home/crcloud/public_html/tax2u.co.uk/UTR/lib/infusion/process.php(462): Carbon\Carbon::createFromFormat('Y-d-m', '26/11/2019')
+#1 {main}
+  thrown in /home/crcloud/public_html/tax2u.co.uk/UTR/vendor/nesbot/carbon/src/Carbon/Carbon.php on line 917
+[26-Nov-2019 20:17:27 UTC] PHP Fatal error:  Uncaught InvalidArgumentException: Unexpected data found.
+Unexpected data found.
+Trailing data in /home/crcloud/public_html/tax2u.co.uk/UTR/vendor/nesbot/carbon/src/Carbon/Carbon.php:917
+Stack trace:
+#0 /home/crcloud/public_html/tax2u.co.uk/UTR/lib/infusion/process.php(462): Carbon\Carbon::createFromFormat('Y-d-m', '26/11/2019')
+#1 {main}
+  thrown in /home/crcloud/public_html/tax2u.co.uk/UTR/vendor/nesbot/carbon/src/Carbon/Carbon.php on line 917
+[27-Nov-2019 17:26:23 UTC] PHP Fatal error:  Uncaught InvalidArgumentException: Unexpected data found.
+Unexpected data found.
+Trailing data in /home/crcloud/public_html/tax2u.co.uk/UTR/vendor/nesbot/carbon/src/Carbon/Carbon.php:917
+Stack trace:
+#0 /home/crcloud/public_html/tax2u.co.uk/UTR/lib/infusion/process.php(462): Carbon\Carbon::createFromFormat('Y-d-m', '23/11/2019')
+#1 {main}
+  thrown in /home/crcloud/public_html/tax2u.co.uk/UTR/vendor/nesbot/carbon/src/Carbon/Carbon.php on line 917
+[28-Nov-2019 06:50:10 UTC] PHP Fatal error:  Uncaught InvalidArgumentException: Unexpected data found.
+Unexpected data found.
+Trailing data in /home/crcloud/public_html/tax2u.co.uk/UTR/vendor/nesbot/carbon/src/Carbon/Carbon.php:917
+Stack trace:
+#0 /home/crcloud/public_html/tax2u.co.uk/UTR/lib/infusion/process.php(462): Carbon\Carbon::createFromFormat('Y-d-m', '25/11/2019')
+#1 {main}
+  thrown in /home/crcloud/public_html/tax2u.co.uk/UTR/vendor/nesbot/carbon/src/Carbon/Carbon.php on line 917
+[28-Nov-2019 18:56:25 UTC] PHP Fatal error:  Uncaught InvalidArgumentException: Unexpected data found.
+Unexpected data found.
+Trailing data in /home/crcloud/public_html/tax2u.co.uk/UTR/vendor/nesbot/carbon/src/Carbon/Carbon.php:917
+Stack trace:
+#0 /home/crcloud/public_html/tax2u.co.uk/UTR/lib/infusion/process.php(462): Carbon\Carbon::createFromFormat('Y-d-m', '23/11/2019')
+#1 {main}
+  thrown in /home/crcloud/public_html/tax2u.co.uk/UTR/vendor/nesbot/carbon/src/Carbon/Carbon.php on line 917
+[28-Nov-2019 20:23:27 UTC] PHP Fatal error:  Uncaught InvalidArgumentException: Unexpected data found.
+Unexpected data found.
+Trailing data in /home/crcloud/public_html/tax2u.co.uk/UTR/vendor/nesbot/carbon/src/Carbon/Carbon.php:917
+Stack trace:
+#0 /home/crcloud/public_html/tax2u.co.uk/UTR/lib/infusion/process.php(462): Carbon\Carbon::createFromFormat('Y-d-m', '23/11/2019')
+#1 {main}
+  thrown in /home/crcloud/public_html/tax2u.co.uk/UTR/vendor/nesbot/carbon/src/Carbon/Carbon.php on line 917

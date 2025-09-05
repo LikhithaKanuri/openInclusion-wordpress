@@ -1,0 +1,111 @@
+<!doctype html>
+<html class="no-js" lang="en-GB">
+<head>
+<meta charset="UTF-8" /> 
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+<title>Simple Table</title>
+
+<style type="text/css">
+div {
+    text-align: left;
+    margin: 0;
+    padding: 0;
+    border: none;
+    white-space: normal;
+    line-height: normal;
+}
+#inner1 {
+   width:100%;
+   max-width:300px;
+   margin:0 auto;
+   background:#ccc;
+   
+}
+
+.table-cont {
+   width: 100%;
+   margin: 1em 0 1em 0;
+   position: relative;
+   overflow: auto;
+   overflow-y: hidden
+}
+td, th {
+   border:1px solid black;
+}
+th {
+   background-color:#eee;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>Simple Table</h1>
+<a href="#">link before content</a>
+<table>
+<caption>Events</caption>
+<thead>
+   <tr> 
+      <th scope="col">Date</th>
+      <th scope="col">Event</th>
+      <th scope="col">Venue</th>
+   </tr> 
+</thead>
+<tbody>
+   <tr>
+      <td>12 Feb</td>
+      <td>Waltz with Strauss</td>
+      <td>Main Hall</td>
+   </tr>
+   <tr>
+      <td>24 Feb</td>
+      <td>Open mic night</td>
+      <td>Hope Bar</td>
+   </tr>
+   <tr>
+      <td>5 March</td>
+      <td>Coldplay</td>
+      <td>Main Hall</td>
+   </tr>
+</tbody>
+</table>
+
+<h1>Missing cells</h1>
+<table>
+<caption>Product Inventory as at 12th April 2016</caption>
+<thead>
+   <tr> 
+      <th scope="col">Product Name</th>
+      <th scope="col">Product SKU</th>
+      <th scope="col">Cost Price (GBP)</th>
+      <th scope="col">Current Stock</th>
+   </tr> 
+</thead>
+<tbody>
+   <tr>
+      <th scope="row">Italian Lace Trench Coat</th>
+      <td>264768</td>
+      <td>&pound;1725</td>
+      <td>37</td>
+   </tr>
+   <tr>
+      <th scope="row">Silk Wool Trench Coat</th>
+      <td>14567</td>
+      <td></td>
+      <td>25</td>
+   </tr>
+   <tr>
+      <th scope="row">Diamond Quilt Trench Jacket</th>
+      <td>76568</td>
+      <td>&pound;750</td>
+      <td>-</td>
+   </tr>
+</tbody>
+</table>
+
+
+</body>
+</html>

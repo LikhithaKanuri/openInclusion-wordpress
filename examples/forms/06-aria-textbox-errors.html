@@ -1,0 +1,28 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<title>Using aria-describedby for errors</title>
+</head>
+
+<body style="font-family:arial">
+<p><label for="firstname">First Name</label><br>
+<input type="text" name="firstname" id="firstname" aria-describedby="firstname-error"><br>
+<span id="firstname-error">First name is required</span></p>
+
+<p><label for="comments">Add your comments here</label><br>
+<textarea name="comments" id="comments" aria-describedby="comments-error"></textarea><br>
+<span id="comments-error">Comments are required</span></p>
+
+<p><label for="howheard">How did you hear about HSBC?</label><br>
+<select name="howheard" id="howheard" aria-labelledby="howheard-error">
+	<option value="1" selected="selected">Please choose...</option>
+	<option value="2">From a friend</option>
+	<option value="3">On the television</option>
+	<option value="4">Via the internet</option>
+</select><br>
+<span id="howheard-error">Chose wrong</span></p>
+
+<input type="submit" name="submit" id="submit" value="Submit">
+</body>
+</html>

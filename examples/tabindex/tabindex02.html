@@ -1,0 +1,43 @@
+<!doctype html>
+<html class="no-js" lang="en-GB">
+<head>
+<meta charset="UTF-8" /> 
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+<title>Tabindex values</title>
+<style type="text/css">
+body {
+	font-size: 200%;
+}
+div {
+    text-align: left;
+    margin: 0;
+    padding: 0;
+    border: none;
+    white-space: normal;
+    line-height: normal;
+}
+a:link, a:Button {}
+a:hover, a:focus {background: black; color: white}
+
+</style>
+<script src="../js/flying-focus.js" async></script> </head>
+
+<body>
+<h1>Buttons Tabindex Values</h1>
+<ul class="">
+<li><button onclick="javascript:alert('Hello 1');" tabindex="1">Button 1</button> tabindex="1"</li>
+<li><button onclick="alert('Hello 2');">Button 2</button> no tabindex set</li>
+<li><button onclick="alert('Hello 3');" tabindex="3">Button 3</button> tabindex="3"</li>
+<li><button onclick="alert('Hello 4');" tabindex="5">Button 4</button> tabindex="5"</li>
+<li><button onclick="alert('Hello 5')';">Button 5</button> no tabindex set</li>
+<li><button onclick="alert('Hello 6');" tabindex="6">Button 6</button> tabindex="6"</li>
+<li><button onclick="alert('Hello 7');" tabindex="-1">Button 7</button> tabindex="-1"</li>
+<li><button onclick="alert('Hello 8');" tabindex="0">Button 8</button> tabindex="0"</li>
+</ul>
+
+
+</div>
+</body>
+</html>
