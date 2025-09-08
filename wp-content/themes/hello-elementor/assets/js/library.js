@@ -872,7 +872,7 @@ jQuery(document).ready(function ($) {
    $("#licountryphonecode").append($("#liphonenumber").html());
    $("#liphonenumber").html("");
    $("label[for=inf_field_countryphonecode]").find("span.text").hide();
-   $("label[for=inf_field_countryphonecode]").attr("style", "width:25%;float:left");
+   $("label[for=inf_field_countryphonecode]").attr("style", "float:left");
    $("label[for=inf_field_countryphonecode]").find("div.custom").attr("style", "top:22px");
    $("label[for=inf_field_Phone2]").attr("style", "width:75%;float:left");
    $("label[for=inf_field_Phone2]").find("span.text").attr("style", "margin-left:-178px");

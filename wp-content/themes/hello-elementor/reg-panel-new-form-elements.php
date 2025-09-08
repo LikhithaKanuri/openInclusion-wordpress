@@ -1,14 +1,23 @@
 <?php
 // Arrays for courses and internet access
 
+//  $contact_method_array = array(
+//    array('Email',__( 'Please contact me via email', 'openinclusion' ),'PreferToContact[]', 'PreferToContact_Email'),
+//    array('SMS',__( 'SMS / Text message', 'openinclusion' ),'PreferToContactOthers[]', 'PreferToContactOthers_SMS'),
+//    array('Phone',__( 'Phone call', 'openinclusion' ),'PreferToContactOthers[]', 'PreferToContactOthers_Phone'),
+//    array('Whatsapp Message',__( 'Whatsapp Message', 'openinclusion' ),'PreferToContactOthers[]', 'PreferToContactOthers_Whatsapp'),
+//    // array('Video_WP',__( 'Video call – WhatsApp, Zoom or other', 'openinclusion' ),'PreferToContactOthers[]', 'PreferToContactOthers_Video_WP'),
+//    // array('Voice_WP',__( 'Voice message - WhatsApp or other', 'openinclusion' ),'PreferToContactOthers[]', 'PreferToContactOthers_Voice_WP'),
+//    // array('calls_via_text_relay_service',__( 'Text relay service', 'openinclusion' ),'PreferToContactOthers[]', 'PreferToContactOthers_cvtrs'),
+//    array('Others',__( 'Other, Other, or any other relevant information about how you do or don’t wish to be contacted by us.', 'openinclusion' ),'PreferToContact[]', 'PreferToContactOthers_Others_2'),
+// );
+
  $contact_method_array = array(
    array('Email',__( 'Please contact me via email', 'openinclusion' ),'PreferToContact[]', 'PreferToContact_Email'),
-   array('SMS',__( 'SMS / Text message', 'openinclusion' ),'PreferToContactOthers[]', 'PreferToContactOthers_SMS'),
-   array('Phone',__( 'Phone call', 'openinclusion' ),'PreferToContactOthers[]', 'PreferToContactOthers_Phone'),
-   array('Video_WP',__( 'Video call – WhatsApp, Zoom or other', 'openinclusion' ),'PreferToContactOthers[]', 'PreferToContactOthers_Video_WP'),
-   array('Voice_WP',__( 'Voice message - WhatsApp or other', 'openinclusion' ),'PreferToContactOthers[]', 'PreferToContactOthers_Voice_WP'),
-   array('calls_via_text_relay_service',__( 'Text relay service', 'openinclusion' ),'PreferToContactOthers[]', 'PreferToContactOthers_cvtrs'),
-   array('Others',__( 'Other, please provide details below', 'openinclusion' ),'PreferToContact[]', 'PreferToContactOthers_Others_2'),
+   array('SMS',__( 'SMS / Text message', 'openinclusion' ), 'PreferToContact_SMS'),
+   array('Phone',__( 'Phone call', 'openinclusion' ), 'PreferToContact_Phone'),
+   array('Whatsapp Message',__( 'Whatsapp Message', 'openinclusion' ), 'PreferToContact_Whatsapp'),
+   array('Others',__( 'Other, or any other relevant information about how you do or don’t wish to be contacted by us.', 'openinclusion' ),'PreferToContact[]', 'PreferToContactOthers_Others_2'),
 );
 
  function get_contact_methods() {

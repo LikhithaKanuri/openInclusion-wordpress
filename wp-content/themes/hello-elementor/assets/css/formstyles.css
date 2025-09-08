@@ -530,3 +530,22 @@ ul.sub-list li {
   list-style-position: inside;
   list-style-type: circle !important;
 }
+
+
+.form-section-header .section-title {
+  margin: 0 0 5px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.form-section-header .section-title .required {
+  color: red;
+  font-weight: normal;
+}
+
+.form-section-header .section-description {
+  margin: 0;
+  font-size: 14px;
+  color: #555;
+}

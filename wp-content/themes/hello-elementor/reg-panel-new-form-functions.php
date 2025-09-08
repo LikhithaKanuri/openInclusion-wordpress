@@ -196,7 +196,7 @@ function redirectAfterRegistration(){
             }         
          }
          else {
-            $redirectUrl = "https://openinclusion.com/thank-you/";
+            $redirectUrl = "https://staging4.openinclusion.com/thank-you/";
          }
          
          wp_redirect($redirectUrl);
@@ -340,7 +340,7 @@ function sentUserActivationMail($toEmailId, $name, $activation_link) {
    <div style=\"padding: 30px 0px; font-size: 24px; line-height: 40px; text-align: left;\">
    Dear ".ucwords(strtolower($name)).",
    
-   <p style=\"font-family: Poppins;\"> Thank you for registering to Open Inclusion’s new community engagement website platform.<br />Please confirm your email to finalize the initial set-up of your profile on the platform by clicking the button below:</p> 
+   <p style=\"font-family: Poppins;\"> Thank you for registering with Open Inclusion’s online community.<br/><strong>Please confirm your email to complete the initial set-up</strong> of your profile by clicking the button below:</p> 
   
    
    </div>
@@ -357,7 +357,7 @@ function sentUserActivationMail($toEmailId, $name, $activation_link) {
    </div>
    <br />
     <div style=\"padding: 30px 0px; font-family: Poppins; font-size: 24px; line-height: 40px; text-align: left; content: left\">
-   <p style=\"font-family: Poppins;content: left; font-size: 24px\">Once in the community, you will be asked to update your access needs and assistive technology preferences so that we can invite you to research that best suits you.
+   <p style=\"font-family: Poppins;content: left; font-size: 24px\">When you log in for the first time, you’ll be directed to the second part of the registration form, where you will have the opportunity to update your access needs and assistive technology preferences. This helps us invite you to research opportunities that best suit you
    </p>
    <p style=\"font-family: Poppins; font-size: 24px\">
    Thank you, <br />The Open Inclusion Team
