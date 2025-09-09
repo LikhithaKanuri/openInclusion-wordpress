@@ -1054,6 +1054,136 @@ function getProfileEditFields() {
    return $profileFields;   
 }
 
+// Part 2 Step 1 form definition
+$part2Step1Form = array(
+   'cont-id' => '',
+   'cont-class' => 'contact panel-contact',
+   'form-id' => 'part2-step1-form',
+   'client-val' => true,
+   'mand-ind' => '*',
+   'success-img' => '',
+   'error-img' => '',
+   'error-sect-id' => 'sub-errs',
+   'error-sect-class' => '',
+   'error-sect-hdr' => __( 'Submission Problems', 'openinclusion' ),
+   'error-sect-hdr-level' => 2,
+   'error-sect-intro' => '<p>'.__( 'We were not able to process your enquiry. Please review the following items and check what you entered', 'openinclusion' ).'</p>',
+   'nonce-name' => 'part2_step1_nonce',
+   'sq-reqd' => false,
+   'sq-id' => 'sq',
+   'sq-label' => __( 'Please answer this question:', 'openinclusion' ).' %1$s <span class="clarify">('.__( 'Helps stop spam', 'openinclusion' ).')</span>',
+   'fields' => array(
+      array(
+         'label' => '',
+         'type' => 'other-html',
+         'name' => 'banner1',
+         'li-class' => 'clear',
+         'value' => '
+            <h2>PAGE 1: ABOUT ME</h2>
+            <p>It is important for us to learn more about you so that we can invite you to research that best matches your experiences.</p>
+            <p>This form should take about 10-15 minutes to complete. In it, we will ask you about:</p>
+            <ul>
+               <li>Your age, where you live and your connection to disability</li>
+               <li>Your access needs</li>
+               <li>The assistive technologies and adaptive solutions you use</li>
+               <li>Some key demographics such as your gender and age</li>
+            </ul>
+            <p>Once completed, including reviewing and consenting to Open Inclusion\'s Terms and Conditions, you\'ll be part of the Open Inclusion Insight Community. We look forward to working with you.</p>
+            <p>Required questions are marked with an asterisk *</p>
+         ',
+         'validation' => array()
+      ),
+      
+      array(
+         'label' => __( 'What country do you live in?', 'openinclusion' ),
+         'type' => 'select',
+         'name' => 'inf_field_country',
+         'li-class' => 'clear',
+         'options' => get_countries(),
+         'validation' => array(
+            array('reqd', __( 'Please select your country', 'openinclusion' ))
+         )
+      ),
+      
+      array(
+         'label' => __( 'What region, province or state do you live in?', 'openinclusion' ),
+         'type' => 'text',
+         'name' => 'inf_field_region',
+         'li-class' => 'clear',
+         'maxlen' => 250,
+         'validation' => array()
+      ),
+      
+      array(
+         'label' => __( 'Please enter your postcode', 'openinclusion' ),
+         'type' => 'text',
+         'name' => 'inf_field_postcode',
+         'li-class' => 'clear',
+         'maxlen' => 20,
+         'validation' => array()
+      ),
+      
+      array(
+         'label' => __( 'Are you over 18?', 'openinclusion' ),
+         'type' => 'radiogroup-inf',
+         'name' => 'inf_field_over18',
+         'li-class' => 'clear',
+         'options' => array(
+            array('Yes', 'Yes', 'inf_field_over18_yes'),
+            array('No', 'No', 'inf_field_over18_no')
+         ),
+         'validation' => array(
+            array('reqd', __( 'Please confirm if you are over 18', 'openinclusion' ))
+         )
+      ),
+      
+      array(
+         'label' => __( 'What year were you born?', 'openinclusion' ),
+         'type' => 'text',
+         'name' => 'inf_custom_YearBorn',
+         'li-class' => 'clear',
+         'maxlen' => 4,
+         'validation' => array(
+            array('reqd', __( 'Please enter your birth year', 'openinclusion' )),
+            array('int', __( 'Please enter a valid year', 'openinclusion' ))
+         )
+      ),
+      
+      array(
+         'label' => __( 'Do you have one or more long-term physical, sensory or cognitive conditions or disabilities that significantly impact your ability to carry out day-to-day activities?', 'openinclusion' ),
+         'type' => 'radiogroup-inf',
+         'name' => 'inf_field_hasDisability',
+         'li-class' => 'clear',
+         'options' => array(
+            array('Yes', 'Yes', 'inf_field_hasDisability_yes'),
+            array('No', 'No', 'inf_field_hasDisability_no'),
+            array('PreferNotToAnswer', 'I\'d rather not answer', 'inf_field_hasDisability_prefer_not')
+         ),
+         'validation' => array(
+            array('reqd', __( 'Please answer this question', 'openinclusion' ))
+         )
+      ),
+      
+      array(
+         'label' => __( 'What is your identity or relationship regarding disability or ageing? I identify as:', 'openinclusion' ),
+         'type' => 'chkboxgroup-inf',
+         'name' => 'RelationShip',
+         'li-class' => 'clear',
+         'options' => get_relationship_needs(),
+         'validation' => array(
+            array('reqd', __( 'Please select at least one option', 'openinclusion' ))
+         )
+      ),
+      
+      array(
+         'name' => 'submit_part2_step1',
+         'type' => 'submit',
+         'li-class' => 'submit',
+         'value' => __('Continue to Next Step', 'openinclusion' )
+      ),
+   )
+);
+
 function getUserRole(){
    $current_user = wp_get_current_user();
    $userid = $current_user->ID;

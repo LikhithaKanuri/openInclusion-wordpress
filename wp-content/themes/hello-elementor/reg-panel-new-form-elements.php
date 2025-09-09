@@ -62,14 +62,14 @@
 
  $relation_ship_array = array (
    array('A-Disabled-Person',__( 'A disabled person / person with a disability', 'openinclusion' ),'RelationShip[]', 'RelationShip_disabled_person'),
+   array('A-person-with-specific-condition',__( 'A person with a specific condition / difference e.g. neurodivergent, deaf', 'openinclusion' ),'RelationShip[]', 'RelationShip_person_with_condition'),
    array('Over-65-Years-Old',__( 'Over 65 years old', 'openinclusion' ),'RelationShip[]', 'RelationShip_over_65_years_old'),
-   array('A-personal-caregiver-to-a-disabled-person',__( 'A personal caregiver to a disabled person/person with a disability (unpaid)', 'openinclusion' ),'RelationShip[]', 'RelationShip_personal_care_giver'),
-   array('A-personal-caregiver-to-a-person-who-is-over-65',__( 'A personal caregiver to a person who is over 65 (unpaid)', 'openinclusion' ),'RelationShip[]', 'RelationShip_personal_care_giver_over_65'),
-   array('A-professional-personal-assistant-or-caregiver-to-a-disabled-person',__( 'A professional personal assistant or caregiver to a disabled person/person with a disability (paid)', 'openinclusion' ),'RelationShip[]', 'RelationShip_personal_carer_of_disabled_person'),
-   array('A-professional-caregiver-to-a-person-who-is-over-65',__( 'A professional caregiver to a person who is over 65 (paid)', 'openinclusion' ),'RelationShip[]', 'RelationShip_professional_care_giver_over_65'),
+   array('A-professional-caregiver-to-a-disabled-person',__( 'A caregiver for a disabled or older person (paid / professional)', 'openinclusion' ),'RelationShip[]', 'RelationShip_professional_caregiver'),
+   array('A-personal-caregiver-to-a-disabled-person',__( 'A caregiver for a disabled or older person (not paid / personal)', 'openinclusion' ),'RelationShip[]', 'RelationShip_personal_caregiver'),
    array('A-parent-of-someone-with-a-disability',__( 'A parent of someone with a disability (child or adult)', 'openinclusion' ),'RelationShip[]', 'RelationShip_parent_of_someone_with_disability'),
-   array('A-spouse-child-or-sibling-of-a-disabled-person',__( 'A spouse, child or sibling of a disabled person/person with a disability', 'openinclusion' ),'RelationShipRelationShip[]', 'RelationShip_relation_with_disable'),
-   array('I-have-another-relationship-to-disability-or-age-related-needs',__( 'I have another relationship to disability or age related needs. Please describe below', 'openinclusion' ),'RelationShip[]', 'RelationShip_other_relation_with_disable'),
+   array('A-spouse-child-or-sibling-of-a-disabled-person',__( 'A spouse, child or sibling of a disabled person/person with a disability', 'openinclusion' ),'RelationShip[]', 'RelationShip_relation_with_disable'),
+   array('I-have-another-relationship-to-disability-or-age-related-needs',__( 'Other. Please describe', 'openinclusion' ),'RelationShip[]', 'RelationShip_other_relation_with_disable'),
+   array('None-of-the-above',__( 'None of the above', 'openinclusion' ),'RelationShip[]', 'RelationShip_none_of_above'),
    // array('OtherPleaseSpecify',__( 'Having another relationship to disability or specific access needs', 'openinclusion' ),'RelationShip[]', 'RelationShip_Other'),
  ); 
 
