@@ -28,6 +28,189 @@ jQuery(document).ready(function ($) {
    var $fieldId = '';
    var $errArray = [];
 
+   // Dynamic region/state/province functionality
+   function updateRegionOptions(country) {
+      var regionSelect = $('#inf_field_region');
+      var regionLabel = $('label[for="inf_field_region"] .text');
+      
+      // Clear existing options
+      regionSelect.empty();
+      
+      // Define country-specific options
+      var regionOptions = {
+         '01007': [ // UK
+            {value: '', text: 'Please select from list'},
+            {value: '01101-Community-Region-UK-London', text: 'London'},
+            {value: '01102-Community-Region-UK-SouthEast', text: 'South East'},
+            {value: '01103-Community-Region-UK-SouthWest', text: 'South West'},
+            {value: '01104-Community-Region-UK-EastEng', text: 'East England'},
+            {value: '01105-Community-Region-UK-EastMidlands', text: 'East Midlands'},
+            {value: '01106-Community-Region-UK-WestMidlands', text: 'West Midlands'},
+            {value: '01107-Community-Region-UK-YorksHumber', text: 'Yorkshire and The Humber'},
+            {value: '01108-Community-Region-UK-NorthEast', text: 'North East'},
+            {value: '01109-Community-Region-UK-NorthWest', text: 'North West'},
+            {value: '01110-Community-Region-UK-Scotland', text: 'Scotland'},
+            {value: '01111-Community-Region-UK-Wales', text: 'Wales'},
+            {value: '01112-Community-Region-UK-Nireland', text: 'Northern Ireland'},
+            {value: '01112-Community-Region-UK-BritishIsles', text: 'British Isles'}
+         ],
+         '01008': [ // USA
+            {value: '', text: 'Please select from list'},
+            {value: '01113-Community-Region-USA-AL', text: 'Alabama'},
+            {value: '01113-Community-Region-USA-AK', text: 'Alaska'},
+            {value: '01113-Community-Region-USA-AZ', text: 'Arizona'},
+            {value: '01113-Community-Region-USA-AR', text: 'Arkansas'},
+            {value: '01113-Community-Region-USA-CA', text: 'California'},
+            {value: '01113-Community-Region-USA-CO', text: 'Colorado'},
+            {value: '01113-Community-Region-USA-CT', text: 'Connecticut'},
+            {value: '01113-Community-Region-USA-DE', text: 'Delaware'},
+            {value: '01113-Community-Region-USA-FL', text: 'Florida'},
+            {value: '01113-Community-Region-USA-GA', text: 'Georgia'},
+            {value: '01113-Community-Region-USA-HI', text: 'Hawaii'},
+            {value: '01113-Community-Region-USA-ID', text: 'Idaho'},
+            {value: '01113-Community-Region-USA-IL', text: 'Illinois'},
+            {value: '01113-Community-Region-USA-IN', text: 'Indiana'},
+            {value: '01113-Community-Region-USA-IA', text: 'Iowa'},
+            {value: '01113-Community-Region-USA-KS', text: 'Kansas'},
+            {value: '01113-Community-Region-USA-KY', text: 'Kentucky'},
+            {value: '01113-Community-Region-USA-LA', text: 'Louisiana'},
+            {value: '01113-Community-Region-USA-ME', text: 'Maine'},
+            {value: '01113-Community-Region-USA-MD', text: 'Maryland'},
+            {value: '01113-Community-Region-USA-MA', text: 'Massachusetts'},
+            {value: '01113-Community-Region-USA-MI', text: 'Michigan'},
+            {value: '01113-Community-Region-USA-MN', text: 'Minnesota'},
+            {value: '01113-Community-Region-USA-MS', text: 'Mississippi'},
+            {value: '01113-Community-Region-USA-MO', text: 'Missouri'},
+            {value: '01113-Community-Region-USA-MT', text: 'Montana'},
+            {value: '01113-Community-Region-USA-NE', text: 'Nebraska'},
+            {value: '01113-Community-Region-USA-NV', text: 'Nevada'},
+            {value: '01113-Community-Region-USA-NH', text: 'New Hampshire'},
+            {value: '01113-Community-Region-USA-NJ', text: 'New Jersey'},
+            {value: '01113-Community-Region-USA-NM', text: 'New Mexico'},
+            {value: '01113-Community-Region-USA-NY', text: 'New York'},
+            {value: '01113-Community-Region-USA-NC', text: 'North Carolina'},
+            {value: '01113-Community-Region-USA-ND', text: 'North Dakota'},
+            {value: '01113-Community-Region-USA-OH', text: 'Ohio'},
+            {value: '01113-Community-Region-USA-OK', text: 'Oklahoma'},
+            {value: '01113-Community-Region-USA-OR', text: 'Oregon'},
+            {value: '01113-Community-Region-USA-PA', text: 'Pennsylvania'},
+            {value: '01113-Community-Region-USA-RI', text: 'Rhode Island'},
+            {value: '01113-Community-Region-USA-SC', text: 'South Carolina'},
+            {value: '01113-Community-Region-USA-SD', text: 'South Dakota'},
+            {value: '01113-Community-Region-USA-TN', text: 'Tennessee'},
+            {value: '01113-Community-Region-USA-TX', text: 'Texas'},
+            {value: '01113-Community-Region-USA-UT', text: 'Utah'},
+            {value: '01113-Community-Region-USA-VT', text: 'Vermont'},
+            {value: '01113-Community-Region-USA-VA', text: 'Virginia'},
+            {value: '01113-Community-Region-USA-WA', text: 'Washington'},
+            {value: '01113-Community-Region-USA-WV', text: 'West Virginia'},
+            {value: '01113-Community-Region-USA-WI', text: 'Wisconsin'},
+            {value: '01113-Community-Region-USA-WY', text: 'Wyoming'},
+            {value: '01113-Community-Region-USA-DC', text: 'Washington DC'}
+         ],
+         '01011': [ // Canada
+            {value: '', text: 'Please select from list'},
+            {value: '011xx-Community-Region-Canada-AB', text: 'Alberta'},
+            {value: '011xx-Community-Region-Canada-BC', text: 'British Columbia'},
+            {value: '011xx-Community-Region-Canada-MB', text: 'Manitoba'},
+            {value: '011xx-Community-Region-Canada-NB', text: 'New Brunswick'},
+            {value: '011xx-Community-Region-Canada-NL', text: 'Newfoundland and Labrador'},
+            {value: '011xx-Community-Region-Canada-NT', text: 'Northwest Territories'},
+            {value: '011xx-Community-Region-Canada-NS', text: 'Nova Scotia'},
+            {value: '011xx-Community-Region-Canada-NU', text: 'Nunavut'},
+            {value: '011xx-Community-Region-Canada-ON', text: 'Ontario'},
+            {value: '011xx-Community-Region-Canada-PE', text: 'Prince Edward Island'},
+            {value: '011xx-Community-Region-Canada-QC', text: 'Quebec'},
+            {value: '011xx-Community-Region-Canada-SK', text: 'Saskatchewan'},
+            {value: '011xx-Community-Region-Canada-YT', text: 'Yukon'}
+         ],
+         '01009': [ // Australia
+            {value: '', text: 'Please select from list'},
+            {value: '011xx-Community-Region-Australia-ACT', text: 'Australian Capital Territory'},
+            {value: '011xx-Community-Region-Australia-NSW', text: 'New South Wales'},
+            {value: '011xx-Community-Region-Australia-NT', text: 'Northern Territory'},
+            {value: '011xx-Community-Region-Australia-QLD', text: 'Queensland'},
+            {value: '011xx-Community-Region-Australia-SA', text: 'South Australia'},
+            {value: '011xx-Community-Region-Australia-TAS', text: 'Tasmania'},
+            {value: '011xx-Community-Region-Australia-VIC', text: 'Victoria'},
+            {value: '011xx-Community-Region-Australia-WA', text: 'Western Australia'}
+         ],
+         '01010': [ // Ireland
+            {value: '', text: 'Please select from list'},
+            {value: '011xx-Community-Region-Ireland-Leinster', text: 'Leinster'},
+            {value: '011xx-Community-Region-Ireland-Ulster', text: 'Ulster'},
+            {value: '011xx-Community-Region-Ireland-Munster', text: 'Munster'},
+            {value: '011xx-Community-Region-Ireland-Connacht', text: 'Connacht'}
+         ],
+         '01012': [ // New Zealand
+            {value: '', text: 'Please select from list'},
+            {value: '011xx-Community-Region-NewZealand-Auckland', text: 'Auckland'},
+            {value: '011xx-Community-Region-NewZealand-NewPlymouth', text: 'New Plymouth'},
+            {value: '011xx-Community-Region-NewZealand-Wellington', text: 'Wellington'},
+            {value: '011xx-Community-Region-NewZealand-Nelson', text: 'Nelson'},
+            {value: '011xx-Community-Region-NewZealand-Canterbury', text: 'Canterbury'},
+            {value: '011xx-Community-Region-NewZealand-Otago', text: 'Otago'}
+         ]
+      };
+      
+      // Update label based on country
+      var labelText = 'What region do you live in?';
+      if (country === '01008') { // USA
+         labelText = 'What state do you live in?';
+      } else if (country === '01007') { // UK
+         labelText = 'What region do you live in?';
+      } else if (country === '01011') { // Canada
+         labelText = 'What province do you live in?';
+      } else if (country === '01009') { // Australia
+         labelText = 'What state do you live in?';
+      } else if (country === '01010') { // Ireland
+         labelText = 'What province do you live in?';
+      } else if (country === '01012') { // New Zealand
+         labelText = 'What region do you live in?';
+      }
+      
+      if (regionLabel.length) {
+         regionLabel.text(labelText);
+      }
+      
+      // Populate options
+      if (regionOptions[country]) {
+         // Ensure it's a select field with proper wrapper
+         if (regionSelect.prop('tagName') !== 'SELECT') {
+            regionSelect.replaceWith('<div class="custom"><select name="inf_field_region" id="inf_field_region"></select></div>');
+            regionSelect = $('#inf_field_region');
+         } else {
+            // If it's already a select, wrap it in the custom div if not already wrapped
+            if (!regionSelect.parent().hasClass('custom')) {
+               regionSelect.wrap('<div class="custom"></div>');
+            }
+         }
+         $.each(regionOptions[country], function(index, option) {
+            regionSelect.append($('<option></option>').val(option.value).text(option.text));
+         });
+      } else {
+         // For other countries, show a text input instead
+         if (regionSelect.prop('tagName') !== 'INPUT') {
+            regionSelect.replaceWith('<input type="text" name="inf_field_region" id="inf_field_region" maxlength="250" placeholder="Please enter your region/state/province">');
+         }
+         if (regionLabel.length) {
+            regionLabel.text('What region do you live in?');
+         }
+      }
+   }
+   
+   // Handle country change
+   $('#inf_field_country').on('change', function() {
+      var selectedCountry = $(this).val();
+      updateRegionOptions(selectedCountry);
+   });
+   
+   // Initialize on page load if country is already selected
+   var initialCountry = $('#inf_field_country').val();
+   if (initialCountry) {
+      updateRegionOptions(initialCountry);
+   }
+
    $('#um-submit-btn').removeAttr("class");
    //var registerButtonHTML = $('div.um-right').html();
    //newButton = "<button>"+ registerButtonHTML + "</button>";
@@ -902,33 +1085,7 @@ jQuery(document).ready(function ($) {
       }
    });
 
-   $("#inf_field_country").on('change', function () {
-      $("#inf_field_region").prop("selectedIndex", 0);
-      countryVal = $(this).find('option:selected').text();
-      atleastOneregion = false;
-      index = 0;
-      $("#inf_field_region").find("option").each(function () {
-         if (index > 0) {
-            if ($(this).attr("class") == countryVal) {
-               $(this).removeAttr("style");
-               atleastOneregion = true;
-            }
-            else {
-               $(this).attr("style", "display:none");
-            }
-         }
-         index++;
-      });
-      if (atleastOneregion == false) {
-         $("#inf_field_region").find("option").each(function () {
-            if ($(this).attr("class") == 'NA') {
-               $(this).removeAttr("style");
-            }
-         });
-      }
-      $("#inf_field_region").focus();
-      $("#inf_field_region").prop("selectedIndex", 0);
-   });
+   // Old country change handler removed - now using new dynamic region functionality above
 
    $("#_PreferToContact_Others").click(function () {
       var msg = $(this).parents("fieldset").attr("data-v-reqd")
@@ -1022,13 +1179,21 @@ jQuery(document).ready(function ($) {
          const d = new Date();
          let year = d.getFullYear();
          var inBornYear = $('#inf_custom_YearBorn').val();
-         var diffInYear = parseInt(year) - parseInt(inBornYear);
-         if (diffInYear < 18) {
+         
+         // Check if year is exactly 4 digits
+         if (!/^\d{4}$/.test(inBornYear)) {
             $errInProgress = true;
-            doTextSelectFail($('#inf_custom_YearBorn'), 'You need to be 18 or over to join the Open Inclusion community and take part in research.');
+            doTextSelectFail($('#inf_custom_YearBorn'), 'Please ensure format is 4 numbers');
          }
          else {
-            doTextSelectSuccess($('#inf_custom_YearBorn'));
+            var diffInYear = parseInt(year) - parseInt(inBornYear);
+            if (diffInYear < 18) {
+               $errInProgress = true;
+               doTextSelectFail($('#inf_custom_YearBorn'), 'You need to be 18 or over to join the Open Inclusion community and take part in research.');
+            }
+            else {
+               doTextSelectSuccess($('#inf_custom_YearBorn'));
+            }
          }
       }
 

@@ -197,6 +197,18 @@ input[type=button]:focus, input[type=button]:hover, input[type=submit]:focus, in
 .terms li {
   list-style-type:disc !important;
 	padding-bottom:20px !important;
+}
+
+.form-intro-list {
+  list-style-type: disc !important;
+  margin-left: 20px !important;
+  padding-left: 0 !important;
+}
+
+.form-intro-list li {
+  list-style-type: disc !important;
+  padding-bottom: 10px !important;
+  margin-bottom: 0 !important;
 } 
 
 .sectionhead {

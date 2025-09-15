@@ -905,9 +905,13 @@ function getProfileEditFields() {
 
          array(
             'label' => __( 'What region, province or state do you live in?', 'openinclusion' ),
-            'type' => 'text',
+            'type' => 'select',
             'name' => 'inf_field_region',
             'li-class' => 'short clear',
+            'li-id' => 'region-field-container',
+            'options' => array(
+               array('', __( 'Please select your country first', 'openinclusion' ), 'inf_option_region_placeholder')
+            ),
             'validation' => array(
                   array('reqd', __( 'Please supply your country', 'openinclusion' ))
             )
@@ -1082,7 +1086,7 @@ $part2Step1Form = array(
             <h2>PAGE 1: ABOUT ME</h2>
             <p>It is important for us to learn more about you so that we can invite you to research that best matches your experiences.</p>
             <p>This form should take about 10-15 minutes to complete. In it, we will ask you about:</p>
-            <ul>
+            <ul class="form-intro-list">
                <li>Your age, where you live and your connection to disability</li>
                <li>Your access needs</li>
                <li>The assistive technologies and adaptive solutions you use</li>
@@ -1107,10 +1111,13 @@ $part2Step1Form = array(
       
       array(
          'label' => __( 'What region, province or state do you live in?', 'openinclusion' ),
-         'type' => 'text',
+         'type' => 'select',
          'name' => 'inf_field_region',
          'li-class' => 'clear',
-         'maxlen' => 250,
+         'li-id' => 'region-field-container',
+         'options' => array(
+            array('', __( 'Please select your country first', 'openinclusion' ), 'inf_option_region_placeholder')
+         ),
          'validation' => array()
       ),
       
@@ -1130,7 +1137,7 @@ $part2Step1Form = array(
          'li-class' => 'clear',
          'options' => array(
             array('Yes', 'Yes', 'inf_field_over18_yes'),
-            array('No', 'No', 'inf_field_over18_no')
+            array('Not Yet', 'Not Yet', 'inf_field_over18_not_yet')
          ),
          'validation' => array(
             array('reqd', __( 'Please confirm if you are over 18', 'openinclusion' ))
@@ -1151,6 +1158,7 @@ $part2Step1Form = array(
       
       array(
          'label' => __( 'Do you have one or more long-term physical, sensory or cognitive conditions or disabilities that significantly impact your ability to carry out day-to-day activities?', 'openinclusion' ),
+         'label-suffix' => '<p style="font-size: 14px; color: #666; margin-top: 5px; margin-bottom: 10px; font-style: italic;">[Long term\' means that it has lasted or is expected to last more than 12 months]</p>',
          'type' => 'radiogroup-inf',
          'name' => 'inf_field_hasDisability',
          'li-class' => 'clear',

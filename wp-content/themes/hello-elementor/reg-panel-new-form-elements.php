@@ -777,8 +777,140 @@ function get_temporaryaccess_needs() {
     array('Other',__( 'Not Applicable', 'openinclusion'),'inf_option_Whatregiondoyoulivein_011xx_Community_Region_NA','NA'),
  );
  function get_regions() {
-    global $region_array;
-    return $region_array; 
+   global $region_array;
+   return $region_array; 
+ }
+
+ // Country-specific region functions
+ function get_uk_regions() {
+   return array(
+      array('', __( 'Please select from list', 'openinclusion' ), 'inf_option_country_0'),
+      array('01101-Community-Region-UK-London', __( 'London', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01101_Community_Region_UK_London'),
+      array('01102-Community-Region-UK-SouthEast', __( 'South East', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01102_Community_Region_UK_SouthEast'),
+      array('01103-Community-Region-UK-SouthWest', __( 'South West', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01103_Community_Region_UK_SouthWest'),
+      array('01104-Community-Region-UK-EastEng', __( 'East England', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01104_Community_Region_UK_EastEng'),
+      array('01105-Community-Region-UK-EastMidlands', __( 'East Midlands', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01105_Community_Region_UK_EastMidlands'),
+      array('01106-Community-Region-UK-WestMidlands', __( 'West Midlands', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01106_Community_Region_UK_WestMidlands'),
+      array('01107-Community-Region-UK-YorksHumber', __( 'Yorkshire and The Humber', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01107_Community_Region_UK_YorksHumber'),
+      array('01108-Community-Region-UK-NorthEast', __( 'North East', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01108_Community_Region_UK_NorthEast'),
+      array('01109-Community-Region-UK-NorthWest', __( 'North West', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01109_Community_Region_UK_NorthWest'),
+      array('01110-Community-Region-UK-Scotland', __( 'Scotland', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01110_Community_Region_UK_Scotland'),
+      array('01111-Community-Region-UK-Wales', __( 'Wales', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01111_Community_Region_UK_Wales'),
+      array('01112-Community-Region-UK-Nireland', __( 'Northern Ireland', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01112_Community_Region_UK_Nireland'),
+      array('01112-Community-Region-UK-BritishIsles', __( 'British Isles', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01112_Community_Region_UK_BritishIsles'),
+   );
+ }
+
+ function get_usa_states() {
+   return array(
+      array('', __( 'Please select from list', 'openinclusion' ), 'inf_option_country_0'),
+      array('01113-Community-Region-USA-AL', __( 'Alabama', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_AL'),
+      array('01113-Community-Region-USA-AK', __( 'Alaska', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_AK'),
+      array('01113-Community-Region-USA-AZ', __( 'Arizona', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_AZ'),
+      array('01113-Community-Region-USA-AR', __( 'Arkansas', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_AR'),
+      array('01113-Community-Region-USA-CA', __( 'California', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_CA'),
+      array('01113-Community-Region-USA-CO', __( 'Colorado', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_CO'),
+      array('01113-Community-Region-USA-CT', __( 'Connecticut', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_CT'),
+      array('01113-Community-Region-USA-DE', __( 'Delaware', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_DE'),
+      array('01113-Community-Region-USA-FL', __( 'Florida', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_FL'),
+      array('01113-Community-Region-USA-GA', __( 'Georgia', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_GA'),
+      array('01113-Community-Region-USA-HI', __( 'Hawaii', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_HI'),
+      array('01113-Community-Region-USA-ID', __( 'Idaho', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_ID'),
+      array('01113-Community-Region-USA-IL', __( 'Illinois', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_IL'),
+      array('01113-Community-Region-USA-IN', __( 'Indiana', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_IN'),
+      array('01113-Community-Region-USA-IA', __( 'Iowa', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_IA'),
+      array('01113-Community-Region-USA-KS', __( 'Kansas', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_KS'),
+      array('01113-Community-Region-USA-KY', __( 'Kentucky', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_KY'),
+      array('01113-Community-Region-USA-LA', __( 'Louisiana', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_LA'),
+      array('01113-Community-Region-USA-ME', __( 'Maine', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_ME'),
+      array('01113-Community-Region-USA-MD', __( 'Maryland', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_MD'),
+      array('01113-Community-Region-USA-MA', __( 'Massachusetts', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_MA'),
+      array('01113-Community-Region-USA-MI', __( 'Michigan', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_MI'),
+      array('01113-Community-Region-USA-MN', __( 'Minnesota', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_MN'),
+      array('01113-Community-Region-USA-MS', __( 'Mississippi', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_MS'),
+      array('01113-Community-Region-USA-MO', __( 'Missouri', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_MO'),
+      array('01113-Community-Region-USA-MT', __( 'Montana', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_MT'),
+      array('01113-Community-Region-USA-NE', __( 'Nebraska', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_NE'),
+      array('01113-Community-Region-USA-NV', __( 'Nevada', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_NV'),
+      array('01113-Community-Region-USA-NH', __( 'New Hampshire', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_NH'),
+      array('01113-Community-Region-USA-NJ', __( 'New Jersey', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_NJ'),
+      array('01113-Community-Region-USA-NM', __( 'New Mexico', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_NM'),
+      array('01113-Community-Region-USA-NY', __( 'New York', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_NY'),
+      array('01113-Community-Region-USA-NC', __( 'North Carolina', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_NC'),
+      array('01113-Community-Region-USA-ND', __( 'North Dakota', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_ND'),
+      array('01113-Community-Region-USA-OH', __( 'Ohio', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_OH'),
+      array('01113-Community-Region-USA-OK', __( 'Oklahoma', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_OK'),
+      array('01113-Community-Region-USA-OR', __( 'Oregon', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_OR'),
+      array('01113-Community-Region-USA-PA', __( 'Pennsylvania', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_PA'),
+      array('01113-Community-Region-USA-RI', __( 'Rhode Island', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_RI'),
+      array('01113-Community-Region-USA-SC', __( 'South Carolina', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_SC'),
+      array('01113-Community-Region-USA-SD', __( 'South Dakota', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_SD'),
+      array('01113-Community-Region-USA-TN', __( 'Tennessee', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_TN'),
+      array('01113-Community-Region-USA-TX', __( 'Texas', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_TX'),
+      array('01113-Community-Region-USA-UT', __( 'Utah', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_UT'),
+      array('01113-Community-Region-USA-VT', __( 'Vermont', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_VT'),
+      array('01113-Community-Region-USA-VA', __( 'Virginia', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_VA'),
+      array('01113-Community-Region-USA-WA', __( 'Washington', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_WA'),
+      array('01113-Community-Region-USA-WV', __( 'West Virginia', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_WV'),
+      array('01113-Community-Region-USA-WI', __( 'Wisconsin', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_WI'),
+      array('01113-Community-Region-USA-WY', __( 'Wyoming', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_WY'),
+      array('01113-Community-Region-USA-DC', __( 'Washington DC', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_01113_Community_Region_USA_DC'),
+   );
+ }
+
+ function get_canada_provinces() {
+   return array(
+      array('', __( 'Please select from list', 'openinclusion' ), 'inf_option_country_0'),
+      array('011xx-Community-Region-Canada-AB', __( 'Alberta', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_011xx_Community_Region_Canada_AB'),
+      array('011xx-Community-Region-Canada-BC', __( 'British Columbia', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_011xx_Community_Region_Canada_BC'),
+      array('011xx-Community-Region-Canada-MB', __( 'Manitoba', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_011xx_Community_Region_Canada_MB'),
+      array('011xx-Community-Region-Canada-NB', __( 'New Brunswick', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_011xx_Community_Region_Canada_NB'),
+      array('011xx-Community-Region-Canada-NL', __( 'Newfoundland and Labrador', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_011xx_Community_Region_Canada_NL'),
+      array('011xx-Community-Region-Canada-NT', __( 'Northwest Territories', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_011xx_Community_Region_Canada_NT'),
+      array('011xx-Community-Region-Canada-NS', __( 'Nova Scotia', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_011xx_Community_Region_Canada_NS'),
+      array('011xx-Community-Region-Canada-NU', __( 'Nunavut', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_011xx_Community_Region_Canada_NU'),
+      array('011xx-Community-Region-Canada-ON', __( 'Ontario', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_011xx_Community_Region_Canada_ON'),
+      array('011xx-Community-Region-Canada-PE', __( 'Prince Edward Island', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_011xx_Community_Region_Canada_PE'),
+      array('011xx-Community-Region-Canada-QC', __( 'Quebec', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_011xx_Community_Region_Canada_QC'),
+      array('011xx-Community-Region-Canada-SK', __( 'Saskatchewan', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_011xx_Community_Region_Canada_SK'),
+      array('011xx-Community-Region-Canada-YT', __( 'Yukon', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_011xx_Community_Region_Canada_YT'),
+   );
+ }
+
+ function get_australia_states() {
+   return array(
+      array('', __( 'Please select from list', 'openinclusion' ), 'inf_option_country_0'),
+      array('011xx-Community-Region-Australia-ACT', __( 'Australian Capital Territory', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_011xx_Community_Region_Australia_ACT'),
+      array('011xx-Community-Region-Australia-NSW', __( 'New South Wales', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_011xx_Community_Region_Australia_NSW'),
+      array('011xx-Community-Region-Australia-NT', __( 'Northern Territory', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_011xx_Community_Region_Australia_NT'),
+      array('011xx-Community-Region-Australia-QLD', __( 'Queensland', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_011xx_Community_Region_Australia_QLD'),
+      array('011xx-Community-Region-Australia-SA', __( 'South Australia', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_011xx_Community_Region_Australia_SA'),
+      array('011xx-Community-Region-Australia-TAS', __( 'Tasmania', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_011xx_Community_Region_Australia_TAS'),
+      array('011xx-Community-Region-Australia-VIC', __( 'Victoria', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_011xx_Community_Region_Australia_VIC'),
+      array('011xx-Community-Region-Australia-WA', __( 'Western Australia', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_011xx_Community_Region_Australia_WA'),
+   );
+ }
+
+ function get_ireland_provinces() {
+   return array(
+      array('', __( 'Please select from list', 'openinclusion' ), 'inf_option_country_0'),
+      array('011xx-Community-Region-Ireland-Leinster', __( 'Leinster', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_011xx_Community_Region_Ireland_Leinster'),
+      array('011xx-Community-Region-Ireland-Ulster', __( 'Ulster', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_011xx_Community_Region_Ireland_Ulster'),
+      array('011xx-Community-Region-Ireland-Munster', __( 'Munster', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_011xx_Community_Region_Ireland_Munster'),
+      array('011xx-Community-Region-Ireland-Connacht', __( 'Connacht', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_011xx_Community_Region_Ireland_Connacht'),
+   );
+ }
+
+ function get_newzealand_regions() {
+   return array(
+      array('', __( 'Please select from list', 'openinclusion' ), 'inf_option_country_0'),
+      array('011xx-Community-Region-NewZealand-Auckland', __( 'Auckland', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_011xx_Community_Region_NewZealand_Auckland'),
+      array('011xx-Community-Region-NewZealand-NewPlymouth', __( 'New Plymouth', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_011xx_Community_Region_NewZealand_NewPlymouth'),
+      array('011xx-Community-Region-NewZealand-Wellington', __( 'Wellington', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_011xx_Community_Region_NewZealand_Wellington'),
+      array('011xx-Community-Region-NewZealand-Nelson', __( 'Nelson', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_011xx_Community_Region_NewZealand_Nelson'),
+      array('011xx-Community-Region-NewZealand-Canterbury', __( 'Canterbury', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_011xx_Community_Region_NewZealand_Canterbury'),
+      array('011xx-Community-Region-NewZealand-Otago', __( 'Otago', 'openinclusion'), 'inf_option_Whatregiondoyoulivein_011xx_Community_Region_NewZealand_Otago'),
+   );
  }
  
  $gender_array = array(
