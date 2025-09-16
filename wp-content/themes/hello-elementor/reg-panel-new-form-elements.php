@@ -9,7 +9,7 @@
 //    // array('Video_WP',__( 'Video call – WhatsApp, Zoom or other', 'openinclusion' ),'PreferToContactOthers[]', 'PreferToContactOthers_Video_WP'),
 //    // array('Voice_WP',__( 'Voice message - WhatsApp or other', 'openinclusion' ),'PreferToContactOthers[]', 'PreferToContactOthers_Voice_WP'),
 //    // array('calls_via_text_relay_service',__( 'Text relay service', 'openinclusion' ),'PreferToContactOthers[]', 'PreferToContactOthers_cvtrs'),
-//    array('Others',__( 'Other, Other, or any other relevant information about how you do or don’t wish to be contacted by us.', 'openinclusion' ),'PreferToContact[]', 'PreferToContactOthers_Others_2'),
+//    array('Others',__( 'Other, Other, or any other relevant information about how you do or don't wish to be contacted by us.', 'openinclusion' ),'PreferToContact[]', 'PreferToContactOthers_Others_2'),
 // );
 
  $contact_method_array = array(
@@ -17,7 +17,7 @@
    array('SMS',__( 'SMS / Text message', 'openinclusion' ), 'PreferToContact_SMS'),
    array('Phone',__( 'Phone call', 'openinclusion' ), 'PreferToContact_Phone'),
    array('Whatsapp Message',__( 'Whatsapp Message', 'openinclusion' ), 'PreferToContact_Whatsapp'),
-   array('Others',__( 'Other, or any other relevant information about how you do or don’t wish to be contacted by us.', 'openinclusion' ),'PreferToContact[]', 'PreferToContactOthers_Others_2'),
+   array('Others',__( 'Other, or any other relevant information about how you do or don\'t wish to be contacted by us.', 'openinclusion' ),'PreferToContact[]', 'PreferToContactOthers_Others_2'),
 );
 
  function get_contact_methods() {
@@ -70,7 +70,6 @@
    array('A-spouse-child-or-sibling-of-a-disabled-person',__( 'A spouse, child or sibling of a disabled person/person with a disability', 'openinclusion' ),'RelationShip[]', 'RelationShip_relation_with_disable'),
    array('I-have-another-relationship-to-disability-or-age-related-needs',__( 'Other. Please describe', 'openinclusion' ),'RelationShip[]', 'RelationShip_other_relation_with_disable'),
    // array('None-of-the-above',__( 'None of the above', 'openinclusion' ),'RelationShip[]', 'RelationShip_none_of_above'),
-   // array('OtherPleaseSpecify',__( 'Having another relationship to disability or specific access needs', 'openinclusion' ),'RelationShip[]', 'RelationShip_Other'),
  ); 
 
 function get_relationship_needs() {
@@ -126,8 +125,8 @@ function get_confirm_methods(){
     array('CannotWalk',__( 'Cannot Walk', 'openinclusion' ),'PhysicalNeeds[]', 'PhysicalNeeds_CannotWalk'),
     array('CannotWalkFar',__( 'Cannot walk far or without difficulty', 'openinclusion' ),'PhysicalNeeds[]', 'PhysicalNeeds_CannotWalkFar'),
     array('Balance',__( 'Balance challenges', 'openinclusion' ),'PhysicalNeeds[]', 'PhysicalNeeds_Balance'),
-    array('ShortStature',__( 'Short of stature: under 147 cms or 4’10”', 'openinclusion' ),'PhysicalNeeds[]', 'PhysicalNeeds_ShortStature'),
-    array('LongStature',__( 'Very tall: over 190 cms or 6’3”', 'openinclusion' ),'PhysicalNeeds[]', 'PhysicalNeeds_LongStature'),
+    array('ShortStature',__( 'Short of stature: under 147 cms or 4\'10"', 'openinclusion' ),'PhysicalNeeds[]', 'PhysicalNeeds_ShortStature'),
+    array('LongStature',__( 'Very tall: over 190 cms or 6\'3"', 'openinclusion' ),'PhysicalNeeds[]', 'PhysicalNeeds_LongStature'),
     array('LowerLimbDifference',__( 'Lower limb difference', 'openinclusion' ),'PhysicalNeeds[]', 'PhysicalNeeds_LowerLimbDifference'),
     array('LimitedMobility',__( 'Limited mobility (restricted movement, paralysis, muscular control etc.)', 'openinclusion' ),'PhysicalNeeds[]', 'PhysicalNeeds_LimitedMobility'),
     array('HandUpperLimbDifference',__( 'Hand or upper limb difference', 'openinclusion' ),'PhysicalNeeds[]', 'PhysicalNeeds_HandUpperLimbDifference'),
@@ -260,7 +259,7 @@ function get_temporaryaccess_needs() {
    array('Digital_testing', __('Digital experience testing (such as testing a new app)', 'openinclusion'),'ResearchFormats[]', 'inf_option_Digital_experience'),
    array('Journey_testing', __('Journey testing (such as train journeys or airports)', 'openinclusion'),'ResearchFormats[]', 'inf_option_Journey_testing'),
    array('In_person_events', __('In-person events', 'openinclusion'),'ResearchFormats[]', 'inf_option_In_person_events'),
-   array('Dontknow', __('I don’t know', 'openinclusion'), 'inf_option_Dontknow'),
+   array('Dontknow', __('I don\'t know', 'openinclusion'), 'inf_option_Dontknow'),
  );
 
  function get_research_formats(){
@@ -777,11 +776,11 @@ function get_temporaryaccess_needs() {
     array('Other',__( 'Not Applicable', 'openinclusion'),'inf_option_Whatregiondoyoulivein_011xx_Community_Region_NA','NA'),
  );
  function get_regions() {
-   global $region_array;
-   return $region_array; 
+    global $region_array;
+    return $region_array; 
  }
 
- // Country-specific region functions
+  // Country-specific region functions
  function get_uk_regions() {
    return array(
       array('', __( 'Please select from list', 'openinclusion' ), 'inf_option_country_0'),
@@ -922,7 +921,7 @@ function get_temporaryaccess_needs() {
     array('774',__( 'Prefer not to respond', 'openinclusion' ),'inf_option_Gender_774'),
    //array('OtherPleaseSpecify',__( 'Let me type my own answer', 'openinclusion' ),'inf_option_Gender_OtherPleaseSpecify'),
    // array('776',__( 'Let me type my own answer', 'openinclusion' ),'inf_option_Gender_776','inf_option_Gender_opentext',"Please enter your gender"),
-   array('776',__( 'Other (please self-describe)', 'openinclusion' ),'inf_option_Gender_776'),
+    array('776',__( 'Other (please self-describe)', 'openinclusion' ),'inf_option_Gender_776'),
  );
  
  function get_genders() {
@@ -1041,11 +1040,13 @@ function get_temporaryaccess_needs() {
     array('ColourChangesandContrast',__( 'High contrast mode, dark mode, or other colour changes', 'openinclusion' ),'DigitalandScreenTechnologies[]', 'DigitalandScreenTechnologies_ColourChangesandContrast'),
     array('BrailleDisplay',__( 'Refreshable Braille device', 'openinclusion' ),'DigitalandScreenTechnologies[]', 'DigitalandScreenTechnologies_BrailleDisplay'),
     array('AudioDescription',__( 'Audio description', 'openinclusion' ),'DigitalandScreenTechnologies[]', 'DigitalandScreenTechnologies_AudioDescription'),
+    array('AIAT',__( 'AI as assistive technology (e.g., for proofreading, summarizing or voice to text)', 'openinclusion' ),'DigitalandScreenTechnologies[]', 'DigitalandScreenTechnologies_AI'),
     array('Dragonandother',__( 'Speech recognition software (Dragon, Braina, Voice Finger etc.)', 'openinclusion' ),'DigitalandScreenTechnologies[]', 'DigitalandScreenTechnologies_Dragonandother'),
+    array('AutoCaptioning',__( 'Automatic captioning software (e.g., Otter.ai, Fireflies.ai)', 'openinclusion' ),'DigitalandScreenTechnologies[]', 'DigitalandScreenTechnologies_AutoCaptioning'),
     array('MainstreamVoiceAssistants',__( 'Mainstream voice assistants (Siri, Alexa, Cortana, Google Assistant)', 'openinclusion' ),'DigitalandScreenTechnologies[]', 'DigitalandScreenTechnologies_MainstreamVoiceAssistants'),
     array('ReadAloudSoftware',__( 'Read aloud software (text to speech such as Read&Write, Natural Reader, Speechify, TextHelp)', 'openinclusion' ),'DigitalandScreenTechnologies[]', 'DigitalandScreenTechnologies_ReadAloudSoftware'),
     array('ClosedCaptionsSubtitles',__( 'Closed captions / subtitles for audio content', 'openinclusion' ),'DigitalandScreenTechnologies[]', 'DigitalandScreenTechnologies_ClosedCaptionsSubtitles'),
-    array('TDDTTY',__( 'Telecommunications device for the deaf (TDD) or teletypewriter (TTY)', 'openinclusion' ),'DigitalandScreenTechnologies[]', 'DigitalandScreenTechnologies_TDDTTY'),
+    array('RelayOrVideoPhone',__( 'Relay Service App / Video Phone', 'openinclusion' ),'DigitalandScreenTechnologies[]', 'DigitalandScreenTechnologies_RelayOrVideoPhone'),
     array('AlternativeKeyboard',__( 'Alternative keyboard', 'openinclusion' ),'DigitalandScreenTechnologies[]', 'DigitalandScreenTechnologies_AlternativeKeyboard'),
     array('AlternativeMouseStylus',__( 'Alternative mouse or stylus', 'openinclusion' ),'DigitalandScreenTechnologies[]', 'DigitalandScreenTechnologies_AlternativeMouseStylus'),
     array('AlternativeTouchscreenInteraction',__( 'Alternative touch screen interaction (doesn\'t use forefinger / thumb)', 'openinclusion' ),'DigitalandScreenTechnologies[]', 'DigitalandScreenTechnologies_AlternativeTouchscreenInteraction'),
@@ -1053,6 +1054,7 @@ function get_temporaryaccess_needs() {
     array('JoystickTrackball',__( 'Joystick or trackball', 'openinclusion' ),'DigitalandScreenTechnologies[]', 'DigitalandScreenTechnologies_JoystickTrackball'),
     array('HeadPointerMouthStickEyeTracking',__( 'Head pointers, mouth stick or eye tracking', 'openinclusion' ),'DigitalandScreenTechnologies[]', 'DigitalandScreenTechnologies_HeadPointerMouthStickEyeTracking'),
     array('NoiseCancellationHeadphones',__( 'Noise cancellation headphones used for sensory sound control', 'openinclusion' ),'DigitalandScreenTechnologies[]', 'DigitalandScreenTechnologies_NoiseCancellationHeadphones'),
+    array('OtherPleaseSpecify',__( 'Other digital assistive technology (please describe)', 'openinclusion' ),'DigitalandScreenTechnologiesOtherPleaseSpecify', 'DigitalandScreenTechnologies_Other'),
  );
  
  function get_digitalandscreentechnologies() {
@@ -1066,6 +1068,7 @@ function get_temporaryaccess_needs() {
      array('Largeprintdocumentspreferred',__( 'Large print documents preferred', 'openinclusion' ),'PrintMedia[]', 'PrintMedia_Largeprintdocumentspreferred'),
      array('Brailledocumentspreferred',__( 'Braille documents preferred', 'openinclusion' ),'PrintMedia[]', 'PrintMedia_Brailledocumentspreferred'),
      array('Easyreaddocumentspreferred  ',__( 'Easy-read documents preferred  ', 'openinclusion' ),'PrintMedia[]', 'PrintMedia_Easyreaddocumentspreferred'),
+     array('OtherPleaseSpecify',__( 'Other printed media aid or adaptation (please describe)', 'openinclusion' ),'PrintMediaOtherPleaseSpecify', 'PrintMedia_Other'),
  );
 
  function get_printMedia() {
@@ -1079,7 +1082,7 @@ function get_temporaryaccess_needs() {
      array('MobilityScooter',__( 'Mobility scooter user', 'openinclusion' ),'MovementCanesandServiceAnimals[]', 'MovementCanesandServiceAnimals_MobilityScooter'),
      array('Adaptedvehicle',__( 'Adapted private vehicle', 'openinclusion' ),'MovementCanesandServiceAnimals[]', 'MovementCanesandServiceAnimals_Adaptedvehicle'),
      array('ProstheticUpperLimb',__( 'Prosthetic/s (upper limb)', 'openinclusion' ),'MovementCanesandServiceAnimals[]', 'MovementCanesandServiceAnimals_ProstheticUpperLimb'),
-     array('ProstheticLowerLimb',__( ' Prosthetic/s (lower limb)', 'openinclusion' ),'MovementCanesandServiceAnimals[]', 'MovementCanesandServiceAnimals_ProstheticLowerLimb'),
+     array('ProstheticLowerLimb',__( ' Prosthetic/s (lower limb)', 'openinclusion' ),'MovementCanesandServiceAnimals[]', 'MovementCanesandServiceAnimals_ProstheticLowerLimb'),
      array('Walkingaid',__( 'Walking aids – stability cane, crutcher/s, frame', 'openinclusion' ),'MovementCanesandServiceAnimals[]', 'MovementCanesandServiceAnimals_Walkingaid'),
      array('Dog',__( 'Service animal (guide dog for navigational support)', 'openinclusion' ),'MovementCanesandServiceAnimals[]', 'MovementCanesandServiceAnimals_Dog'),
      array('OtherServiceAnimal',__( 'Service animal (other)', 'openinclusion' ),'MovementCanesandServiceAnimals[]', 'MovementCanesandServiceAnimals_OtherServiceAnimal'),
@@ -1098,6 +1101,8 @@ function get_temporaryaccess_needs() {
      array('CochlearImplantBionic',__( 'Cochlear Implant / Bionic ear', 'openinclusion' ),'CommunicationPreferences[]', 'CommunicationPreferences_CochlearImplantBionic'),
      array('HearingAid',__( 'Hearing aid/s', 'openinclusion' ),'CommunicationPreferences[]', 'CommunicationPreferences_HearingAid'),
      array('AAC',__( 'Augmented assistive communication (manual or digital AAC)', 'openinclusion' ),'CommunicationPreferences[]', 'CommunicationPreferences_AAC'),
+     array('WirelessMicrophones',__( 'Wireless microphones (e.g., Phonak Roger series)', 'openinclusion' ),'CommunicationPreferences[]', 'CommunicationPreferences_WirelessMicrophones'),
+     array('OtherPleaseSpecify',__( 'Other communication aids or alternatives (please describe)', 'openinclusion' ),'CommunicationPreferencesOtherPleaseSpecify', 'CommunicationPreferences_Other'),
  );
  
  function get_communicationpreferences() {

@@ -134,7 +134,7 @@ function opinc_panel_form_sc_v2($atts, $content = null) {
    return $strHtml;
 }
 
-add_shortcode("opinc-panel-form-reg", "opinc_panel_form_sc_v2");
+add_shortcode("opinc-panel-form-reg", "opinc_panel_form_sc_v2");   
 
 /**********************************************************************************************
 Part 2 Step 1 Form Shortcode
@@ -198,118 +198,101 @@ function opinc_part2_step1_form_sc($atts, $content = null) {
 
 add_shortcode("opinc-part2-step1", "opinc_part2_step1_form_sc");   
 
-/**********************************************************************************************
-Part 2 Step 2 Form Shortcode
-
-This function places the Part 2 Step 2 form on the page
-**********************************************************************************************/
+// Shortcode: Part 2 Step 2 (About My Access Needs)
 function opinc_part2_step2_form_sc($atts, $content = null) {
-   // Get parameters
    extract(shortcode_atts(array(
    ), $atts));
 
-   // Check if user is logged in
    if (!is_user_logged_in()) {
       if($_SERVER['HTTP_HOST'] == 'localhost') {
-         $redirect = "http://" . $_SERVER['HTTP_HOST']."/openinclusion/login";
+         $redirect = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/login';
+      } else {
+         $redirect = "https://" . $_SERVER['HTTP_HOST']. "/login";
       }
-      else {
-         $redirect = "https://". $_SERVER['HTTP_HOST']. "/login";
-      }       
-      wp_redirect( $redirect ); exit;
+      wp_redirect($redirect); exit;
    }
 
-   // Check if user has completed Part 2 Step 1
-   $current_user = wp_get_current_user();
-   if($current_user) {
-      $userid = $current_user->ID;
-      $part2Step1Completed = get_user_meta($userid, 'Part2Step1Completed', true);
-      if($part2Step1Completed !== 'Yes') {
-         // Redirect to Part 2 Step 1 if not completed
-         if($_SERVER['HTTP_HOST'] == 'localhost') {
-            $redirect = "http://" . $_SERVER['HTTP_HOST']."/mywordpress/blog/multi-step-registration-1/";
-         }
-         else {
-            $redirect = "https://staging4.openinclusion.com/multi-step-registration-1/";
-         }       
-         wp_redirect( $redirect ); exit;
-      }
-   }
-
-   // Pull in stored values
    $arrErrs = getFormErrors();
    $clean = getClean();
-   
-   // If no form data, populate with existing user data
+
+   // Default to existing meta if not coming from a POST
    if (empty($clean) || !isset($clean['submitted'])) {
       $current_user = wp_get_current_user();
       if($current_user) {
          $userid = $current_user->ID;
          $user_info = get_user_meta($userid);
-         
-         // Populate form with existing user data
          $clean = array();
-         if(isset($user_info['Sensory Needs'][0])) {
-            $sensory_data = $user_info['Sensory Needs'][0];
-            if(strpos($sensory_data, '|') !== false) {
-               $clean['SensoryNeeds'] = explode('|', $sensory_data);
-            } else {
-               $clean['SensoryNeeds'] = array($sensory_data);
-            }
-         }
-         if(isset($user_info['Physical Needs'][0])) {
-            $physical_data = $user_info['Physical Needs'][0];
-            if(strpos($physical_data, '|') !== false) {
-               $clean['PhysicalNeeds'] = explode('|', $physical_data);
-            } else {
-               $clean['PhysicalNeeds'] = array($physical_data);
-            }
-         }
-         if(isset($user_info['Cognitive And Mental health Needs'][0])) {
-            $cognitive_data = $user_info['Cognitive And Mental health Needs'][0];
-            if(strpos($cognitive_data, '|') !== false) {
-               $clean['CognitiveAndMentalhealthNeeds'] = explode('|', $cognitive_data);
-            } else {
-               $clean['CognitiveAndMentalhealthNeeds'] = array($cognitive_data);
-            }
-         }
-         if(isset($user_info['Communication Needs'][0])) {
-            $communication_data = $user_info['Communication Needs'][0];
-            if(strpos($communication_data, '|') !== false) {
-               $clean['CommunicationNeeds'] = explode('|', $communication_data);
-            } else {
-               $clean['CommunicationNeeds'] = array($communication_data);
-            }
-         }
-         if(isset($user_info['Chronic health Needs'][0])) {
-            $chronic_data = $user_info['Chronic health Needs'][0];
-            if(strpos($chronic_data, '|') !== false) {
-               $clean['ChronichealthNeeds'] = explode('|', $chronic_data);
-            } else {
-               $clean['ChronichealthNeeds'] = array($chronic_data);
-            }
-         }
-         if(isset($user_info['Other Needs'][0])) {
-            $other_data = $user_info['Other Needs'][0];
-            if(strpos($other_data, '|') !== false) {
-               $clean['OtherNeeds'] = explode('|', $other_data);
-            } else {
-               $clean['OtherNeeds'] = array($other_data);
+         foreach (array('Sensory Needs' => 'SensoryNeeds','Physical Needs'=>'PhysicalNeeds','Cognitive And Mental health Needs'=>'CognitiveAndMentalhealthNeeds','Communication Needs'=>'CommunicationNeeds','Chronic health Needs'=>'ChronichealthNeeds','Other Needs'=>'OtherNeeds') as $metaKey => $fieldKey) {
+            if(isset($user_info[$metaKey][0])) {
+               $val = $user_info[$metaKey][0];
+               $clean[$fieldKey] = strpos($val,'|') !== false ? explode('|', $val) : array($val);
             }
          }
       }
    }
-   
+
    global $part2Step2Form;
-   
-   // Call the function to print out the form and return
    $strHtml = printFormNew($part2Step2Form, $clean, $arrErrs );
    $strHtml.= "<script>jQuery(document).ready(function($) { jQuery('#content').find('header').remove(); });</script>";
-   
    return $strHtml;
 }
+add_shortcode("opinc-part2-step2", "opinc_part2_step2_form_sc");
 
-add_shortcode("opinc-part2-step2", "opinc_part2_step2_form_sc");   
+// Shortcode: Part 2 Step 3 (Assistive Technologies I Use)
+function opinc_part2_step3_form_sc($atts, $content = null) {
+   extract(shortcode_atts(array(
+   ), $atts));
+
+   if (!is_user_logged_in()) {
+      if($_SERVER['HTTP_HOST'] == 'localhost') {
+         $redirect = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/login';
+      } else {
+         $redirect = "https://" . $_SERVER['HTTP_HOST']. "/login";
+      }
+      wp_redirect($redirect); exit;
+   }
+
+   $arrErrs = getFormErrors();
+   $clean = getClean();
+
+   if (empty($clean) || !isset($clean['submitted'])) {
+      $current_user = wp_get_current_user();
+      if($current_user) {
+         $userid = $current_user->ID;
+         $user_info = get_user_meta($userid);
+         $clean = array();
+         foreach (array(
+            'Digital and Screen Technologies' => 'DigitalandScreenTechnologies',
+            'PrintMedia' => 'PrintMedia',
+            'Movement Canes and Service Animals' => 'MovementCanesandServiceAnimals',
+            'Communication Preferences' => 'CommunicationPreferences',
+            'PersonalSupportandHome' => 'PersonalSupportandHome',
+            'Other Technologies' => 'OtherTechnologies',
+            'Research Formats' => 'Research Formats'
+         ) as $metaKey => $fieldKey) {
+            if(isset($user_info[$metaKey][0])) {
+               $val = $user_info[$metaKey][0];
+               $clean[$fieldKey] = strpos($val,'|') !== false ? explode('|', $val) : array($val);
+            }
+         }
+         if(isset($user_info['DigitalandScreenTechnologiesSpecificSoftware'][0])) {
+            $clean['DigitalandScreenTechnologiesSpecificSoftware'] = $user_info['DigitalandScreenTechnologiesSpecificSoftware'][0];
+         }
+         if(isset($user_info['inf_field_referred'][0])) {
+            $clean['inf_field_referred'] = $user_info['inf_field_referred'][0];
+         }
+         if(isset($user_info['inf_field_referred_name'][0])) {
+            $clean['inf_field_referred_name'] = $user_info['inf_field_referred_name'][0];
+         }
+      }
+   }
+
+   global $part2Step3Form;
+   $strHtml = printFormNew($part2Step3Form, $clean, $arrErrs );
+   $strHtml.= "<script>jQuery(document).ready(function($) { jQuery('#content').find('header').remove(); });</script>";
+   return $strHtml;
+}
+add_shortcode("opinc-part2-step3", "opinc_part2_step3_form_sc");
 
 /**********************************************************************************************
 This function redirects to thank you page after registration. Validate if consent is submitted
@@ -319,8 +302,31 @@ function redirectAfterRegistration(){
    ob_start();
    // if(isset($_POST['consent'])) {
       $mailSent = false;
-      
-      
+          // Check if user is under 18 - screen them out
+      // if(isset($_POST['inf_field_over18']) && $_POST['inf_field_over18'] == 'Not-yet') {
+      //    // Set error message and return to form
+      //    $arrErrs = array();
+      //    $arrErrs[] = array('inf_field_over18', 'Thanks for your interest! Currently, we\'re only able to accept members aged 18 and over for our insight community.');
+      //    setFormErrors($arrErrs);
+      //    return;
+      // if(isset($_POST['inf_field_over18']) && $_POST['inf_field_over18'] == 'No') {
+      //    // Redirect to thank-you page with error message
+      //    if(isset($_SERVER['HTTP_HOST'])) {
+      //       if($_SERVER['HTTP_HOST'] == 'localhost') {
+      //          $redirectUrl = "http://" . $_SERVER['HTTP_HOST']."/mywordpress/thank-you/";
+      //       }
+      //       else {
+      //          $redirectUrl = "https://". $_SERVER['HTTP_HOST']. "/thank-you/";
+      //       }
+            
+      //       // Add error message as URL parameter
+      //       $errorMessage = urlencode('Thanks for your interest! Currently, we\'re only able to accept members aged 18 and over for our insight community.');
+      //       $redirectUrl .= "?error=" . $errorMessage;
+            
+      //       wp_redirect($redirectUrl);
+      //       exit;
+      //    }
+      // }
       if(isValidUserInput()) {
          // user table data
          $userData = array(
@@ -344,12 +350,14 @@ function redirectAfterRegistration(){
             }
             $code = sha1( $userId . time() );
 
+            // $baseLink = "https://openinclusion.com/activation/";
             $baseLink = "https://staging4.openinclusion.com/activation/";
             if(isset($_SERVER['HTTP_HOST'])) {
                if($_SERVER['HTTP_HOST'] == 'localhost') {
                   $baseLink = "http://" . $_SERVER['HTTP_HOST']."/openinclusion/activation/";
                }
                else {
+                  // $baseLink = "https://". $_SERVER['HTTP_HOST']. "/activation/";
                   $baseLink = "https://staging4.openinclusion.com/activation/";
                }          
             }
@@ -366,8 +374,7 @@ function redirectAfterRegistration(){
          // exit();
          if($mailSent && $contactId && isset($_SERVER['HTTP_HOST'])) {
             if($_SERVER['HTTP_HOST'] == 'localhost') {
-               // $redirectUrl = "http://localhost/mywordpress/thank-you/";
-               $redirectUrl = "http://" . $_SERVER['HTTP_HOST']."/thank-you/";
+               $redirectUrl = "http://" . $_SERVER['HTTP_HOST']."/openinclusion/thank-you/";
             }
             else {
                $redirectUrl = "https://" . $_SERVER['HTTP_HOST']."/thank-you/";
@@ -560,14 +567,14 @@ function opinc_panel_useractivation($atts, $content = null) {
       $code = get_user_meta( $user_id, 'ActivationKey', true );
       if ( $code == filter_input( INPUT_GET, 'key' ) ) {
           delete_user_meta( $user_id, 'ActivationKey' );
-          
-          // Log the user in after successful activation
+         // Log the user in after successful activation
           wp_set_current_user( $user_id );
           wp_set_auth_cookie( $user_id );
       }
       if($_SERVER['HTTP_HOST'] == 'localhost') {
-         // $redirect = "https:/staging4.openinclusion.com/multi-step-registration-1/";
-         $redirect = "http://" . $_SERVER['HTTP_HOST']."/multi-step-registration-1/";
+         // $redirect = "http://" . $_SERVER['HTTP_HOST']."/openinclusion/login";
+                  $redirect = "https://staging4.openinclusion.com/multi-step-registration-1/";
+
       }
       else {
         // $redirect = "https://". $_SERVER['HTTP_HOST']. "/login";
@@ -789,13 +796,12 @@ This function redirects after Part 2 Step 1 form submission
 function redirectAfterPart2Step1(){
    ob_clean();
    ob_start();
+//    if(isset($_POST['submit_part2_step1'])) {
    if(isset($_POST['submit_part2_step1']) || isset($_POST['save_continue_later'])) {
       $current_user = wp_get_current_user();
       if($current_user) {
          $userid = $current_user->ID;
-         
-         // Check if user is under 18 - screen them out
-         if(isset($_POST['inf_field_over18']) && $_POST['inf_field_over18'] == 'Not Yet') {
+          if(isset($_POST['inf_field_over18']) && $_POST['inf_field_over18'] == 'Not Yet') {
             // Mark user as screened out
             update_user_meta( $userid, 'ScreenedOut', 'Yes');
             update_user_meta( $userid, 'ScreenedOutReason', 'Under 18 years old');
@@ -843,7 +849,26 @@ function redirectAfterPart2Step1(){
             update_user_meta( $userid, $key, $val ); 
          }
          
-         // Check if "Save & Continue Later" button was clicked
+        //  // Mark that user has completed Part 2 Step 1
+        //  update_user_meta( $userid, 'Part2Step1Completed', 'Yes');
+
+        //  // Update Part 2 Step 1 data in Keap/Infusionsoft
+        //  include_once (__DIR__."/../../../infusion/updatePart2Step1.php");
+         
+        //  // Update user status in Keap/Infusionsoft
+        //  include_once (__DIR__."/../../../infusion/updateUserStatus.php");
+         
+        //  if(isset($_SERVER['HTTP_HOST'])) {
+        //     if($_SERVER['HTTP_HOST'] == 'localhost') {
+        //        $redirectUrl = "http://" . $_SERVER['HTTP_HOST']."/openinclusion/part2-step2/";
+        //     }
+        //     else {
+        //        $redirectUrl = "https://". $_SERVER['HTTP_HOST']. "/part2-step2/";
+        //     }         
+        //     wp_redirect($redirectUrl);
+        //     exit;      
+        //  } 
+        // Check if "Save & Continue Later" button was clicked
          if(isset($_POST['save_continue_later'])) {
             // Don't mark as completed, just save the data and redirect to thank you page
             if(isset($_SERVER['HTTP_HOST'])) {
@@ -860,18 +885,27 @@ function redirectAfterPart2Step1(){
             // Mark that user has completed Part 2 Step 1 (only for "Save & Continue to Next Step")
             update_user_meta( $userid, 'Part2Step1Completed', 'Yes');
             
-            // Update Part 2 Step 1 data in Keap/Infusionsoft
-            include_once (__DIR__."/../../../infusion/updatePart2Step1.php");
+            // Update Part 2 Step 1 data in Keap/Infusionsoft (temporarily disabled to avoid class iSDK redeclare)
+            // if (function_exists('class_exists') && !class_exists('iSDK') && file_exists(__DIR__."/../../../infusion/updatePart2Step1.php")) {
+            //    include_once (__DIR__."/../../../infusion/updatePart2Step1.php");
+            // }
             
-            // Update user status in Keap/Infusionsoft
-            include_once (__DIR__."/../../../infusion/updateUserStatus.php");
+            // Update user status in Keap/Infusionsoft (temporarily disabled to avoid class iSDK redeclare)
+            // if (function_exists('class_exists') && !class_exists('iSDK') && file_exists(__DIR__."/../../../infusion/updateUserStatus.php")) {
+            //    include_once (__DIR__."/../../../infusion/updateUserStatus.php");
+            // }
             
+            // Determine routing based on caregiver-only selection
+            $shouldSkip = false;
+            if(isset($_POST['RelationShip'])) {
+               $shouldSkip = user_should_skip_step2_based_on_relationship($_POST['RelationShip']);
+            }
             if(isset($_SERVER['HTTP_HOST'])) {
                if($_SERVER['HTTP_HOST'] == 'localhost') {
-                  $redirectUrl = "http://" . $_SERVER['HTTP_HOST']."/openinclusion/part2-step2/";
+                  $redirectUrl = "http://" . $_SERVER['HTTP_HOST']."/openinclusion/".($shouldSkip ? 'part2-step3/' : 'part2-step2/');
                }
                else {
-                  $redirectUrl = "https://". $_SERVER['HTTP_HOST']. "/part2-step2/";
+                  $redirectUrl = "https://". $_SERVER['HTTP_HOST']. "/".($shouldSkip ? 'part2-step3/' : 'part2-step2/');
                }         
                wp_redirect($redirectUrl);
                exit;      
@@ -881,6 +915,73 @@ function redirectAfterPart2Step1(){
    }
 }
 add_action( 'template_redirect', 'redirectAfterPart2Step1');
+
+// Caregiver-only routing from Step 1: If RelationShip is only caregiver categories and no others, skip Step 2
+function user_should_skip_step2_based_on_relationship($relationshipValues) {
+   if(!is_array($relationshipValues)) return false;
+   $caregiverKeys = array('A-professional-caregiver-to-a-disabled-person','A-personal-caregiver-to-a-disabled-person');
+   $hasCaregiver = false;
+   $hasNonCaregiver = false;
+   foreach($relationshipValues as $val){
+      if(in_array($val, $caregiverKeys)) { $hasCaregiver = true; }
+      else { $hasNonCaregiver = true; }
+   }
+   return ($hasCaregiver && !$hasNonCaregiver);
+}
+
+// Redirects after Step 2 submission
+function redirectAfterPart2Step2(){
+   ob_clean();
+   ob_start();
+   if(isset($_POST['submit_part2_step2']) || isset($_POST['save_continue_later_step2'])) {
+      $current_user = wp_get_current_user();
+      if($current_user) {
+         $userid = $current_user->ID;
+         $userMetaData = prepareUserMetaData();
+         foreach( $userMetaData as $key => $val ) {
+            update_user_meta( $userid, $key, $val );
+         }
+         if(isset($_POST['save_continue_later_step2'])) {
+            if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/mywordpress/thank-you/'; }
+            else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/thank-you/"; }
+            wp_redirect($redirectUrl); exit;
+         }
+         // Continue to Step 3
+         if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/part2-step3/'; }
+         else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/part2-step3/"; }
+         wp_redirect($redirectUrl); exit;
+      }
+   }
+}
+add_action( 'template_redirect', 'redirectAfterPart2Step2');
+
+// Redirects after Step 3 submission
+function redirectAfterPart2Step3(){
+   ob_clean();
+   ob_start();
+   if(isset($_POST['submit_part2_step3']) || isset($_POST['save_continue_later_step3'])) {
+      $current_user = wp_get_current_user();
+      if($current_user) {
+         $userid = $current_user->ID;
+         $userMetaData = prepareUserMetaData();
+         foreach( $userMetaData as $key => $val ) {
+            update_user_meta( $userid, $key, $val );
+         }
+         // Mark completion
+         update_user_meta( $userid, 'Part2Step3Completed', 'Yes');
+         include_once (__DIR__."/../../../infusion/updateUserStatus.php");
+         if(isset($_POST['save_continue_later_step3'])) {
+            if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/mywordpress/thank-you/'; }
+            else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/thank-you/"; }
+         } else {
+            if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/registration-complete/'; }
+            else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/registration-complete/"; }
+         }
+         wp_redirect($redirectUrl); exit;
+      }
+   }
+}
+add_action( 'template_redirect', 'redirectAfterPart2Step3');
 
 
 function getMetaValue($input) {

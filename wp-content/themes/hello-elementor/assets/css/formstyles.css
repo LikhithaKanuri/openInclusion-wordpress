@@ -8,7 +8,7 @@ ul.checkbox.error,
 ul.checkbox-radio.error,
 ul.dob.error {
   /*outline: 2px solid #CC063B;*/
-  /* border: 1px solid #CC063B !important; */
+  /*border: 1px solid #CC063B !important;*/
 }
 
 input[type=date], input[type=email], input[type=number], input[type=password], input[type=search], input[type=tel], input[type=text], input[type=url], select, textarea {	
@@ -97,14 +97,14 @@ input[type=date], input[type=email], input[type=number], input[type=password], i
   margin: 0;
   text-align: left;
   line-height: 1.8em;
-  font-weight: normal !important; }
+  font-weight: normal !important;  }
 
 #content .contact label .text {
   width: auto;
   display: block;
   padding: 0 30px 0 0; 
   line-height: 1.6rem;
-  font-weight: normal !important;}
+  font-weight: normal !important; }
 
 #content .contact fieldset {
   width: 100%;
@@ -182,6 +182,38 @@ input[type=date], input[type=email], input[type=number], input[type=password], i
 #content .contact .clarify {
   font-size: 0.8rem; }
 
+#content .contact li.submit {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+/* Container for submit buttons to control alignment */
+#content .contact ul li.submit:first-of-type {
+  float: left;
+}
+
+#content .contact ul li.submit:last-of-type {
+  float: right;
+}
+
+/* Clear float after submit buttons */
+#content .contact ul li.submit:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+#content .contact li.submit.save-later input {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  color: white;
+}
+
+#content .contact li.submit.save-later input:hover {
+  background-color: #5a6268;
+  border-color: #545b62;
+}
+
 #content .contact .err-img {
   border: none; }
 
@@ -247,7 +279,7 @@ input[type=button]:focus, input[type=button]:hover, input[type=submit]:focus, in
 .terms li {
   list-style-type:disc !important;
 	padding-bottom:20px !important;
-}
+} 
 
 .form-intro-list {
   list-style-type: disc !important;

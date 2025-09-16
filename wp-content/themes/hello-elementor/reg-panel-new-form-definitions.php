@@ -1187,6 +1187,20 @@ $part2Step1Form = array(
          )
       ),
       
+      // array(
+      //    'name' => 'submit_part2_step1',
+      //    'type' => 'submit',
+      //    'li-class' => 'submit',
+      //    'value' => __('Continue to Next Step', 'openinclusion' )
+      // ),
+
+            array(
+         'name' => 'save_continue_later',
+         'type' => 'submit',
+         'li-class' => 'submit save-later',
+         'value' => __('Save & Continue Later', 'openinclusion' )
+      ),
+      
       array(
          'name' => 'save_continue_later',
          'type' => 'submit',
@@ -1254,4 +1268,228 @@ function getUserRole(){
    }
    return $member_text;
 }
+?>
+<?php
+// Append Part 2 Step 2 and Step 3 form definitions
+
+// Part 2 Step 2 form definition (About My Access Needs)
+$part2Step2Form = array(
+   'cont-id' => '',
+   'cont-class' => 'contact panel-contact',
+   'form-id' => 'part2-step2-form',
+   'client-val' => true,
+   'mand-ind' => '*',
+   'success-img' => '',
+   'error-img' => '',
+   'error-sect-id' => 'sub-errs',
+   'error-sect-class' => '',
+   'error-sect-hdr' => __( 'Submission Problems', 'openinclusion' ),
+   'error-sect-hdr-level' => 2,
+   'error-sect-intro' => '<p>'.__( 'We were not able to process your enquiry. Please review the following items and check what you entered', 'openinclusion' ).'</p>',
+   'nonce-name' => 'part2_step2_nonce',
+   'sq-reqd' => false,
+   'sq-id' => 'sq',
+   'sq-label' => __( 'Please answer this question:', 'openinclusion' ).' %1$s <span class="clarify">('.__( 'Helps stop spam', 'openinclusion' ).')</span>',
+   'fields' => array(
+      array(
+         'label' => '',
+         'type' => 'other-html',
+         'name' => 'banner2',
+         'li-class' => 'clear',
+         'value' => '
+            <h2>PAGE 2: ABOUT MY ACCESS NEEDS</h2>
+            <p>Please select all that apply. Required questions are marked with an asterisk *</p>
+         ',
+         'validation' => array()
+      ),
+      array(
+         'label' => __( 'Sensory needs:', 'openinclusion' ),
+         'type' => 'chkboxgroup-inf',
+         'name' => 'SensoryNeeds',
+         'li-class' => 'clear',
+         'options' => get_sensory_needs(),
+         'validation' => array()
+      ),
+      array(
+         'label' => __( 'Physical needs:', 'openinclusion' ),
+         'type' => 'chkboxgroup-inf',
+         'name' => 'PhysicalNeeds',
+         'li-class' => 'clear',
+         'options' => get_physical_needs(),
+         'validation' => array()
+      ),
+      array(
+         'label' => __( 'Cognitive and mental health needs:', 'openinclusion' ),
+         'type' => 'chkboxgroup-inf',
+         'name' => 'CognitiveAndMentalhealthNeeds',
+         'li-class' => 'clear',
+         'options' => get_cognitive_and_mentalhealth_needs(),
+         'validation' => array()
+      ),
+      array(
+         'label' => __( 'Communication needs:', 'openinclusion' ),
+         'type' => 'chkboxgroup-inf',
+         'name' => 'CommunicationNeeds',
+         'li-class' => 'clear',
+         'options' => get_communication_needs(),
+         'validation' => array()
+      ),
+      array(
+         'label' => __( 'Chronic health needs:', 'openinclusion' ),
+         'type' => 'chkboxgroup-inf',
+         'name' => 'ChronichealthNeeds',
+         'li-class' => 'clear',
+         'options' => get_chronichealth_needs(),
+         'validation' => array()
+      ),
+      array(
+         'label' => __( 'Other', 'openinclusion' ),
+         'type' => 'chkboxgroup-inf',
+         'name' => 'OtherNeeds',
+         'li-class' => 'clear',
+         'options' => get_other_needs(),
+         'validation' => array()
+      ),
+      array(
+         'name' => 'save_continue_later_step2',
+         'type' => 'submit',
+         'li-class' => 'submit save-later',
+         'value' => __('Save & Continue Later', 'openinclusion' )
+      ),
+      array(
+         'name' => 'submit_part2_step2',
+         'type' => 'submit',
+         'li-class' => 'submit',
+         'value' => __('Save & Continue to Next Step', 'openinclusion' )
+      ),
+   )
+);
+
+// Part 2 Step 3 form definition (Assistive Technologies I Use)
+$part2Step3Form = array(
+   'cont-id' => '',
+   'cont-class' => 'contact panel-contact',
+   'form-id' => 'part2-step3-form',
+   'client-val' => true,
+   'mand-ind' => '*',
+   'success-img' => '',
+   'error-img' => '',
+   'error-sect-id' => 'sub-errs',
+   'error-sect-class' => '',
+   'error-sect-hdr' => __( 'Submission Problems', 'openinclusion' ),
+   'error-sect-hdr-level' => 2,
+   'error-sect-intro' => '<p>'.__( 'We were not able to process your enquiry. Please review the following items and check what you entered', 'openinclusion' ).'</p>',
+   'nonce-name' => 'part2_step3_nonce',
+   'sq-reqd' => false,
+   'sq-id' => 'sq',
+   'sq-label' => __( 'Please answer this question:', 'openinclusion' ).' %1$s <span class="clarify">('.__( 'Helps stop spam', 'openinclusion' ).')</span>',
+   'fields' => array(
+      array(
+         'label' => '',
+         'type' => 'other-html',
+         'name' => 'banner3',
+         'li-class' => 'clear',
+         'value' => '
+            <h2>PAGE 3: ASSISTIVE TECHNOLOGIES I USE</h2>
+            <p>Please select all that apply. Required questions are marked with an asterisk *</p>
+         ',
+         'validation' => array()
+      ),
+      array(
+         'label' => __( 'Digital and screen technologies, including hardware:', 'openinclusion' ),
+         'type' => 'chkboxgroup-inf',
+         'name' => 'DigitalandScreenTechnologies',
+         'li-class' => 'clear',
+         'options' => get_digitalandscreentechnologies(),
+         'validation' => array()
+      ),
+      array(
+         'label' => __( 'Please share the names of any specific software you regularly use (e.g., JAWS, Dragon NaturallySpeaking)', 'openinclusion' ),
+         'type' => 'text',
+         'name' => 'DigitalandScreenTechnologiesSpecificSoftware',
+         'li-class' => 'clear',
+         'maxlen' => 500,
+         'validation' => array()
+      ),
+      array(
+         'label' => __( 'Printed media aids or adaptations:', 'openinclusion' ),
+         'type' => 'chkboxgroup-inf',
+         'name' => 'PrintMedia',
+         'li-class' => 'clear',
+         'options' => get_printMedia(),
+         'validation' => array()
+      ),
+      array(
+         'label' => __( 'Movement: mobility devices, aids and service animals:', 'openinclusion' ),
+         'type' => 'chkboxgroup-inf',
+         'name' => 'MovementCanesandServiceAnimals',
+         'li-class' => 'clear',
+         'options' => get_movementcanesandserviceanimals(),
+         'validation' => array()
+      ),
+      array(
+         'label' => __( 'Communication aids and alternatives:', 'openinclusion' ),
+         'type' => 'chkboxgroup-inf',
+         'name' => 'CommunicationPreferences',
+         'li-class' => 'clear',
+         'options' => get_communicationpreferences(),
+         'validation' => array()
+      ),
+      array(
+         'label' => __( 'Personal support and home:', 'openinclusion' ),
+         'type' => 'chkboxgroup-inf',
+         'name' => 'PersonalSupportandHome',
+         'li-class' => 'clear',
+         'options' => get_personalsupportandhome(),
+         'validation' => array()
+      ),
+      array(
+         'label' => __( 'Other technologies or support:', 'openinclusion' ),
+         'type' => 'chkboxgroup-inf',
+         'name' => 'OtherTechnologies',
+         'li-class' => 'clear',
+         'options' => get_othertechnologies(),
+         'validation' => array()
+      ),
+      array(
+         'label' => __( "What research formats would you most like to be invited to?", 'openinclusion' ),
+         'type' => 'chkboxgroup-inf',
+         'name' => 'ResearchFormats',
+         'li-class' => 'clear',
+         'options' => get_research_formats(),
+         'validation' => array()
+      ),
+      array(
+         'label' => __( 'Were you referred by someone to the Open Inclusion community?', 'openinclusion' ),
+         'type' => 'radiogroup-inf',
+         'name' => 'inf_field_referred',
+         'li-class' => 'clear',
+         'options' => array(
+            array('Yes', __( 'Yes', 'openinclusion' ), 'inf_option_referred_yes'),
+            array('No', __( 'No', 'openinclusion' ), 'inf_option_referred_no'),
+         ),
+         'validation' => array()
+      ),
+      array(
+         'label' => __( 'If yes, please share the name of the person or organisation that referred you so we can thank them.', 'openinclusion' ),
+         'type' => 'text',
+         'name' => 'inf_field_referred_name',
+         'li-class' => 'clear',
+         'maxlen' => 250,
+         'validation' => array()
+      ),
+      array(
+         'name' => 'save_continue_later_step3',
+         'type' => 'submit',
+         'li-class' => 'submit save-later',
+         'value' => __('Save & Continue Later', 'openinclusion' )
+      ),
+      array(
+         'name' => 'submit_part2_step3',
+         'type' => 'submit',
+         'li-class' => 'submit',
+         'value' => __('Save & Complete Registration', 'openinclusion' )
+      ),
+   )
+);
 ?>
