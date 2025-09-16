@@ -71,7 +71,7 @@ function openinc_create_form_defs_v3() {
                 <p><strong>2.</strong> You will then <strong>receive a welcome email with a link</strong> you will need to click on to verify your account.</p>
                 <p><strong>3. From the welcome email link, you’ll go to our registration process</strong> where we will ask you about your 
                 access needs, assistive technology usage, and some broader demographic questions. 
-                This will take approximately 10-15 minutes to complete.</p>
+                This will take approximately <strong>10-15 minutes to complete.</strong></p>
             ',
             'validation' => array()
          ),
@@ -1087,12 +1087,12 @@ $part2Step1Form = array(
             <p>It is important for us to learn more about you so that we can invite you to research that best matches your experiences.</p>
             <p>This form should take about 10-15 minutes to complete. In it, we will ask you about:</p>
             <ul class="form-intro-list">
-               <li>Your age, where you live and your connection to disability</li>
-               <li>Your access needs</li>
-               <li>The assistive technologies and adaptive solutions you use</li>
-               <li>Some key demographics such as your gender and age</li>
+               <li><strong>Your age, where you live and your connection to disability</strong></li>
+               <li><strong>Your access needs</strong></li>
+               <li><strong>The assistive technologies and adaptive solutions you use</strong></li>
+               <li><strong>Some key demographics such as your gender and age</strong></li>
             </ul>
-            <p>Once completed, including reviewing and consenting to Open Inclusion\'s Terms and Conditions, you\'ll be part of the Open Inclusion Insight Community. We look forward to working with you.</p>
+            <p>Once completed, including reviewing and consenting to Open Inclusion\'s Terms and Conditions, you\'ll be part of the Open Inclusion Online Community. We look forward to working with you.</p>
             <p>Required questions are marked with an asterisk *</p>
          ',
          'validation' => array()
@@ -1188,10 +1188,17 @@ $part2Step1Form = array(
       ),
       
       array(
+         'name' => 'save_continue_later',
+         'type' => 'submit',
+         'li-class' => 'submit save-later',
+         'value' => __('Save & Continue Later', 'openinclusion' )
+      ),
+      
+      array(
          'name' => 'submit_part2_step1',
          'type' => 'submit',
          'li-class' => 'submit',
-         'value' => __('Continue to Next Step', 'openinclusion' )
+         'value' => __('Save & Continue to Next Step', 'openinclusion' )
       ),
    )
 );

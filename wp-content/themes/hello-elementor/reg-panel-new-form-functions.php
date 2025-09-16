@@ -535,7 +535,7 @@ function sentUserActivationMail($toEmailId, $name, $activation_link) {
    </div>
    <br />
     <div style=\"padding: 30px 0px; font-family: Poppins; font-size: 24px; line-height: 40px; text-align: left; content: left\">
-   <p style=\"font-family: Poppins;content: left; font-size: 24px\">When you log in for the first time, you’ll be directed to the second part of the registration form, where you will have the opportunity to update your access needs and assistive technology preferences. This helps us invite you to research opportunities that best suit you
+   <p style=\"font-family: Poppins;content: left; font-size: 24px\">When you log in for the first time, you’ll be directed to the second part of the registration form, where you will have the opportunity to update your access needs and assistive technology preferences. <br> This helps us invite you to research opportunities that best suit you
    </p>
    <p style=\"font-family: Poppins; font-size: 24px\">
    Thank you, <br />The Open Inclusion Team
@@ -789,7 +789,7 @@ This function redirects after Part 2 Step 1 form submission
 function redirectAfterPart2Step1(){
    ob_clean();
    ob_start();
-   if(isset($_POST['submit_part2_step1'])) {
+   if(isset($_POST['submit_part2_step1']) || isset($_POST['save_continue_later'])) {
       $current_user = wp_get_current_user();
       if($current_user) {
          $userid = $current_user->ID;
@@ -843,24 +843,39 @@ function redirectAfterPart2Step1(){
             update_user_meta( $userid, $key, $val ); 
          }
          
-         // Mark that user has completed Part 2 Step 1
-         update_user_meta( $userid, 'Part2Step1Completed', 'Yes');
-         
-         // Update Part 2 Step 1 data in Keap/Infusionsoft
-         include_once (__DIR__."/../../../infusion/updatePart2Step1.php");
-         
-         // Update user status in Keap/Infusionsoft
-         include_once (__DIR__."/../../../infusion/updateUserStatus.php");
-         
-         if(isset($_SERVER['HTTP_HOST'])) {
-            if($_SERVER['HTTP_HOST'] == 'localhost') {
-               $redirectUrl = "http://" . $_SERVER['HTTP_HOST']."/openinclusion/part2-step2/";
+         // Check if "Save & Continue Later" button was clicked
+         if(isset($_POST['save_continue_later'])) {
+            // Don't mark as completed, just save the data and redirect to thank you page
+            if(isset($_SERVER['HTTP_HOST'])) {
+               if($_SERVER['HTTP_HOST'] == 'localhost') {
+                  $redirectUrl = "http://" . $_SERVER['HTTP_HOST']."/mywordpress/thank-you/";
+               }
+               else {
+                  $redirectUrl = "https://". $_SERVER['HTTP_HOST']. "/thank-you/";
+               }         
+               wp_redirect($redirectUrl);
+               exit;      
             }
-            else {
-               $redirectUrl = "https://". $_SERVER['HTTP_HOST']. "/part2-step2/";
-            }         
-            wp_redirect($redirectUrl);
-            exit;      
+         } else {
+            // Mark that user has completed Part 2 Step 1 (only for "Save & Continue to Next Step")
+            update_user_meta( $userid, 'Part2Step1Completed', 'Yes');
+            
+            // Update Part 2 Step 1 data in Keap/Infusionsoft
+            include_once (__DIR__."/../../../infusion/updatePart2Step1.php");
+            
+            // Update user status in Keap/Infusionsoft
+            include_once (__DIR__."/../../../infusion/updateUserStatus.php");
+            
+            if(isset($_SERVER['HTTP_HOST'])) {
+               if($_SERVER['HTTP_HOST'] == 'localhost') {
+                  $redirectUrl = "http://" . $_SERVER['HTTP_HOST']."/openinclusion/part2-step2/";
+               }
+               else {
+                  $redirectUrl = "https://". $_SERVER['HTTP_HOST']. "/part2-step2/";
+               }         
+               wp_redirect($redirectUrl);
+               exit;      
+            }
          } 
       }
    }

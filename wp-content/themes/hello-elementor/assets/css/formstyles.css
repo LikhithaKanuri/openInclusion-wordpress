@@ -96,13 +96,15 @@ input[type=date], input[type=email], input[type=number], input[type=password], i
   display: block;
   margin: 0;
   text-align: left;
-  line-height: 1.8em; }
+  line-height: 1.8em;
+  font-weight: normal !important; }
 
 #content .contact label .text {
   width: auto;
   display: block;
   padding: 0 30px 0 0; 
-  line-height: 1.6rem;}
+  line-height: 1.6rem;
+  font-weight: normal !important;}
 
 #content .contact fieldset {
   width: 100%;
@@ -111,7 +113,8 @@ input[type=date], input[type=email], input[type=number], input[type=password], i
 #content .contact legend {
   width: 90%;
   display: block;
-  padding: 0 30px 0 0; }
+  padding: 0 30px 0 0;
+  font-weight: normal !important; }
 
 #content .contact legend.valid,
 #content .contact label.valid {
@@ -128,6 +131,53 @@ input[type=date], input[type=email], input[type=number], input[type=password], i
 #content .contact li.submit input {
   width: auto;
   cursor: pointer; }
+
+/* Style for multiple submit buttons */
+#content .contact li.submit {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+/* Container for submit buttons to control alignment */
+#content .contact ul li.submit:first-of-type {
+  float: left;
+}
+
+#content .contact ul li.submit:last-of-type {
+  float: right;
+}
+
+/* Clear float after submit buttons */
+#content .contact ul li.submit:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+#content .contact li.submit.save-later input {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  color: white;
+}
+
+#content .contact li.submit.save-later input:hover {
+  background-color: #5a6268;
+  border-color: #545b62;
+}
+
+/* Ensure all text content in forms has normal font weight */
+#content .contact p,
+#content .contact li p,
+#content .contact ul li p,
+#content .contact .form-intro-list li {
+  font-weight: normal !important;
+}
+
+/* Override any strong/bold tags in form content */
+#content .contact strong,
+#content .contact b {
+  font-weight: normal !important;
+}
 
 #content .contact .clarify {
   font-size: 0.8rem; }
@@ -167,7 +217,7 @@ input[type=button]:focus, input[type=button]:hover, input[type=submit]:focus, in
 }
 
 #content fieldset legend{	
-	font-weight:500;
+	font-weight:normal;
 }
 
 .txtbold{
