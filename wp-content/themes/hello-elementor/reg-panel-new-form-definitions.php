@@ -1118,7 +1118,9 @@ $part2Step1Form = array(
          'options' => array(
             array('', __( 'Please select your country first', 'openinclusion' ), 'inf_option_region_placeholder')
          ),
-         'validation' => array()
+         'validation' => array(
+            array('reqd', __( 'Please select your region, province or state', 'openinclusion' ))
+         )
       ),
       
       array(
@@ -1127,7 +1129,9 @@ $part2Step1Form = array(
          'name' => 'inf_field_postcode',
          'li-class' => 'clear',
          'maxlen' => 20,
-         'validation' => array()
+         'validation' => array(
+            array('reqd', __( 'Please enter your postcode', 'openinclusion' ))
+         )
       ),
       
       array(

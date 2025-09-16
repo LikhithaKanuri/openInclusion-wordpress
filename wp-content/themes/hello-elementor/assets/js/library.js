@@ -203,6 +203,11 @@ jQuery(document).ready(function ($) {
    $('#inf_field_country').on('change', function() {
       var selectedCountry = $(this).val();
       updateRegionOptions(selectedCountry);
+      // Re-bind region validation because control may have been replaced
+      $(document).off('change.inputRegion input.inputRegion');
+      $(document).on('change.inputRegion input.inputRegion', '#inf_field_region', function(){
+         validateTextSelectField(this);
+      });
    });
    
    // Initialize on page load if country is already selected
@@ -210,6 +215,10 @@ jQuery(document).ready(function ($) {
    if (initialCountry) {
       updateRegionOptions(initialCountry);
    }
+   // Bind region validation for current control as well
+   $(document).on('change.inputRegion input.inputRegion', '#inf_field_region', function(){
+      validateTextSelectField(this);
+   });
 
    $('#um-submit-btn').removeAttr("class");
    //var registerButtonHTML = $('div.um-right').html();
@@ -1116,6 +1125,114 @@ jQuery(document).ready(function ($) {
       $(this).parent().find("input").trigger("click");
    });
 
+   // Part 2 Step 1: Over 18 toggle and screen-out handling
+   (function() {
+      var $form = $('#part2-step1-form');
+      if (!$form.length) return;
+
+      function getFieldLiByInput($input) {
+         if (!$input.length) return $();
+         var $fieldsetLi = $input.closest('fieldset').closest('li');
+         if ($fieldsetLi.length) return $fieldsetLi;
+         return $input.closest('li');
+      }
+
+      var $over18Yes = $('#inf_field_over18_yes');
+      var $over18No = $('#inf_field_over18_not_yet');
+      var $over18Li = getFieldLiByInput($over18Yes.length ? $over18Yes : $over18No);
+
+      var $yearBornLi = getFieldLiByInput($('#inf_custom_YearBorn'));
+      var $hasDisabilityLi = getFieldLiByInput($('#inf_field_hasDisability_yes'));
+      if (!$hasDisabilityLi.length) { $hasDisabilityLi = getFieldLiByInput($('#inf_field_hasDisability_no')); }
+      var $relationshipLi = getFieldLiByInput($('#RelationShip_disabled_person'));
+      if (!$relationshipLi.length) { $relationshipLi = getFieldLiByInput($('input[id^="RelationShip_"]').first()); }
+      var $submitLi = getFieldLiByInput($('#submit_part2_step1'));
+
+      // Insert screen-out message container after the over18 field
+      var messageText = "Thanks for your interest! Currently, we're only able to accept members aged 18 and over for our insight community.";
+      var $screenMsg = $('<li class="clear" id="over18-screenout-msg" style="display:none;"><div role="alert" aria-live="polite">'+ messageText +'</div></li>');
+      if ($over18Li.length) {
+         $over18Li.after($screenMsg);
+      }
+
+      function setDisabled($li, disabled) {
+         if (!$li || !$li.length) return;
+         $li.find('input, select, textarea, button').each(function() {
+            var $el = $(this);
+            if (disabled) {
+               $el.data('orig-disabled', $el.prop('disabled'));
+               $el.prop('disabled', true).attr('aria-disabled', 'true');
+            } else {
+               $el.prop('disabled', false).removeAttr('disabled').attr('aria-disabled', 'false');
+            }
+         });
+      }
+
+      function toggleUnder18State(isUnder18) {
+         if (isUnder18) {
+            // Hide remaining fields
+            $yearBornLi.hide();
+            $hasDisabilityLi.hide();
+            $relationshipLi.hide();
+            // Disable their controls to avoid client-side validation
+            setDisabled($yearBornLi, true);
+            setDisabled($hasDisabilityLi, true);
+            setDisabled($relationshipLi, true);
+            // Keep message hidden until submit
+            $('#over18-screenout-msg').hide();
+         } else {
+            // Show fields
+            $yearBornLi.show();
+            $hasDisabilityLi.show();
+            $relationshipLi.show();
+            // Re-enable controls
+            setDisabled($yearBornLi, false);
+            setDisabled($hasDisabilityLi, false);
+            setDisabled($relationshipLi, false);
+            // Ensure message hidden
+            $('#over18-screenout-msg').hide();
+         }
+      }
+
+      // Bind change handler
+      $form.on('change', 'input[name="inf_field_over18"]', function() {
+         var val = $(this).val();
+         toggleUnder18State(val !== 'Yes');
+      });
+
+      // Initialize on load based on current selection (default to hidden unless explicitly Yes)
+      var initial = $form.find('input[name="inf_field_over18"]:checked').val();
+      var isUnder18Init = (initial !== 'Yes');
+      toggleUnder18State(isUnder18Init);
+
+      // Prevent submit if Not Yet selected; redirect to over18 page
+      $form.on('submit', function(e) {
+         var selected = $form.find('input[name=\"inf_field_over18\"]:checked').val();
+         if (selected === 'Not Yet') {
+            e.preventDefault();
+            window.location.href = 'https://staging4.openinclusion.com/over18/';
+            return false;
+         } else {
+            $('#over18-screenout-msg').hide();
+         }
+      });
+
+      // Also intercept submit button to redirect immediately on Not Yet
+      $form.find('input[type=\"submit\"]').on('click', function(e) {
+         var selected = $form.find('input[name=\"inf_field_over18\"]:checked').val();
+         if (selected === 'Not Yet') {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            e.stopPropagation();
+            window.location.href = 'https://staging4.openinclusion.com/over18/';
+            return false;
+         } else {
+            $('#over18-screenout-msg').hide();
+         }
+      });
+
+   })();
+
    /****************** Form is submitted **************************/
    $('.contact').find('input[type="submit"]').on('click', function (e) {
       $fieldId = '';
@@ -1452,15 +1569,19 @@ jQuery(document).ready(function ($) {
    }
 
    function doTextSelectSuccess(obj) {
-      $(obj).attr('aria-invalid', 'false')
-         .next('.errors').html('')
-         .parent('label').addClass('valid');
+      var $errorsEl = ($(obj).is('select')) ? $(obj).closest('.custom').next('.errors') : $(obj).next('.errors');
+      var $labelEl = $(obj).closest('label');
+      $(obj).attr('aria-invalid', 'false');
+      if ($errorsEl.length) { $errorsEl.html(''); }
+      if ($labelEl.length) { $labelEl.addClass('valid'); }
    }
 
    function doTextSelectFail(obj, message) {
-      $(obj).attr('aria-invalid', 'true')
-         .next('.errors').html(message)
-         .parent('label').removeClass('valid');
+      var $errorsEl = ($(obj).is('select')) ? $(obj).closest('.custom').next('.errors') : $(obj).next('.errors');
+      var $labelEl = $(obj).closest('label');
+      $(obj).attr('aria-invalid', 'true');
+      if ($errorsEl.length) { $errorsEl.html(message); }
+      if ($labelEl.length) { $labelEl.removeClass('valid'); }
       // Add error message to array for reporting on screen
       console.log($(obj).attr('id') + ', ' + message);
       $errArray.push([$(obj).attr('id'), message]);

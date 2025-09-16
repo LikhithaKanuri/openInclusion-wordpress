@@ -8,7 +8,7 @@ ul.checkbox.error,
 ul.checkbox-radio.error,
 ul.dob.error {
   /*outline: 2px solid #CC063B;*/
-  border: 1px solid #CC063B !important;
+  /* border: 1px solid #CC063B !important; */
 }
 
 input[type=date], input[type=email], input[type=number], input[type=password], input[type=search], input[type=tel], input[type=text], input[type=url], select, textarea {	
