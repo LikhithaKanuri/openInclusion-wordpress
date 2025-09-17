@@ -1092,7 +1092,7 @@ $part2Step1Form = array(
                <li><strong>The assistive technologies and adaptive solutions you use</strong></li>
                <li><strong>Some key demographics such as your gender and age</strong></li>
             </ul>
-            <p>Once completed, including reviewing and consenting to Open Inclusion\'s Terms and Conditions, you\'ll be part of the Open Inclusion Online Community. We look forward to working with you.</p>
+            <p>Once completed, including reviewing and consenting to Open Inclusion\'s Terms and Conditions, you\'ll be part of the Open Inclusion Insight Community. We look forward to working with you.</p>
             <p>Required questions are marked with an asterisk *</p>
          ',
          'validation' => array()
@@ -1195,13 +1195,6 @@ $part2Step1Form = array(
       // ),
 
             array(
-         'name' => 'save_continue_later',
-         'type' => 'submit',
-         'li-class' => 'submit save-later',
-         'value' => __('Save & Continue Later', 'openinclusion' )
-      ),
-      
-      array(
          'name' => 'save_continue_later',
          'type' => 'submit',
          'li-class' => 'submit save-later',

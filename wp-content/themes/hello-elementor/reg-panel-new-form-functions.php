@@ -313,10 +313,10 @@ function redirectAfterRegistration(){
       //    // Redirect to thank-you page with error message
       //    if(isset($_SERVER['HTTP_HOST'])) {
       //       if($_SERVER['HTTP_HOST'] == 'localhost') {
-      //          $redirectUrl = "http://" . $_SERVER['HTTP_HOST']."/mywordpress/thank-you/";
+      //          $redirectUrl = "http://" . $_SERVER['HTTP_HOST']."/mywordpress/thank-you-2/";
       //       }
       //       else {
-      //          $redirectUrl = "https://". $_SERVER['HTTP_HOST']. "/thank-you/";
+      //          $redirectUrl = "https://". $_SERVER['HTTP_HOST']. "/thank-you-2/";
       //       }
             
       //       // Add error message as URL parameter
@@ -374,14 +374,14 @@ function redirectAfterRegistration(){
          // exit();
          if($mailSent && $contactId && isset($_SERVER['HTTP_HOST'])) {
             if($_SERVER['HTTP_HOST'] == 'localhost') {
-               $redirectUrl = "http://" . $_SERVER['HTTP_HOST']."/openinclusion/thank-you/";
+               $redirectUrl = "http://" . $_SERVER['HTTP_HOST']."/openinclusion/thank-you-2/";
             }
             else {
-               $redirectUrl = "https://" . $_SERVER['HTTP_HOST']."/thank-you/";
+               $redirectUrl = "https://" . $_SERVER['HTTP_HOST']."/thank-you-2/";
             }         
          }
          else {
-            $redirectUrl = "https://staging4.openinclusion.com/thank-you/";
+            $redirectUrl = "https://staging4.openinclusion.com/thank-you-2/";
          }
          
          wp_redirect($redirectUrl);
@@ -809,10 +809,10 @@ function redirectAfterPart2Step1(){
             // Redirect to thank-you page with error message
             if(isset($_SERVER['HTTP_HOST'])) {
                if($_SERVER['HTTP_HOST'] == 'localhost') {
-                  $redirectUrl = "http://" . $_SERVER['HTTP_HOST']."/mywordpress/thank-you/";
+                  $redirectUrl = "http://" . $_SERVER['HTTP_HOST']."/mywordpress/thank-you-2/";
                }
                else {
-                  $redirectUrl = "https://". $_SERVER['HTTP_HOST']. "/thank-you/";
+                  $redirectUrl = "https://". $_SERVER['HTTP_HOST']. "/thank-you-2/";
                }
                
                // Add error message as URL parameter
@@ -873,10 +873,10 @@ function redirectAfterPart2Step1(){
             // Don't mark as completed, just save the data and redirect to thank you page
             if(isset($_SERVER['HTTP_HOST'])) {
                if($_SERVER['HTTP_HOST'] == 'localhost') {
-                  $redirectUrl = "http://" . $_SERVER['HTTP_HOST']."/mywordpress/thank-you/";
+                  $redirectUrl = "http://" . $_SERVER['HTTP_HOST']."/mywordpress/thank-you-2/";
                }
                else {
-                  $redirectUrl = "https://". $_SERVER['HTTP_HOST']. "/thank-you/";
+                  $redirectUrl = "https://". $_SERVER['HTTP_HOST']. "/thank-you-2/";
                }         
                wp_redirect($redirectUrl);
                exit;      
@@ -942,8 +942,8 @@ function redirectAfterPart2Step2(){
             update_user_meta( $userid, $key, $val );
          }
          if(isset($_POST['save_continue_later_step2'])) {
-            if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/mywordpress/thank-you/'; }
-            else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/thank-you/"; }
+            if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/mywordpress/thank-you-2/'; }
+            else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/thank-you-2/"; }
             wp_redirect($redirectUrl); exit;
          }
          // Continue to Step 3
@@ -971,8 +971,8 @@ function redirectAfterPart2Step3(){
          update_user_meta( $userid, 'Part2Step3Completed', 'Yes');
          include_once (__DIR__."/../../../infusion/updateUserStatus.php");
          if(isset($_POST['save_continue_later_step3'])) {
-            if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/mywordpress/thank-you/'; }
-            else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/thank-you/"; }
+            if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/mywordpress/thank-you-2/'; }
+            else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/thank-you-2/"; }
          } else {
             if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/registration-complete/'; }
             else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/registration-complete/"; }
