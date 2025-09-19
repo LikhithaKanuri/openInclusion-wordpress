@@ -372,6 +372,108 @@ function opinc_part2_step5_form_sc($atts, $content = null) {
 }
 add_shortcode("opinc-part2-step5", "opinc_part2_step5_form_sc");
 
+// Shortcode: Part 2 Step 8 (Create Community Login)
+function opinc_part2_step8_form_sc($atts, $content = null) {
+   extract(shortcode_atts(array(
+   ), $atts));
+
+   if (!is_user_logged_in()) {
+      if($_SERVER['HTTP_HOST'] == 'localhost') { $redirect = "http://" . $_SERVER['HTTP_HOST']."/openinclusion/login"; }
+      else { $redirect = "https://" . $_SERVER['HTTP_HOST']. "/login"; }
+      wp_redirect($redirect); exit;
+   }
+
+   $arrErrs = getFormErrors();
+   $clean = getClean();
+
+   if (empty($clean) || !isset($clean['submitted'])) {
+      $current_user = wp_get_current_user();
+      if($current_user) {
+         $userid = $current_user->ID;
+         $user_info = get_user_meta($userid);
+         $clean = array();
+         // Auto-generate username Firstname + last initial if missing
+         $first = isset($user_info['First Name'][0]) ? $user_info['First Name'][0] : $current_user->first_name;
+         $last = isset($user_info['Last Name'][0]) ? $user_info['Last Name'][0] : $current_user->last_name;
+         $username = trim($first);
+         if(!empty($last)) { $username .= substr(trim($last),0,1); }
+         if(isset($user_info['inf_field_UserName'][0])) { $username = $user_info['inf_field_UserName'][0]; }
+         $clean['inf_field_UserName'] = $username;
+      }
+   }
+
+   global $part2Step8Form;
+   $strHtml = printFormNew($part2Step8Form, $clean, $arrErrs );
+   $strHtml.= "<script>jQuery(document).ready(function($) { jQuery('#content').find('header').remove(); });</script>";
+   return $strHtml;
+}
+add_shortcode("opinc-part2-step8", "opinc_part2_step8_form_sc");
+
+// Redirects after Step 8 submission
+function redirectAfterPart2Step8(){
+   ob_clean();
+   ob_start();
+   if(isset($_POST['submit_part2_step8'])) {
+      $current_user = wp_get_current_user();
+      if($current_user) {
+         $userid = $current_user->ID;
+         // Validate passwords match (server-side)
+         $errs = array();
+         if(!isset($_POST['inf_field_Password']) || strlen($_POST['inf_field_Password']) < 8) {
+            $errs[] = array('inf_field_Password', __('Password must be at least 8 characters', 'openinclusion'));
+         }
+         if(!isset($_POST['inf_field_Password_reenter']) || $_POST['inf_field_Password_reenter'] !== $_POST['inf_field_Password']) {
+            $errs[] = array('inf_field_Password_reenter', __('Passwords do not match', 'openinclusion'));
+         }
+         if(count($errs) > 0) { setFormErrors($errs); return; }
+
+         // Update WP user account
+         $userData = array(
+            'ID' => $userid,
+            'user_pass' => $_POST['inf_field_Password'],
+            'user_login' => $_POST['inf_field_UserName']
+         );
+         wp_update_user($userData);
+
+         // Save meta
+         $userMetaData = prepareUserMetaData();
+         foreach( $userMetaData as $key => $val ) { update_user_meta( $userid, $key, $val ); }
+
+         // Next: Step 9
+         if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/part2-step9/'; }
+         else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/part2-step9/"; }
+         wp_redirect($redirectUrl); exit;
+      }
+   }
+}
+add_action( 'template_redirect', 'redirectAfterPart2Step8');
+
+// Shortcode: Part 2 Step 9 (Thank You)
+function opinc_part2_step9_form_sc($atts, $content = null) {
+   extract(shortcode_atts(array(
+   ), $atts));
+
+   // Simple render
+   global $part2Step9Form;
+   $strHtml = printFormNew($part2Step9Form, array(), array() );
+   $strHtml.= "<script>jQuery(document).ready(function($) { jQuery('#content').find('header').remove(); });</script>";
+   return $strHtml;
+}
+add_shortcode("opinc-part2-step9", "opinc_part2_step9_form_sc");
+
+// Redirects after Step 9 submission
+function redirectAfterPart2Step9(){
+   ob_clean();
+   ob_start();
+   if(isset($_POST['submit_part2_step9'])) {
+      // Final redirect to completion page
+      if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/registration-complete/'; }
+      else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/registration-complete/"; }
+      wp_redirect($redirectUrl); exit;
+   }
+}
+add_action( 'template_redirect', 'redirectAfterPart2Step9');
+
 /**********************************************************************************************
 This function redirects to thank you page after registration. Validate if consent is submitted
 **********************************************************************************************/

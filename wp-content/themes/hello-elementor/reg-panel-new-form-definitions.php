@@ -1768,3 +1768,130 @@ HTML
    )
 );
 ?>
+<?php
+// Part 2 Step 8 form definition (Create Community Login)
+$part2Step8Form = array(
+   'cont-id' => '',
+   'cont-class' => 'contact panel-contact',
+   'form-id' => 'part2-step8-form',
+   'client-val' => true,
+   'mand-ind' => '*',
+   'success-img' => '',
+   'error-img' => '',
+   'error-sect-id' => 'sub-errs',
+   'error-sect-class' => '',
+   'error-sect-hdr' => __( 'Submission Problems', 'openinclusion' ),
+   'error-sect-hdr-level' => 2,
+   'error-sect-intro' => '<p>'.__( 'We were not able to process your enquiry. Please review the following items and check what you entered', 'openinclusion' ).'</p>',
+   'nonce-name' => 'part2_step8_nonce',
+   'sq-reqd' => false,
+   'sq-id' => 'sq',
+   'sq-label' => __( 'Please answer this question:', 'openinclusion' ).' %1$s <span class="clarify">('.__( 'Helps stop spam', 'openinclusion' ).')</span>',
+   'fields' => array(
+      array(
+         'label' => '',
+         'type' => 'other-html',
+         'name' => 'banner8',
+         'li-class' => 'clear',
+         'value' => <<<HTML
+            <h2>PAGE 8: CREATE YOUR COMMUNITY LOGIN</h2>
+            <p>In order to log into the community we have generated a username for you. Please create a password of your choice to log in.</p>
+            <p>Passwords need to have 8 characters minimum and have a mix of letters and numbers.</p>
+            <p>Required questions are marked with an asterisk *</p>
+HTML
+         ,
+         'validation' => array()
+      ),
+      array(
+         'label' => __( 'Auto generated Open Inclusion Community username:', 'openinclusion' ),
+         'type' => 'text',
+         'name' => 'inf_field_UserName',
+         'li-class' => 'clear',
+         'maxlen' => 250,
+         'validation' => array(
+            array('reqd', __( 'Please keep a username value', 'openinclusion' )),
+            array('len', __( 'Your username can only be %1$d characters long', 'openinclusion' )),
+         )
+      ),
+      array(
+         'label' => __( 'Please create a password for the online Open Inclusion Community:', 'openinclusion' ),
+         'type' => 'password',
+         'name' => 'inf_field_Password',
+         'li-class' => 'clear',
+         'maxlen' => 250,
+         'validation' => array(
+            array('reqd', __( 'Please supply your password', 'openinclusion' )),
+            array('len', __( 'Your password can only be %1$d characters long', 'openinclusion' )),
+         )
+      ),
+      array(
+         'label' => __( 'Please re-enter your password:', 'openinclusion' ),
+         'type' => 'password',
+         'name' => 'inf_field_Password_reenter',
+         'li-class' => 'clear',
+         'maxlen' => 250,
+         'validation' => array(
+            array('reqd', __( 'Please re-enter your password', 'openinclusion' )),
+            array('len', __( 'Your password can only be %1$d characters long', 'openinclusion' )),
+         )
+      ),
+      array(
+         'name' => 'submit_part2_step8',
+         'type' => 'submit',
+         'li-class' => 'submit',
+         'value' => __('Submit', 'openinclusion' )
+      ),
+   )
+);
+?>
+<?php
+// Part 2 Step 9 form definition (Thank You)
+$part2Step9Form = array(
+   'cont-id' => '',
+   'cont-class' => 'contact panel-contact',
+   'form-id' => 'part2-step9-form',
+   'client-val' => true,
+   'mand-ind' => '*',
+   'success-img' => '',
+   'error-img' => '',
+   'error-sect-id' => 'sub-errs',
+   'error-sect-class' => '',
+   'error-sect-hdr' => __( 'Submission Problems', 'openinclusion' ),
+   'error-sect-hdr-level' => 2,
+   'error-sect-intro' => '',
+   'nonce-name' => 'part2_step9_nonce',
+   'sq-reqd' => false,
+   'sq-id' => 'sq',
+   'sq-label' => __( 'Please answer this question:', 'openinclusion' ).' %1$s <span class="clarify">('.__( 'Helps stop spam', 'openinclusion' ).')</span>',
+   'fields' => array(
+      array(
+         'label' => '',
+         'type' => 'other-html',
+         'name' => 'banner9',
+         'li-class' => 'clear',
+         'value' => <<<HTML
+            <h2>PAGE 9: THANK YOU!</h2>
+            <p>We look forward to working with you on paid research opportunities soon.</p>
+            <p>We cannot know exactly when the next research opportunity will arise that includes respondents with your access needs and other characteristics. We hope that it will not be long.</p>
+            <p>In the meantime please engage with others across our community in discussions.</p>
+            <p>On the Open Inclusion digital community space you can meet and engage with others in Open's community to:</p>
+            <ul>
+               <li>share challenges and find inclusive and innovative solutions</li>
+               <li>help others experiencing challenges where you may have helpful ideas or suggestions</li>
+               <li>tell us and others about things you love or frustrations you have experienced</li>
+               <li>share an event coming up or describe an event you attended that others in the community may like to know about</li>
+            </ul>
+            <p>It is a space that was designed by and for our community, and is continually evolving with your and other members' input.</p>
+HTML
+         ,
+         'validation' => array()
+      ),
+      array(
+         'name' => 'submit_part2_step9',
+         'type' => 'submit',
+         'li-class' => 'submit',
+         'value' => __('Finish', 'openinclusion' )
+      ),
+   )
+);
+?>
