@@ -834,48 +834,112 @@ function getProfileEditFields() {
             'name' => 'DigitalandScreenTechnologies',
             'li-class' => 'clear',
             'options' => get_digitalandscreentechnologies(),
-            'validation' => array(               
+            'validation' => array(
+                  // Optional: Users may not use digital technologies
             )
-         ), 
+         ),
 
          array(
-            'label' => __( 'Movement, canes and service animals:', 'openinclusion' ),
+            'label' => __( 'Please share the names of any specific software you regularly use (e.g., JAWS, Dragon NaturallySpeaking)', 'openinclusion' ),
+            'type' => 'text',
+            'name' => 'DigitalandScreenTechnologiesSpecificSoftware',
+            'li-class' => 'clear',
+            'maxlen' => 500,
+            'validation' => array(
+                  array('len', __( 'Software description can only be %1$d characters long', 'openinclusion' )),
+            )
+         ),
+
+         array(
+            'label' => __( 'Printed media aids or adaptations:', 'openinclusion' ),
+            'type' => 'chkboxgroup-inf',
+            'name' => 'PrintMedia',
+            'li-class' => 'clear',
+            'options' => get_printMedia(),
+            'validation' => array(
+                  // Optional: Users may not use print media aids
+            )
+         ),
+
+         array(
+            'label' => __( 'Movement: mobility devices, aids and service animals:', 'openinclusion' ),
             'type' => 'chkboxgroup-inf',
             'name' => 'MovementCanesandServiceAnimals',
             'li-class' => 'clear',
             'options' => get_movementcanesandserviceanimals(),
-            'validation' => array(               
+            'validation' => array(
+                  // Optional: Users may not use movement aids
             )
-         ),         
-         
+         ),
+
          array(
-            'label' => __( 'Communication, verbal and written preferences:', 'openinclusion' ),
+            'label' => __( 'Communication aids and alternatives:', 'openinclusion' ),
             'type' => 'chkboxgroup-inf',
             'name' => 'CommunicationPreferences',
             'li-class' => 'clear',
             'options' => get_communicationpreferences(),
-            'validation' => array(               
+            'validation' => array(
+                  // Optional: Users may not use communication aids
             )
-         ),  
+         ),
+
          array(
             'label' => __( 'Personal support and home:', 'openinclusion' ),
             'type' => 'chkboxgroup-inf',
             'name' => 'PersonalSupportandHome',
             'li-class' => 'clear',
             'options' => get_personalsupportandhome(),
-            'validation' => array(               
+            'validation' => array(
+                  // Optional: Users may not use personal support
             )
-         ),           
-         
+         ),
+
          array(
-            'label' => __( 'Other', 'openinclusion' ),
+            'label' => __( 'Other technologies or support:', 'openinclusion' ),
             'type' => 'chkboxgroup-inf',
             'name' => 'OtherTechnologies',
             'li-class' => 'clear',
             'options' => get_othertechnologies(),
-            'validation' => array(               
+            'validation' => array(
+                  // Optional: Users may not use other technologies
             )
-         ),   
+         ),
+
+         array(
+            'label' => __( "What research formats would you most like to be invited to?", 'openinclusion' ),
+            'type' => 'chkboxgroup-inf',
+            'name' => 'ResearchFormats',
+            'li-class' => 'clear',
+            'options' => get_research_formats(),
+            'validation' => array(
+                  array('reqd', __( 'Please select at least one research format you are interested in', 'openinclusion' )),
+            )
+         ),
+
+         array(
+            'label' => __( 'Were you referred by someone to the Open Inclusion community?', 'openinclusion' ),
+            'type' => 'radiogroup-inf',
+            'name' => 'inf_field_referred',
+            'li-class' => 'clear',
+            'options' => array(
+               array('Yes', __( 'Yes', 'openinclusion' ), 'inf_option_referred_yes'),
+               array('No', __( 'No', 'openinclusion' ), 'inf_option_referred_no'),
+            ),
+            'validation' => array(
+               array('reqd', __( 'Please let us know if you were referred by someone', 'openinclusion' )),
+            )
+         ),
+
+         array(
+            'label' => __( 'If yes, please share the name of the person or organisation that referred you so we can thank them.', 'openinclusion' ),
+            'type' => 'text',
+            'name' => 'inf_field_referred_name',
+            'li-class' => 'clear',
+            'maxlen' => 250,
+            'validation' => array(
+               array('len', __( 'Referrer name can only be %1$d characters long', 'openinclusion' )),
+            )
+         ),
 
          array(
             'type' => 'hidden',
@@ -1301,7 +1365,9 @@ $part2Step2Form = array(
          'name' => 'SensoryNeeds',
          'li-class' => 'clear',
          'options' => get_sensory_needs(),
-         'validation' => array()
+         'validation' => array(
+            // Note: Access needs are typically optional but at least one category should be selected
+         )
       ),
       array(
          'label' => __( 'Physical needs:', 'openinclusion' ),
@@ -1309,7 +1375,9 @@ $part2Step2Form = array(
          'name' => 'PhysicalNeeds',
          'li-class' => 'clear',
          'options' => get_physical_needs(),
-         'validation' => array()
+         'validation' => array(
+            // Note: Access needs are typically optional but at least one category should be selected
+         )
       ),
       array(
          'label' => __( 'Cognitive and mental health needs:', 'openinclusion' ),
@@ -1317,7 +1385,9 @@ $part2Step2Form = array(
          'name' => 'CognitiveAndMentalhealthNeeds',
          'li-class' => 'clear',
          'options' => get_cognitive_and_mentalhealth_needs(),
-         'validation' => array()
+         'validation' => array(
+            // Note: Access needs are typically optional but at least one category should be selected
+         )
       ),
       array(
          'label' => __( 'Communication needs:', 'openinclusion' ),
@@ -1325,7 +1395,9 @@ $part2Step2Form = array(
          'name' => 'CommunicationNeeds',
          'li-class' => 'clear',
          'options' => get_communication_needs(),
-         'validation' => array()
+         'validation' => array(
+            // Note: Access needs are typically optional but at least one category should be selected
+         )
       ),
       array(
          'label' => __( 'Chronic health needs:', 'openinclusion' ),
@@ -1333,7 +1405,9 @@ $part2Step2Form = array(
          'name' => 'ChronichealthNeeds',
          'li-class' => 'clear',
          'options' => get_chronichealth_needs(),
-         'validation' => array()
+         'validation' => array(
+            // Note: Access needs are typically optional but at least one category should be selected
+         )
       ),
       array(
          'label' => __( 'Other', 'openinclusion' ),
@@ -1341,7 +1415,9 @@ $part2Step2Form = array(
          'name' => 'OtherNeeds',
          'li-class' => 'clear',
          'options' => get_other_needs(),
-         'validation' => array()
+         'validation' => array(
+            // Note: Access needs are typically optional but at least one category should be selected
+         )
       ),
       array(
          'name' => 'save_continue_later_step2',
@@ -1394,7 +1470,9 @@ $part2Step3Form = array(
          'name' => 'DigitalandScreenTechnologies',
          'li-class' => 'clear',
          'options' => get_digitalandscreentechnologies(),
-         'validation' => array()
+         'validation' => array(
+            // Optional: Users may not use digital technologies
+         )
       ),
       array(
          'label' => __( 'Please share the names of any specific software you regularly use (e.g., JAWS, Dragon NaturallySpeaking)', 'openinclusion' ),
@@ -1402,7 +1480,9 @@ $part2Step3Form = array(
          'name' => 'DigitalandScreenTechnologiesSpecificSoftware',
          'li-class' => 'clear',
          'maxlen' => 500,
-         'validation' => array()
+         'validation' => array(
+            array('len', __( 'Software description can only be %1$d characters long', 'openinclusion' )),
+         )
       ),
       array(
          'label' => __( 'Printed media aids or adaptations:', 'openinclusion' ),
@@ -1410,7 +1490,9 @@ $part2Step3Form = array(
          'name' => 'PrintMedia',
          'li-class' => 'clear',
          'options' => get_printMedia(),
-         'validation' => array()
+         'validation' => array(
+            // Optional: Users may not use print media aids
+         )
       ),
       array(
          'label' => __( 'Movement: mobility devices, aids and service animals:', 'openinclusion' ),
@@ -1418,7 +1500,9 @@ $part2Step3Form = array(
          'name' => 'MovementCanesandServiceAnimals',
          'li-class' => 'clear',
          'options' => get_movementcanesandserviceanimals(),
-         'validation' => array()
+         'validation' => array(
+            // Optional: Users may not use movement aids
+         )
       ),
       array(
          'label' => __( 'Communication aids and alternatives:', 'openinclusion' ),
@@ -1426,7 +1510,9 @@ $part2Step3Form = array(
          'name' => 'CommunicationPreferences',
          'li-class' => 'clear',
          'options' => get_communicationpreferences(),
-         'validation' => array()
+         'validation' => array(
+            // Optional: Users may not use communication aids
+         )
       ),
       array(
          'label' => __( 'Personal support and home:', 'openinclusion' ),
@@ -1434,7 +1520,9 @@ $part2Step3Form = array(
          'name' => 'PersonalSupportandHome',
          'li-class' => 'clear',
          'options' => get_personalsupportandhome(),
-         'validation' => array()
+         'validation' => array(
+            // Optional: Users may not use personal support
+         )
       ),
       array(
          'label' => __( 'Other technologies or support:', 'openinclusion' ),
@@ -1442,7 +1530,9 @@ $part2Step3Form = array(
          'name' => 'OtherTechnologies',
          'li-class' => 'clear',
          'options' => get_othertechnologies(),
-         'validation' => array()
+         'validation' => array(
+            // Optional: Users may not use other technologies
+         )
       ),
       array(
          'label' => __( "What research formats would you most like to be invited to?", 'openinclusion' ),
@@ -1450,7 +1540,9 @@ $part2Step3Form = array(
          'name' => 'ResearchFormats',
          'li-class' => 'clear',
          'options' => get_research_formats(),
-         'validation' => array()
+         'validation' => array(
+            array('reqd', __( 'Please select at least one research format you are interested in', 'openinclusion' )),
+         )
       ),
       array(
          'label' => __( 'Were you referred by someone to the Open Inclusion community?', 'openinclusion' ),
@@ -1461,7 +1553,9 @@ $part2Step3Form = array(
             array('Yes', __( 'Yes', 'openinclusion' ), 'inf_option_referred_yes'),
             array('No', __( 'No', 'openinclusion' ), 'inf_option_referred_no'),
          ),
-         'validation' => array()
+         'validation' => array(
+            array('reqd', __( 'Please let us know if you were referred by someone', 'openinclusion' )),
+         )
       ),
       array(
          'label' => __( 'If yes, please share the name of the person or organisation that referred you so we can thank them.', 'openinclusion' ),
@@ -1469,7 +1563,9 @@ $part2Step3Form = array(
          'name' => 'inf_field_referred_name',
          'li-class' => 'clear',
          'maxlen' => 250,
-         'validation' => array()
+         'validation' => array(
+            array('len', __( 'Referrer name can only be %1$d characters long', 'openinclusion' )),
+         )
       ),
       array(
          'name' => 'save_continue_later_step3',
