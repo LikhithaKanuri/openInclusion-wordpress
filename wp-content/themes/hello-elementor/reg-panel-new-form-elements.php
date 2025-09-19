@@ -249,6 +249,19 @@ function get_temporaryaccess_needs() {
    return $marginalised_ethnicity;
  }
 
+ $sexual_orientations = array(
+   array('Bisexual',__( 'Bisexual', 'openinclusion' ),'SexualOrientations[]','SexualOrientation_Bisexual'),
+   array('GayLesbianQueer',__( 'Gay/lesbian/queer', 'openinclusion' ),'SexualOrientations[]','SexualOrientation_GayLesbianQueer'),
+   array('Heterosexual',__( 'Heterosexual/straight', 'openinclusion' ),'SexualOrientations[]','SexualOrientation_Heterosexual'),
+   array('PreferNotToSay',__( 'Prefer not to say', 'openinclusion' ),'SexualOrientations[]','SexualOrientation_PreferNotToSay'),
+   array('OtherPleaseSpecify',__( 'Other / prefer to self describe', 'openinclusion' ),'SexualOrientationsOtherPleaseSpecify','SexualOrientation_Other')
+ );
+
+ function get_sexual_orientations(){
+   global $sexual_orientations;
+   return $sexual_orientations;
+ }
+
  $research_format = array(
    array('any_paid_research', __('Any paid research', 'openinclusion'),'ResearchFormats[]', 'inf_option_any_paid_research'),
    array('online_surveys', __('Online surveys', 'openinclusion'),'ResearchFormats[]', 'inf_option_online_surveys'),

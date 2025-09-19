@@ -294,6 +294,47 @@ function opinc_part2_step3_form_sc($atts, $content = null) {
 }
 add_shortcode("opinc-part2-step3", "opinc_part2_step3_form_sc");
 
+// Shortcode: Part 2 Step 4 (Other Personal Characteristics)
+function opinc_part2_step4_form_sc($atts, $content = null) {
+   extract(shortcode_atts(array(
+   ), $atts));
+
+   if (!is_user_logged_in()) {
+      if($_SERVER['HTTP_HOST'] == 'localhost') {
+         $redirect = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/login';
+      } else {
+         $redirect = "https://" . $_SERVER['HTTP_HOST']. "/login";
+      }
+      wp_redirect($redirect); exit;
+   }
+
+   $arrErrs = getFormErrors();
+   $clean = getClean();
+
+   if (empty($clean) || !isset($clean['submitted'])) {
+      $current_user = wp_get_current_user();
+      if($current_user) {
+         $userid = $current_user->ID;
+         $user_info = get_user_meta($userid);
+         $clean = array();
+         if(isset($user_info['Gender'][0])) $clean['inf_option_Gender'] = $user_info['Gender'][0];
+         if(isset($user_info['inf_field_gender_at_birth_diff'][0])) $clean['inf_field_gender_at_birth_diff'] = $user_info['inf_field_gender_at_birth_diff'][0];
+         if(isset($user_info['SexualOrientations'][0])) {
+            $val = $user_info['SexualOrientations'][0];
+            $clean['SexualOrientations'] = strpos($val,'|') !== false ? explode('|', $val) : array($val);
+         }
+         if(isset($user_info['inf_option_pronouns'][0])) $clean['inf_option_pronouns'] = $user_info['inf_option_pronouns'][0];
+         if(isset($user_info['inf_field_identify_terms'][0])) $clean['inf_field_identify_terms'] = $user_info['inf_field_identify_terms'][0];
+      }
+   }
+
+   global $part2Step4Form;
+   $strHtml = printFormNew($part2Step4Form, $clean, $arrErrs );
+   $strHtml.= "<script>jQuery(document).ready(function($) { jQuery('#content').find('header').remove(); });</script>";
+   return $strHtml;
+}
+add_shortcode("opinc-part2-step4", "opinc_part2_step4_form_sc");
+
 /**********************************************************************************************
 This function redirects to thank you page after registration. Validate if consent is submitted
 **********************************************************************************************/
@@ -510,7 +551,7 @@ function sentUserActivationMail($toEmailId, $name, $activation_link) {
     );
    // $headers = 'From: Open Inclusion';
    // $headers .= 'Content-Type: text/html; charset=UTF-8';
-   $subject = "Please confirm your email for Open Inclusion’s new community engagement platform";
+   $subject = "Please confirm your email for Open Inclusion's new community engagement platform";
    $content = "
    <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">
    <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>
@@ -525,7 +566,7 @@ function sentUserActivationMail($toEmailId, $name, $activation_link) {
    <div style=\"padding: 30px 0px; font-size: 24px; line-height: 40px; text-align: left;\">
    Dear ".ucwords(strtolower($name)).",
    
-   <p style=\"font-family: Poppins;\"> Thank you for registering with Open Inclusion’s online community.<br/><strong>Please confirm your email to complete the initial set-up</strong> of your profile by clicking the button below:</p> 
+   <p style=\"font-family: Poppins;\"> Thank you for registering with Open Inclusion's online community.<br/><strong>Please confirm your email to complete the initial set-up</strong> of your profile by clicking the button below:</p> 
   
    
    </div>
@@ -542,7 +583,7 @@ function sentUserActivationMail($toEmailId, $name, $activation_link) {
    </div>
    <br />
     <div style=\"padding: 30px 0px; font-family: Poppins; font-size: 24px; line-height: 40px; text-align: left; content: left\">
-   <p style=\"font-family: Poppins;content: left; font-size: 24px\">When you log in for the first time, you’ll be directed to the second part of the registration form, where you will have the opportunity to update your access needs and assistive technology preferences. <br> This helps us invite you to research opportunities that best suit you
+   <p style=\"font-family: Poppins;content: left; font-size: 24px\">When you log in for the first time, you'll be directed to the second part of the registration form, where you will have the opportunity to update your access needs and assistive technology preferences. <br> This helps us invite you to research opportunities that best suit you
    </p>
    <p style=\"font-family: Poppins; font-size: 24px\">
    Thank you, <br />The Open Inclusion Team
@@ -902,10 +943,10 @@ function redirectAfterPart2Step1(){
             }
             if(isset($_SERVER['HTTP_HOST'])) {
                if($_SERVER['HTTP_HOST'] == 'localhost') {
-                  $redirectUrl = "http://" . $_SERVER['HTTP_HOST']."/openinclusion/".($shouldSkip ? 'part2-step3/' : 'part2-step2/');
+                  $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/part2-step3/';
                }
                else {
-                  $redirectUrl = "https://". $_SERVER['HTTP_HOST']. "/".($shouldSkip ? 'part2-step3/' : 'part2-step2/');
+                  $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/part2-step3/";
                }         
                wp_redirect($redirectUrl);
                exit;      
@@ -974,14 +1015,37 @@ function redirectAfterPart2Step3(){
             if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/mywordpress/thank-you-2/'; }
             else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/thank-you-2/"; }
          } else {
-            if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/registration-complete/'; }
-            else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/registration-complete/"; }
+            if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/part2-step4/'; }
+            else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/part2-step4/"; }
          }
          wp_redirect($redirectUrl); exit;
       }
    }
 }
 add_action( 'template_redirect', 'redirectAfterPart2Step3');
+
+// Redirects after Step 4 submission
+function redirectAfterPart2Step4(){
+   ob_clean();
+   ob_start();
+   if(isset($_POST['submit_part2_step4']) || isset($_POST['save_continue_later_step4'])) {
+      $current_user = wp_get_current_user();
+      if($current_user) {
+         $userid = $current_user->ID;
+         $userMetaData = prepareUserMetaData();
+         foreach( $userMetaData as $key => $val ) { update_user_meta( $userid, $key, $val ); }
+         if(isset($_POST['save_continue_later_step4'])) {
+            if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/mywordpress/thank-you-2/'; }
+            else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/thank-you-2/"; }
+         } else {
+            if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/part2-step4/'; }
+            else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/part2-step4/"; }
+         }
+         wp_redirect($redirectUrl); exit;
+      }
+   }
+}
+add_action( 'template_redirect', 'redirectAfterPart2Step4');
 
 
 function getMetaValue($input) {

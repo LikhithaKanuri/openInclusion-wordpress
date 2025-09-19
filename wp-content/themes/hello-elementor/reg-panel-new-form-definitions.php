@@ -1481,7 +1481,107 @@ $part2Step3Form = array(
          'name' => 'submit_part2_step3',
          'type' => 'submit',
          'li-class' => 'submit',
-         'value' => __('Save & Complete Registration', 'openinclusion' )
+         'value' => __('Save & Next Step', 'openinclusion' )
+      ),
+   )
+);
+?>
+<?php
+// Part 2 Step 4 form definition (Other Personal Characteristics)
+$part2Step4Form = array(
+   'cont-id' => '',
+   'cont-class' => 'contact panel-contact',
+   'form-id' => 'part2-step4-form',
+   'client-val' => true,
+   'mand-ind' => '*',
+   'success-img' => '',
+   'error-img' => '',
+   'error-sect-id' => 'sub-errs',
+   'error-sect-class' => '',
+   'error-sect-hdr' => __( 'Submission Problems', 'openinclusion' ),
+   'error-sect-hdr-level' => 2,
+   'error-sect-intro' => '<p>'.__( 'We were not able to process your enquiry. Please review the following items and check what you entered', 'openinclusion' ).'</p>',
+   'nonce-name' => 'part2_step4_nonce',
+   'sq-reqd' => false,
+   'sq-id' => 'sq',
+   'sq-label' => __( 'Please answer this question:', 'openinclusion' ).' %1$s <span class="clarify">('.__( 'Helps stop spam', 'openinclusion' ).')</span>',
+   'fields' => array(
+      array(
+         'label' => '',
+         'type' => 'other-html',
+         'name' => 'banner4',
+         'li-class' => 'clear',
+         'value' => '
+            <h2>PAGE 4: OTHER PERSONAL CHARACTERISTICS</h2>
+            <p>Anything you choose to share will be handled with care, kept secure, and always treated with respect.</p>
+         ',
+         'validation' => array()
+      ),
+      array(
+         'label' => __( 'Which gender do you most identify with?', 'openinclusion' ),
+         'type' => 'radiogroup-inf',
+         'name' => 'inf_option_Gender',
+         'li-class' => 'clear',
+         'options' => get_genders(),
+         'validation' => array(
+            array('reqd', __( 'Please select one gender', 'openinclusion' )),
+         )
+      ),
+      array(
+         'label' => __( 'Is your gender different to the gender you were assigned at birth?', 'openinclusion' ),
+         'type' => 'radiogroup-inf',
+         'name' => 'inf_field_gender_at_birth_diff',
+         'li-class' => 'clear',
+         'options' => array(
+            array('Yes', 'Yes', 'inf_option_gender_at_birth_yes'),
+            array('No', 'No', 'inf_option_gender_at_birth_no'),
+            array('PreferNotToRespond', 'Prefer not to respond', 'inf_option_gender_at_birth_prefer_not'),
+         ),
+         'validation' => array(
+            array('reqd', __( 'Please select one option', 'openinclusion' )),
+         )
+      ),
+      array(
+         'label' => __( 'This question is about your sexual orientation. Do you identify as:', 'openinclusion' ),
+         'type' => 'chkboxgroup-inf',
+         'name' => 'SexualOrientations',
+         'li-class' => 'clear',
+         'options' => get_sexual_orientations(),
+         'validation' => array(
+            array('reqd', __( 'Please select at least one option', 'openinclusion' )),
+         )
+      ),
+      array(
+         'label' => __( 'What are your preferred pronouns?', 'openinclusion' ),
+         'type' => 'radiogroup-inf',
+         'name' => 'inf_option_pronouns',
+         'li-class' => 'clear',
+         'options' => get_preferred_pronouns(),
+         'validation' => array(
+            array('reqd', __( 'Please select one preferred pronoun', 'openinclusion' )),
+         )
+      ),
+      array(
+         'label' => __( 'Please describe your racial and ethnic identity as makes most sense to you. (e.g., Black British, White New Zealander or Luo Kenyan)', 'openinclusion' ),
+         'type' => 'text',
+         'name' => 'inf_field_identify_terms',
+         'li-class' => 'clear',
+         'maxlen' => 250,
+         'validation' => array(
+            array('reqd', __( 'Please provide your description or choose prefer not to respond', 'openinclusion' )),
+         )
+      ),
+      array(
+         'name' => 'save_continue_later_step4',
+         'type' => 'submit',
+         'li-class' => 'submit save-later',
+         'value' => __('Save & Continue Later', 'openinclusion' )
+      ),
+      array(
+         'name' => 'submit_part2_step4',
+         'type' => 'submit',
+         'li-class' => 'submit',
+         'value' => __('Save & Next Step', 'openinclusion' )
       ),
    )
 );
