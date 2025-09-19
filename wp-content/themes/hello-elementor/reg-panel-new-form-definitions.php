@@ -1743,6 +1743,12 @@ HTML
          )
       ),
       array(
+         'name' => 'save_continue_later_step5',
+         'type' => 'submit',
+         'li-class' => 'submit save-later',
+         'value' => __('Save & Continue Later', 'openinclusion' )
+      ),
+      array(
          'name' => 'submit_part2_step5',
          'type' => 'submit',
          'li-class' => 'submit',
@@ -1800,6 +1806,12 @@ HTML
          ),
       ),
       array(
+         'name' => 'save_continue_later_step6',
+         'type' => 'submit',
+         'li-class' => 'submit save-later',
+         'value' => __('Save & Continue Later', 'openinclusion' )
+      ),
+      array(
          'name' => 'submit_part2_step6',
          'type' => 'submit',
          'li-class' => 'submit',
@@ -1854,6 +1866,12 @@ HTML
          ),
          'validation' => array(
          ),
+      ),
+      array(
+         'name' => 'save_continue_later_step7',
+         'type' => 'submit',
+         'li-class' => 'submit save-later',
+         'value' => __('Save & Continue Later', 'openinclusion' )
       ),
       array(
          'name' => 'submit_part2_step7',
@@ -1932,10 +1950,16 @@ HTML
          )
       ),
       array(
+         'name' => 'save_continue_later_step8',
+         'type' => 'submit',
+         'li-class' => 'submit save-later',
+         'value' => __('Save & Continue Later', 'openinclusion' )
+      ),
+      array(
          'name' => 'submit_part2_step8',
          'type' => 'submit',
          'li-class' => 'submit',
-         'value' => __('Submit', 'openinclusion' )
+         'value' => __('Save & Next Step', 'openinclusion' )
       ),
    )
 );

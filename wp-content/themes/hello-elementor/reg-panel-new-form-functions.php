@@ -413,7 +413,7 @@ add_shortcode("opinc-part2-step6", "opinc_part2_step6_form_sc");
 function redirectAfterPart2Step6(){
    ob_clean();
    ob_start();
-   if(isset($_POST['submit_part2_step6'])) {
+   if(isset($_POST['submit_part2_step6']) || isset($_POST['save_continue_later_step6'])) {
       $current_user = wp_get_current_user();
       if($current_user) {
          $userid = $current_user->ID;
@@ -422,7 +422,10 @@ function redirectAfterPart2Step6(){
          if(!isset($_POST['PleaseConfirm']) || count($_POST['PleaseConfirm']) < 3) {
             $errs[] = array('PleaseConfirm', __('Please confirm all statements', 'openinclusion'));
          }
-         if(count($errs) > 0) { setFormErrors($errs); return; }
+         if(count($errs) > 0 && isset($_POST['submit_part2_step6'])) { 
+            setFormErrors($errs); 
+            return; 
+         }
 
          // Save meta
          $userMetaData = prepareUserMetaData();
@@ -430,6 +433,12 @@ function redirectAfterPart2Step6(){
 
          // Update status
          update_user_meta( $userid, 'Part2Step6Completed', 'Yes' );
+
+         if(isset($_POST['save_continue_later_step6'])) {
+            if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/mywordpress/thank-you-2/'; }
+            else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/thank-you-2/"; }
+            wp_redirect($redirectUrl); exit;
+         }
 
          // Next: Step 7
          if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/part2-step7/'; }
@@ -480,7 +489,7 @@ add_shortcode("opinc-part2-step7", "opinc_part2_step7_form_sc");
 function redirectAfterPart2Step7(){
    ob_clean();
    ob_start();
-   if(isset($_POST['submit_part2_step7'])) {
+   if(isset($_POST['submit_part2_step7']) || isset($_POST['save_continue_later_step7'])) {
       $current_user = wp_get_current_user();
       if($current_user) {
          $userid = $current_user->ID;
@@ -544,6 +553,12 @@ function redirectAfterPart2Step7(){
             wp_mail( $current_user->user_email, $subject, $content, $headers);
          }
 
+         if(isset($_POST['save_continue_later_step7'])) {
+            if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/mywordpress/thank-you-2/'; }
+            else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/thank-you-2/"; }
+            wp_redirect($redirectUrl); exit;
+         }
+
          // Redirect to Step 8 (Create Community Login)
          if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/part2-step8/'; }
          else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/part2-step8/"; }
@@ -594,7 +609,7 @@ add_shortcode("opinc-part2-step8", "opinc_part2_step8_form_sc");
 function redirectAfterPart2Step8(){
    ob_clean();
    ob_start();
-   if(isset($_POST['submit_part2_step8'])) {
+   if(isset($_POST['submit_part2_step8']) || isset($_POST['save_continue_later_step8'])) {
       $current_user = wp_get_current_user();
       if($current_user) {
          $userid = $current_user->ID;
@@ -606,19 +621,30 @@ function redirectAfterPart2Step8(){
          if(!isset($_POST['inf_field_Password_reenter']) || $_POST['inf_field_Password_reenter'] !== $_POST['inf_field_Password']) {
             $errs[] = array('inf_field_Password_reenter', __('Passwords do not match', 'openinclusion'));
          }
-         if(count($errs) > 0) { setFormErrors($errs); return; }
+         if(count($errs) > 0 && isset($_POST['submit_part2_step8'])) { 
+            setFormErrors($errs); 
+            return; 
+         }
 
-         // Update WP user account
-         $userData = array(
-            'ID' => $userid,
-            'user_pass' => $_POST['inf_field_Password'],
-            'user_login' => $_POST['inf_field_UserName']
-         );
-         wp_update_user($userData);
+         // Update WP user account (only if not "save continue later")
+         if(!isset($_POST['save_continue_later_step8'])) {
+            $userData = array(
+               'ID' => $userid,
+               'user_pass' => $_POST['inf_field_Password'],
+               'user_login' => $_POST['inf_field_UserName']
+            );
+            wp_update_user($userData);
+         }
 
          // Save meta
          $userMetaData = prepareUserMetaData();
          foreach( $userMetaData as $key => $val ) { update_user_meta( $userid, $key, $val ); }
+
+         if(isset($_POST['save_continue_later_step8'])) {
+            if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/mywordpress/thank-you-2/'; }
+            else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/thank-you-2/"; }
+            wp_redirect($redirectUrl); exit;
+         }
 
          // Next: Step 9
          if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/part2-step9/'; }
@@ -1606,7 +1632,7 @@ add_action( 'template_redirect', 'redirectAfterPart2Step4');
 function redirectAfterPart2Step5(){
    ob_clean();
    ob_start();
-   if(isset($_POST['submit_part2_step5'])) {
+   if(isset($_POST['submit_part2_step5']) || isset($_POST['save_continue_later_step5'])) {
       $current_user = wp_get_current_user();
       if($current_user) {
          $userid = $current_user->ID;
@@ -1636,7 +1662,13 @@ function redirectAfterPart2Step5(){
             }
          }
 
-         // Redirect to final thank you / profile
+         if(isset($_POST['save_continue_later_step5'])) {
+            if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/mywordpress/thank-you-2/'; }
+            else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/thank-you-2/"; }
+            wp_redirect($redirectUrl); exit;
+         }
+
+         // Redirect to Step 6 (only if validation passed)
          if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/part2-step6/'; }
          else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/part2-step6/"; }
          wp_redirect($redirectUrl); exit;
