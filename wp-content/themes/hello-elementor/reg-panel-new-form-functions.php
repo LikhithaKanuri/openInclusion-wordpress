@@ -335,6 +335,43 @@ function opinc_part2_step4_form_sc($atts, $content = null) {
 }
 add_shortcode("opinc-part2-step4", "opinc_part2_step4_form_sc");
 
+// Shortcode: Part 2 Step 5 (Joining the Community)
+function opinc_part2_step5_form_sc($atts, $content = null) {
+   extract(shortcode_atts(array(
+   ), $atts));
+
+   if (!is_user_logged_in()) {
+      if($_SERVER['HTTP_HOST'] == 'localhost') {
+         $redirect = "http://" . $_SERVER['HTTP_HOST']."/openinclusion/login";
+      } else {
+         $redirect = "https://" . $_SERVER['HTTP_HOST']. "/login";
+      }
+      wp_redirect($redirect); exit;
+   }
+
+   $arrErrs = getFormErrors();
+   $clean = getClean();
+
+   if (empty($clean) || !isset($clean['submitted'])) {
+      $current_user = wp_get_current_user();
+      if($current_user) {
+         $userid = $current_user->ID;
+         $user_info = get_user_meta($userid);
+         $clean = array();
+         if(isset($user_info['Community Agreement'][0])) {
+            $val = $user_info['Community Agreement'][0];
+            $clean['CommunityAgreement'] = strpos($val,'|') !== false ? explode('|', $val) : array($val);
+         }
+      }
+   }
+
+   global $part2Step5Form;
+   $strHtml = printFormNew($part2Step5Form, $clean, $arrErrs );
+   $strHtml.= "<script>jQuery(document).ready(function($) { jQuery('#content').find('header').remove(); });</script>";
+   return $strHtml;
+}
+add_shortcode("opinc-part2-step5", "opinc_part2_step5_form_sc");
+
 /**********************************************************************************************
 This function redirects to thank you page after registration. Validate if consent is submitted
 **********************************************************************************************/
@@ -474,6 +511,8 @@ function getUserMetaDataMapping() {
       'OtherTechnologiesOtherPleaseSpecify_OpenText' => 'Other Technologies Open Text',
       // 'OtherTechnologiesOtherPleaseSpecify_OpenText' => 'Other Technologies Open Text',
       'consent' => 'Consent',
+      // New: Community agreement consent mapping
+      'CommunityAgreement' => 'Community Agreement'
    );
 }
 
@@ -1046,6 +1085,37 @@ function redirectAfterPart2Step4(){
    }
 }
 add_action( 'template_redirect', 'redirectAfterPart2Step4');
+
+// Redirects after Step 5 submission
+function redirectAfterPart2Step5(){
+   ob_clean();
+   ob_start();
+   if(isset($_POST['submit_part2_step5'])) {
+      $current_user = wp_get_current_user();
+      if($current_user) {
+         $userid = $current_user->ID;
+         // Validate consent
+         if(!isset($_POST['CommunityAgreement']) || !is_array($_POST['CommunityAgreement']) || count($_POST['CommunityAgreement']) === 0) {
+            $arrErrs = array();
+            $arrErrs[] = array('CommunityAgreement', __('You must agree to proceed', 'openinclusion'));
+            setFormErrors($arrErrs);
+            return; // fall back to form render with error
+         }
+         // Save
+         $userMetaData = prepareUserMetaData();
+         foreach( $userMetaData as $key => $val ) { update_user_meta( $userid, $key, $val ); }
+         // Mark completion
+         update_user_meta( $userid, 'Part2Step5Completed', 'Yes');
+         include_once (__DIR__."/../../../infusion/updateUserStatus.php");
+
+         // Redirect to final thank you / profile
+         if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/registration-complete/'; }
+         else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/registration-complete/"; }
+         wp_redirect($redirectUrl); exit;
+      }
+   }
+}
+add_action( 'template_redirect', 'redirectAfterPart2Step5');
 
 
 function getMetaValue($input) {
