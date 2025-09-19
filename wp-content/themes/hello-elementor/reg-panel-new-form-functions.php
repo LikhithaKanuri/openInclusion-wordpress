@@ -372,6 +372,187 @@ function opinc_part2_step5_form_sc($atts, $content = null) {
 }
 add_shortcode("opinc-part2-step5", "opinc_part2_step5_form_sc");
 
+// Shortcode: Part 2 Step 6 (Privacy Protection)
+function opinc_part2_step6_form_sc($atts, $content = null) {
+   extract(shortcode_atts(array(
+   ), $atts));
+
+   if (!is_user_logged_in()) {
+      if($_SERVER['HTTP_HOST'] == 'localhost') {
+         $redirect = "http://" . $_SERVER['HTTP_HOST']."/openinclusion/login";
+      } else {
+         $redirect = "https://" . $_SERVER['HTTP_HOST']. "/login";
+      }
+      wp_redirect($redirect); exit;
+   }
+
+   $arrErrs = getFormErrors();
+   $clean = getClean();
+
+   if (empty($clean) || !isset($clean['submitted'])) {
+      $current_user = wp_get_current_user();
+      if($current_user) {
+         $userid = $current_user->ID;
+         $user_info = get_user_meta($userid);
+         $clean = array();
+         if(isset($user_info['Consent'][0])) {
+            $val = $user_info['Consent'][0];
+            $clean['PleaseConfirm'] = strpos($val,'|') !== false ? explode('|', $val) : array($val);
+         }
+      }
+   }
+
+   global $part2Step6Form;
+   $strHtml = printFormNew($part2Step6Form, $clean, $arrErrs );
+   $strHtml.= "<script>jQuery(document).ready(function($) { jQuery('#content').find('header').remove(); });</script>";
+   return $strHtml;
+}
+add_shortcode("opinc-part2-step6", "opinc_part2_step6_form_sc");
+
+// Redirects after Step 6 submission
+function redirectAfterPart2Step6(){
+   ob_clean();
+   ob_start();
+   if(isset($_POST['submit_part2_step6'])) {
+      $current_user = wp_get_current_user();
+      if($current_user) {
+         $userid = $current_user->ID;
+         // Validate all confirmations are selected
+         $errs = array();
+         if(!isset($_POST['PleaseConfirm']) || count($_POST['PleaseConfirm']) < 3) {
+            $errs[] = array('PleaseConfirm', __('Please confirm all statements', 'openinclusion'));
+         }
+         if(count($errs) > 0) { setFormErrors($errs); return; }
+
+         // Save meta
+         $userMetaData = prepareUserMetaData();
+         foreach( $userMetaData as $key => $val ) { update_user_meta( $userid, $key, $val ); }
+
+         // Update status
+         update_user_meta( $userid, 'Part2Step6Completed', 'Yes' );
+
+         // Next: Step 7
+         if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/part2-step7/'; }
+         else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/part2-step7/"; }
+         wp_redirect($redirectUrl); exit;
+      }
+   }
+}
+add_action( 'template_redirect', 'redirectAfterPart2Step6');
+
+// Shortcode: Part 2 Step 7 (Identity Verification)
+function opinc_part2_step7_form_sc($atts, $content = null) {
+   extract(shortcode_atts(array(
+   ), $atts));
+
+   if (!is_user_logged_in()) {
+      if($_SERVER['HTTP_HOST'] == 'localhost') {
+         $redirect = "http://" . $_SERVER['HTTP_HOST']."/openinclusion/login";
+      } else {
+         $redirect = "https://" . $_SERVER['HTTP_HOST']. "/login";
+      }
+      wp_redirect($redirect); exit;
+   }
+
+   $arrErrs = getFormErrors();
+   $clean = getClean();
+
+   if (empty($clean) || !isset($clean['submitted'])) {
+      $current_user = wp_get_current_user();
+      if($current_user) {
+         $userid = $current_user->ID;
+         $user_info = get_user_meta($userid);
+         $clean = array();
+         if(isset($user_info['Open Verified Opt In'][0])) {
+            $clean['OpenVerifiedOptIn'] = $user_info['Open Verified Opt In'][0];
+         }
+      }
+   }
+
+   global $part2Step7Form;
+   $strHtml = printFormNew($part2Step7Form, $clean, $arrErrs );
+   $strHtml.= "<script>jQuery(document).ready(function($) { jQuery('#content').find('header').remove(); });</script>";
+   return $strHtml;
+}
+add_shortcode("opinc-part2-step7", "opinc_part2_step7_form_sc");
+
+// Redirects after Step 7 submission
+function redirectAfterPart2Step7(){
+   ob_clean();
+   ob_start();
+   if(isset($_POST['submit_part2_step7'])) {
+      $current_user = wp_get_current_user();
+      if($current_user) {
+         $userid = $current_user->ID;
+         // Save meta
+         $userMetaData = prepareUserMetaData();
+         foreach( $userMetaData as $key => $val ) { update_user_meta( $userid, $key, $val ); }
+
+         // Update status
+         update_user_meta( $userid, 'Part2Step7Completed', 'Yes' );
+
+         // Send Open Verified email if opted in
+         if(isset($_POST['OpenVerifiedOptIn'])) {
+            $headers = array(
+               'Content-Type: text/html; charset=UTF-8',
+               'From: Open Inclusion <contact@openinclusion.com>'
+            );
+            $subject = "Open Verified: Verify your identity";
+            $content = "
+            <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">
+            <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>
+            <link href=\"https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap\" rel=\"stylesheet\">
+            <div style=\"background: #f2f2f2;\">
+            <div style=\"height: 50px;background:#E5E8E8\"></div>
+            <div style=\"max-width: 560px; padding: 20px; background: #ffffff; border-radius: 5px; margin: 40px auto; font-family: Poppins; color: #666;\">
+            <div style=\"color: #444444; font-weight: normal;\"></div>
+            <div style=\"padding: 0 30px 30px 30px;\">
+            <div style=\"padding: 30px 0; font-size: 24px; text-align: center; line-height: 40px;\">
+            <img src=\"https://staging4.openinclusion.com/wp-content/uploads/cropped-1.-MAIN-OpenInclusion_Stack_Navy-scaled-1.jpg\" style=\"height:100px\" />
+            <div style=\"padding: 30px 0px; font-size: 24px; line-height: 40px; text-align: left;\">
+            Dear ".ucwords(strtolower($current_user->first_name)).",
+            
+            <p style=\"font-family: Poppins;\"> Thank you for registering with Open Inclusion's online community.<br/><strong>Please confirm your email to complete the initial set-up</strong> of your profile by clicking the button below:</p> 
+            
+            
+            </div>
+            <div>
+            <table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"left\" style=\"height: 50px;background: #2a3258;border-radius: 23px;\">
+            <tr>
+            <td style=\"text-align: left; padding-top:10px;padding-right:15px;padding-bottom:10px;padding-left:15px;\">
+            <a href=\"https://staging4.openinclusion.com/open-verified/\" target=\"_blank\" rel=\"noopener\" style=\"border-radius: 23px;background: #2a3258;text-decoration: none;font-family: Poppins-Medium, Poppins;font-style: normal;font-weight: 500;line-height: 38px;height: 50px;padding: 6px; content: left; font-size: 24px\">
+            <span style=\"color:#ffffff;\">Verify your identity</span>
+            </a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            <br />
+             <div style=\"padding: 30px 0px; font-family: Poppins; font-size: 24px; line-height: 40px; text-align: left; content: left\">
+            <p style=\"font-family: Poppins;content: left; font-size: 24px\">When you log in for the first time, you'll be directed to the second part of the registration form, where you will have the opportunity to update your access needs and assistive technology preferences. <br> This helps us invite you to research opportunities that best suit you
+            </p>
+            <p style=\"font-family: Poppins; font-size: 24px\">
+            Thank you, <br />The Open Inclusion Team
+            </p>
+            </div>
+            </div>
+            </div>
+            </div>
+            <div style=\"height: 50px;background:#E5E8E8\"></div>
+            </div>";
+
+            wp_mail( $current_user->user_email, $subject, $content, $headers);
+         }
+
+         // Final redirect to completion page
+         if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/registration-complete/'; }
+         else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/registration-complete/"; }
+         wp_redirect($redirectUrl); exit;
+      }
+   }
+}
+add_action( 'template_redirect', 'redirectAfterPart2Step7');
+
 // Shortcode: Part 2 Step 8 (Create Community Login)
 function opinc_part2_step8_form_sc($atts, $content = null) {
    extract(shortcode_atts(array(
@@ -475,7 +656,7 @@ function redirectAfterPart2Step9(){
 add_action( 'template_redirect', 'redirectAfterPart2Step9');
 
 /**********************************************************************************************
-This function redirects to thank you page after registration. Validate if consent is submitted
+      This function redirects to thank you page after registration. Validate if consent is submitted
 **********************************************************************************************/
 function redirectAfterRegistration(){
    ob_clean();
@@ -612,9 +793,10 @@ function getUserMetaDataMapping() {
       // 'OtherTechnologiesOtherPleaseSpecify' => 'Other Technologies',
       'OtherTechnologiesOtherPleaseSpecify_OpenText' => 'Other Technologies Open Text',
       // 'OtherTechnologiesOtherPleaseSpecify_OpenText' => 'Other Technologies Open Text',
-      'consent' => 'Consent',
+      'PleaseConfirm' => 'Consent',
       // New: Community agreement consent mapping
-      'CommunityAgreement' => 'Community Agreement'
+      'CommunityAgreement' => 'Community Agreement',
+      'OpenVerifiedOptIn' => 'Open Verified Opt In'
    );
 }
 
@@ -1211,8 +1393,8 @@ function redirectAfterPart2Step5(){
          include_once (__DIR__."/../../../infusion/updateUserStatus.php");
 
          // Redirect to final thank you / profile
-         if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/registration-complete/'; }
-         else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/registration-complete/"; }
+         if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/part2-step6/'; }
+         else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/part2-step6/"; }
          wp_redirect($redirectUrl); exit;
       }
    }
