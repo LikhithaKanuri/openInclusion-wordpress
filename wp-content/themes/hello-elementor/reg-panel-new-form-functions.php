@@ -1,6 +1,9 @@
 <?php
 add_action( 'wp_enqueue_scripts', 'openinclusion_script_enqueuer');
 
+// Include registration redirect handler
+require_once(get_template_directory() . '/registration-redirect-handler.php');
+
 function openinclusion_script_enqueuer() {
 	
 	// FRONT END JS AND CSS ONLY
@@ -431,6 +434,20 @@ function redirectAfterPart2Step6(){
          $userMetaData = prepareUserMetaData();
          foreach( $userMetaData as $key => $val ) { update_user_meta( $userid, $key, $val ); }
 
+         // Process Keap integration for Part 2 Step 6
+         if (file_exists(__DIR__."/../../../infusion/processv2.php")) {
+            try {
+               require_once(__DIR__."/../../../infusion/processv2.php");
+               $keapIntegration = new KeapIntegration();
+               $result = $keapIntegration->processPart2Step6($userMetaData);
+               if ($result) {
+                  error_log("Successfully processed Part 2 Step 6 data to Keap for user ID: " . $userid);
+               }
+            } catch (Exception $e) {
+               error_log("Error processing Part 2 Step 6 to Keap: " . $e->getMessage());
+            }
+         }
+
          // Update status
          update_user_meta( $userid, 'Part2Step6Completed', 'Yes' );
 
@@ -496,6 +513,20 @@ function redirectAfterPart2Step7(){
          // Save meta
          $userMetaData = prepareUserMetaData();
          foreach( $userMetaData as $key => $val ) { update_user_meta( $userid, $key, $val ); }
+
+         // Process Keap integration for Part 2 Step 7
+         if (file_exists(__DIR__."/../../../infusion/processv2.php")) {
+            try {
+               require_once(__DIR__."/../../../infusion/processv2.php");
+               $keapIntegration = new KeapIntegration();
+               $result = $keapIntegration->processPart2Step7($userMetaData);
+               if ($result) {
+                  error_log("Successfully processed Part 2 Step 7 data to Keap for user ID: " . $userid);
+               }
+            } catch (Exception $e) {
+               error_log("Error processing Part 2 Step 7 to Keap: " . $e->getMessage());
+            }
+         }
 
          // Update status
          update_user_meta( $userid, 'Part2Step7Completed', 'Yes' );
@@ -640,6 +671,23 @@ function redirectAfterPart2Step8(){
          $userMetaData = prepareUserMetaData();
          foreach( $userMetaData as $key => $val ) { update_user_meta( $userid, $key, $val ); }
 
+         // Process Keap integration for Part 2 Step 8
+         if (file_exists(__DIR__."/../../../infusion/processv2.php")) {
+            try {
+               require_once(__DIR__."/../../../infusion/processv2.php");
+               $keapIntegration = new KeapIntegration();
+               $result = $keapIntegration->processPart2Step8($userMetaData);
+               if ($result) {
+                  error_log("Successfully processed Part 2 Step 8 data to Keap for user ID: " . $userid);
+               }
+            } catch (Exception $e) {
+               error_log("Error processing Part 2 Step 8 to Keap: " . $e->getMessage());
+            }
+         }
+         
+         // Mark step as completed
+         update_user_meta( $userid, 'Part2Step8Completed', 'Yes' );
+
          if(isset($_POST['save_continue_later_step8'])) {
             if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/mywordpress/thank-you-2/'; }
             else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/thank-you-2/"; }
@@ -673,10 +721,40 @@ function redirectAfterPart2Step9(){
    ob_clean();
    ob_start();
    if(isset($_POST['submit_part2_step9'])) {
-      // Final redirect to completion page
-      if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/registration-complete/'; }
-      else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/registration-complete/"; }
-      wp_redirect($redirectUrl); exit;
+      $current_user = wp_get_current_user();
+      if($current_user) {
+         $userid = $current_user->ID;
+         $user_info = get_user_meta($userid);
+         
+         // Get user email for Keap lookup
+         $userEmail = '';
+         if (isset($user_info['Email'][0])) {
+            $userEmail = $user_info['Email'][0];
+         } else {
+            $userEmail = $current_user->user_email;
+         }
+         
+         // Process final completion in Keap
+         if (file_exists(__DIR__."/../../../infusion/processv2.php")) {
+            try {
+               require_once(__DIR__."/../../../infusion/processv2.php");
+               $keapIntegration = new KeapIntegration();
+               $result = $keapIntegration->processPart2Completion(null, $userEmail);
+               if ($result) {
+                  error_log("Successfully processed Part 2 completion in Keap for user ID: " . $userid);
+               }
+            } catch (Exception $e) {
+               error_log("Error processing Part 2 completion to Keap: " . $e->getMessage());
+            }
+         }
+         
+         // Mark overall registration as completed
+         update_user_meta( $userid, 'RegistrationCompleted', 'Yes' );
+         update_user_meta( $userid, 'RegistrationCompletedDate', date('Y-m-d H:i:s') );
+      }
+      
+      // Registration is completed on this page (Step 9) - no redirect needed
+      // Users will see the thank you message and completion confirmation
    }
 }
 add_action( 'template_redirect', 'redirectAfterPart2Step9');
@@ -753,8 +831,20 @@ function redirectAfterRegistration(){
             add_user_meta( $userId, 'ActivationKey', $code);
             $mailSent = sentUserActivationMail($userData['user_email'], $userData['first_name'] . " " . $userData['last_name'], $activation_link);
          }
+         // Process initial registration in Keap
          $contactId = "";
-         include_once (__DIR__."/../../../infusion/processv2.php");
+         if (file_exists(__DIR__."/../../../infusion/processv2.php")) {
+            try {
+               require_once(__DIR__."/../../../infusion/processv2.php");
+               $keapIntegration = new KeapIntegration();
+               $contactId = $keapIntegration->processInitialRegistration($_POST);
+               if ($contactId) {
+                  error_log("Successfully processed initial registration in Keap. Contact ID: " . $contactId);
+               }
+            } catch (Exception $e) {
+               error_log("Error processing initial registration to Keap: " . $e->getMessage());
+            }
+         }
          // var_dump($mailSent);
          // var_dump($contactId );
          // var_dump(isset($_SERVER['HTTP_HOST']));
@@ -967,27 +1057,9 @@ function sentUserActivationMail($toEmailId, $name, $activation_link) {
       This function activate the user
 **********************************************************************************************/
 function opinc_panel_useractivation($atts, $content = null) {
-   $user_id = filter_input( INPUT_GET, 'user', FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 1 ) ) );
-   if ( $user_id ) {
-      // get user meta activation hash field
-      $code = get_user_meta( $user_id, 'ActivationKey', true );
-      if ( $code == filter_input( INPUT_GET, 'key' ) ) {
-          delete_user_meta( $user_id, 'ActivationKey' );
-         // Log the user in after successful activation
-          wp_set_current_user( $user_id );
-          wp_set_auth_cookie( $user_id );
-      }
-      if($_SERVER['HTTP_HOST'] == 'localhost') {
-         // $redirect = "http://" . $_SERVER['HTTP_HOST']."/openinclusion/login";
-                  $redirect = "https://staging4.openinclusion.com/multi-step-registration-1/";
-
-      }
-      else {
-        // $redirect = "https://". $_SERVER['HTTP_HOST']. "/login";
-        $redirect = "https://staging4.openinclusion.com/multi-step-registration-1/";
-      }       
-      wp_redirect( $redirect ); exit;
-  }
+   // This function is now handled by handleUserActivationRedirect() in registration-redirect-handler.php
+   // Keeping for backward compatibility but the actual logic is moved to the redirect handler
+   handleUserActivationRedirect();
 }
 
 add_shortcode("opinc-panel-activation", "opinc_panel_useractivation");  
@@ -1315,14 +1387,19 @@ function redirectAfterPart2Step1(){
             update_user_meta( $userid, $key, $val ); 
          }
          
-        //  // Mark that user has completed Part 2 Step 1
-        //  update_user_meta( $userid, 'Part2Step1Completed', 'Yes');
-
-        //  // Update Part 2 Step 1 data in Keap/Infusionsoft
-        //  include_once (__DIR__."/../../../infusion/updatePart2Step1.php");
-         
-        //  // Update user status in Keap/Infusionsoft
-        //  include_once (__DIR__."/../../../infusion/updateUserStatus.php");
+         // Process Keap integration for Part 2 Step 1
+         if (file_exists(__DIR__."/../../../infusion/processv2.php")) {
+            try {
+               require_once(__DIR__."/../../../infusion/processv2.php");
+               $keapIntegration = new KeapIntegration();
+               $result = $keapIntegration->processPart2Step1($userMetaData);
+               if ($result) {
+                  error_log("Successfully processed Part 2 Step 1 data to Keap for user ID: " . $userid);
+               }
+            } catch (Exception $e) {
+               error_log("Error processing Part 2 Step 1 to Keap: " . $e->getMessage());
+            }
+         }
          
         //  if(isset($_SERVER['HTTP_HOST'])) {
         //     if($_SERVER['HTTP_HOST'] == 'localhost') {
@@ -1448,6 +1525,24 @@ function redirectAfterPart2Step2(){
             foreach( $userMetaData as $key => $val ) {
                update_user_meta( $userid, $key, $val );
             }
+            
+            // Process Keap integration for Part 2 Step 2
+            if (file_exists(__DIR__."/../../../infusion/processv2.php")) {
+               try {
+                  require_once(__DIR__."/../../../infusion/processv2.php");
+                  $keapIntegration = new KeapIntegration();
+                  $result = $keapIntegration->processPart2Step2($userMetaData);
+                  if ($result) {
+                     error_log("Successfully processed Part 2 Step 2 data to Keap for user ID: " . $userid);
+                  }
+               } catch (Exception $e) {
+                  error_log("Error processing Part 2 Step 2 to Keap: " . $e->getMessage());
+               }
+            }
+            
+            // Mark step as completed
+            update_user_meta( $userid, 'Part2Step2Completed', 'Yes');
+            
          } catch (Exception $e) {
             // If there's an error in data preparation, show validation error
             $errs[] = array('general', __('There was an error processing your data. Please check your selections and try again.', 'openinclusion'));
@@ -1528,10 +1623,24 @@ function redirectAfterPart2Step3(){
                update_user_meta( $userid, $key, $val );
             }
             
+            // Process Keap integration for Part 2 Step 3
+            if (file_exists(__DIR__."/../../../infusion/processv2.php")) {
+               try {
+                  require_once(__DIR__."/../../../infusion/processv2.php");
+                  $keapIntegration = new KeapIntegration();
+                  $result = $keapIntegration->processPart2Step3($userMetaData);
+                  if ($result) {
+                     error_log("Successfully processed Part 2 Step 3 data to Keap for user ID: " . $userid);
+                  }
+               } catch (Exception $e) {
+                  error_log("Error processing Part 2 Step 3 to Keap: " . $e->getMessage());
+               }
+            }
+            
             // Mark completion
             update_user_meta( $userid, 'Part2Step3Completed', 'Yes');
             
-            // Only include updateUserStatus.php if we're not in "save continue later" mode and if file exists
+            // Update user status in Keap if not in "save continue later" mode
             if(!isset($_POST['save_continue_later_step3']) && file_exists(__DIR__."/../../../infusion/updateUserStatus.php")) {
                try {
                   include_once (__DIR__."/../../../infusion/updateUserStatus.php");
@@ -1615,6 +1724,23 @@ function redirectAfterPart2Step4(){
          // Save user meta data
          $userMetaData = prepareUserMetaData();
          foreach( $userMetaData as $key => $val ) { update_user_meta( $userid, $key, $val ); }
+         
+         // Process Keap integration for Part 2 Step 4
+         if (file_exists(__DIR__."/../../../infusion/processv2.php")) {
+            try {
+               require_once(__DIR__."/../../../infusion/processv2.php");
+               $keapIntegration = new KeapIntegration();
+               $result = $keapIntegration->processPart2Step4($userMetaData);
+               if ($result) {
+                  error_log("Successfully processed Part 2 Step 4 data to Keap for user ID: " . $userid);
+               }
+            } catch (Exception $e) {
+               error_log("Error processing Part 2 Step 4 to Keap: " . $e->getMessage());
+            }
+         }
+         
+         // Mark step as completed
+         update_user_meta( $userid, 'Part2Step4Completed', 'Yes');
          if(isset($_POST['save_continue_later_step4'])) {
             if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/mywordpress/thank-you-2/'; }
             else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/thank-you-2/"; }
@@ -1646,10 +1772,25 @@ function redirectAfterPart2Step5(){
          // Save
          $userMetaData = prepareUserMetaData();
          foreach( $userMetaData as $key => $val ) { update_user_meta( $userid, $key, $val ); }
+         
+         // Process Keap integration for Part 2 Step 5
+         if (file_exists(__DIR__."/../../../infusion/processv2.php")) {
+            try {
+               require_once(__DIR__."/../../../infusion/processv2.php");
+               $keapIntegration = new KeapIntegration();
+               $result = $keapIntegration->processPart2Step5($userMetaData);
+               if ($result) {
+                  error_log("Successfully processed Part 2 Step 5 data to Keap for user ID: " . $userid);
+               }
+            } catch (Exception $e) {      
+               error_log("Error processing Part 2 Step 5 to Keap: " . $e->getMessage());
+            }
+         }
+         
          // Mark completion
          update_user_meta( $userid, 'Part2Step5Completed', 'Yes');
          
-         // Add error handling around updateUserStatus.php
+         // Update user status in Keap
          if(file_exists(__DIR__."/../../../infusion/updateUserStatus.php")) {
             try {
                include_once (__DIR__."/../../../infusion/updateUserStatus.php");
@@ -2334,7 +2475,7 @@ function update_user_role(){
       $response = curl_exec($curl);
       curl_close($curl);
       $contactData=[
-         "User Status"                       => 'Member'
+         "User Status" => 'Member'
       ];
    }
    return $user_role;
