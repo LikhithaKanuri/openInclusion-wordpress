@@ -162,6 +162,7 @@ function openinc_create_form_defs_v3() {
                   array('reqd', __( 'Please provide your email address', 'openinclusion' )),
                   array('email', __( 'Please check the email address format', 'openinclusion' )),
                   array('len', __( 'Your email address can only be %1$d characters long', 'openinclusion' )),
+                  array('email-match', __( 'Email addresses do not match', 'openinclusion' )),
             )
          ),
 

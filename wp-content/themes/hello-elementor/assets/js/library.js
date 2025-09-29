@@ -1233,6 +1233,30 @@ jQuery(document).ready(function ($) {
 
    })();
 
+   // Real-time email matching validation
+   $(document).on('blur', '#inf_field_re_Email', function() {
+      var email1 = $('#inf_field_Email').val();
+      var email2 = $(this).val();
+      
+      if (email2.length > 0 && email1 !== email2) {
+         doTextSelectFail($(this), 'Email addresses do not match');
+      } else if (email2.length > 0 && email1 === email2) {
+         doTextSelectSuccess($(this));
+      }
+   });
+   
+   // Also validate when the main email field changes
+   $(document).on('blur', '#inf_field_Email', function() {
+      var email1 = $(this).val();
+      var email2 = $('#inf_field_re_Email').val();
+      
+      if (email2.length > 0 && email1 !== email2) {
+         doTextSelectFail($('#inf_field_re_Email'), 'Email addresses do not match');
+      } else if (email2.length > 0 && email1 === email2) {
+         doTextSelectSuccess($('#inf_field_re_Email'));
+      }
+   });
+
    /****************** Form is submitted **************************/
    $('.contact').find('input[type="submit"]').on('click', function (e) {
       $fieldId = '';
@@ -1563,13 +1587,21 @@ jQuery(document).ready(function ($) {
 
          }
       }
+      if ($(obj).attr('data-v-email-match')) {
+         if (($myVal.length > 0) && ($myVal !== $('#inf_field_Email').val())) {
+            $errMsg = $(obj).attr('data-v-email-match');
+            doTextSelectFail($(obj), $errMsg);
+            return false; // End out of function
+         }
+      }
       // Still here the show success
       doTextSelectSuccess($(obj));
       return true;
    }
 
    function doTextSelectSuccess(obj) {
-      var $errorsEl = ($(obj).is('select')) ? $(obj).closest('.custom').next('.errors') : $(obj).next('.errors');
+      // var $errorsEl = ($(obj).is('select')) ? $(obj).closest('.custom').next('.errors') : $(obj).closest('label').find('.errors');
+      var $errorsEl = ($(obj).is('select')) ? $(obj).closest('.custom').next('.errors') : $('#' + obj.attr('id') + '_error');
       var $labelEl = $(obj).closest('label');
       $(obj).attr('aria-invalid', 'false');
       if ($errorsEl.length) { $errorsEl.html(''); }
@@ -1577,7 +1609,8 @@ jQuery(document).ready(function ($) {
    }
 
    function doTextSelectFail(obj, message) {
-      var $errorsEl = ($(obj).is('select')) ? $(obj).closest('.custom').next('.errors') : $(obj).next('.errors');
+      // var $errorsEl = ($(obj).is('select')) ? $(obj).closest('.custom').next('.errors') : $(obj).closest('label').find('.errors');
+      var $errorsEl = ($(obj).is('select')) ? $(obj).closest('.custom').next('.errors') : $('#' + obj.attr('id') + '_error');
       var $labelEl = $(obj).closest('label');
       $(obj).attr('aria-invalid', 'true');
       if ($errorsEl.length) { $errorsEl.html(message); }

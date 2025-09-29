@@ -521,6 +521,8 @@ function prepareUserMetaData() {
 **********************************************************************************************/
 function isValidUserInput() {
    $return = true;
+   $arrErrs = array();
+   
    /*
    if(!isset($_POST['inf_field_UserName'])){
       $return = false;
@@ -537,7 +539,21 @@ function isValidUserInput() {
    }
    if(!isset($_POST['inf_field_LastName'])){
       $return = false;
-   }   
+   }
+   
+   // Check if email addresses match
+   if(isset($_POST['inf_field_Email']) && isset($_POST['inf_field_re_Email'])) {
+      if($_POST['inf_field_Email'] !== $_POST['inf_field_re_Email']) {
+         $arrErrs[] = array('inf_field_re_Email', 'Email addresses do not match');
+         $return = false;
+      }
+   }
+   
+   // Set form errors if any validation failed
+   if(!$return && !empty($arrErrs)) {
+      setFormErrors($arrErrs);
+   }
+   
    return $return;
 }
 
@@ -614,12 +630,12 @@ function opinc_panel_useractivation($atts, $content = null) {
       }
       if($_SERVER['HTTP_HOST'] == 'localhost') {
          // $redirect = "http://" . $_SERVER['HTTP_HOST']."/openinclusion/login";
-                  $redirect = "https://staging4.openinclusion.com/multi-step-registration-1/";
+                  $redirect = "https://staging4.openinclusion.com/multi-step-reg/";
 
       }
       else {
         // $redirect = "https://". $_SERVER['HTTP_HOST']. "/login";
-        $redirect = "https://staging4.openinclusion.com/multi-step-registration-1/";
+        $redirect = "https://staging4.openinclusion.com/multi-step-reg/";
       }       
       wp_redirect( $redirect ); exit;
   }
@@ -1218,6 +1234,9 @@ function printFormNew($formDef,$clean, $arrErrs ) {
                   break;
                case 'sq' :
                   $validStr .= ' data-v-sq="'.getSecA($clean['sq']).'~'.$validate[1].'"';
+                  break;
+               case 'email-match' :
+                  $validStr .= ' data-v-email-match="'.$validate[1].'"';
                   break;
            }
          }
