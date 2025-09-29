@@ -881,24 +881,7 @@ function redirectAfterPart2Step1(){
             }
          }
          
-         // Check if user selected "None of the above" - screen them out
-         if(isset($_POST['RelationShip']) && in_array('None-of-the-above', $_POST['RelationShip'])) {
-            // Mark user as screened out
-            update_user_meta( $userid, 'ScreenedOut', 'Yes');
-            update_user_meta( $userid, 'ScreenedOutReason', 'None of the above relationship options selected');
-            
-            // Redirect to a "thank you but not eligible" page
-            if(isset($_SERVER['HTTP_HOST'])) {
-               if($_SERVER['HTTP_HOST'] == 'localhost') {
-                  $redirectUrl = "http://" . $_SERVER['HTTP_HOST']."/openinclusion/not-eligible/";
-               }
-               else {
-                  $redirectUrl = "https://". $_SERVER['HTTP_HOST']. "/not-eligible/";
-               }         
-               wp_redirect($redirectUrl);
-               exit;      
-            }
-         }
+         // No screening out based on relationship selection
          
          // Update user meta data with Part 2 Step 1 information
          $userMetaData = prepareUserMetaData();
@@ -952,18 +935,32 @@ function redirectAfterPart2Step1(){
             //    include_once (__DIR__."/../../../infusion/updateUserStatus.php");
             // }
             
-            // Determine routing based on caregiver-only selection
-            $shouldSkip = false;
+            // Determine routing based on Q1 (hasDisability) and Q2 (relationship to disability)
+            $shouldSkipStep2 = false;
             if(isset($_POST['RelationShip'])) {
-               $shouldSkip = user_should_skip_step2_based_on_relationship($_POST['RelationShip']);
+               $hasDisabilityValue = isset($_POST['inf_field_hasDisability']) ? $_POST['inf_field_hasDisability'] : null;
+               $shouldSkipStep2 = user_should_skip_step2_based_on_relationship($_POST['RelationShip'], $hasDisabilityValue);
             }
+            
+            // Route to appropriate step
             if(isset($_SERVER['HTTP_HOST'])) {
-               if($_SERVER['HTTP_HOST'] == 'localhost') {
-                  $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/part2-step3/';
+               if($shouldSkipStep2) {
+                  // Caregiver-only: Skip Page 2, go to Page 3
+                  if($_SERVER['HTTP_HOST'] == 'localhost') {
+                     $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/part2-step3/';
+                  }
+                  else {
+                     $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/part2-step3/";
+                  }
+               } else {
+                  // Everyone else: Continue to Page 2
+                  if($_SERVER['HTTP_HOST'] == 'localhost') {
+                     $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/part2-step2/';
+                  }
+                  else {
+                     $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/part2-step2/";
+                  }
                }
-               else {
-                  $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/part2-step3/";
-               }         
                wp_redirect($redirectUrl);
                exit;      
             }
@@ -973,18 +970,71 @@ function redirectAfterPart2Step1(){
 }
 add_action( 'template_redirect', 'redirectAfterPart2Step1');
 
-// Caregiver-only routing from Step 1: If RelationShip is only caregiver categories and no others, skip Step 2
-function user_should_skip_step2_based_on_relationship($relationshipValues) {
+// Page 2 routing logic based on Q1 (hasDisability) and Q2 (relationship to disability)
+function user_should_skip_step2_based_on_relationship($relationshipValues, $hasDisabilityValue = null) {
    if(!is_array($relationshipValues)) return false;
-   $caregiverKeys = array('A-professional-caregiver-to-a-disabled-person','A-personal-caregiver-to-a-disabled-person');
-   $hasCaregiver = false;
-   $hasNonCaregiver = false;
-   foreach($relationshipValues as $val){
-      if(in_array($val, $caregiverKeys)) { $hasCaregiver = true; }
-      else { $hasNonCaregiver = true; }
+   
+   // Get Q1 value from POST if not provided
+   if($hasDisabilityValue === null && isset($_POST['inf_field_hasDisability'])) {
+      $hasDisabilityValue = $_POST['inf_field_hasDisability'];
    }
-   return ($hasCaregiver && !$hasNonCaregiver);
+   
+   // Define caregiver-only options
+   $caregiverOnlyKeys = array(
+      'A-professional-caregiver-to-a-disabled-person',
+      'A-personal-caregiver-to-a-disabled-person'
+   );
+   
+   // Define non-caregiver options (disabled, condition, over 65, other)
+   $nonCaregiverKeys = array(
+      'A-Disabled-Person',
+      'A-person-with-specific-condition', 
+      'Over-65-Years-Old',
+      'A-parent-of-someone-with-a-disability',
+      'A-spouse-child-or-sibling-of-a-disabled-person',
+      'I-have-another-relationship-to-disability-or-age-related-needs'
+   );
+   
+   $hasCaregiverOnly = false;
+   $hasNonCaregiver = false;
+   
+   foreach($relationshipValues as $val) {
+      if(in_array($val, $caregiverOnlyKeys)) {
+         $hasCaregiverOnly = true;
+      }
+      if(in_array($val, $nonCaregiverKeys)) {
+         $hasNonCaregiver = true;
+      }
+   }
+   
+   // Implement the new routing logic:
+   // Q1 = No + Q2 caregiver only → skip Page 2
+   // Q1 = No + Q2 caregiver + something else → go to Page 2
+   // Q1 = Yes (any identity selected) → go to Page 2
+   // Q1 = I'd rather not answer + Q2 caregiver only → skip Page 2
+   // Q1 = I'd rather not answer + Q2 caregiver + something else → go to Page 2
+   
+   if($hasDisabilityValue === 'No' || $hasDisabilityValue === 'PreferNotToAnswer') {
+      // For Q1 = No or "I'd rather not answer": skip Page 2 only if Q2 is caregiver only
+      return ($hasCaregiverOnly && !$hasNonCaregiver);
+   } else if($hasDisabilityValue === 'Yes') {
+      // For Q1 = Yes: always go to Page 2
+      return false;
+   }
+   
+   // Default: go to Page 2
+   return false;
 }
+
+// Check if user should be screened out
+function user_should_be_screened_out($relationshipValues) {
+   if(!is_array($relationshipValues)) return false;
+   
+   // Currently no screening out based on relationship selection
+   return false;
+}
+
+
 
 // Redirects after Step 2 submission
 function redirectAfterPart2Step2(){

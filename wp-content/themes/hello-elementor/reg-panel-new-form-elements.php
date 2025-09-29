@@ -69,7 +69,7 @@
    array('A-parent-of-someone-with-a-disability',__( 'A parent of someone with a disability (child or adult)', 'openinclusion' ),'RelationShip[]', 'RelationShip_parent_of_someone_with_disability'),
    array('A-spouse-child-or-sibling-of-a-disabled-person',__( 'A spouse, child or sibling of a disabled person/person with a disability', 'openinclusion' ),'RelationShip[]', 'RelationShip_relation_with_disable'),
    array('I-have-another-relationship-to-disability-or-age-related-needs',__( 'Other. Please describe', 'openinclusion' ),'RelationShip[]', 'RelationShip_other_relation_with_disable'),
-   // array('None-of-the-above',__( 'None of the above', 'openinclusion' ),'RelationShip[]', 'RelationShip_none_of_above'),
+   array('None-of-the-above',__( 'None of the above', 'openinclusion' ),'RelationShip[]', 'RelationShip_none_of_above'),
  ); 
 
 function get_relationship_needs() {
