@@ -1,3 +1,9 @@
+// Immediately hide the specific software field on page load
+jQuery(document).ready(function($) {
+   $('#specific-software-field').hide();
+   $('#specific-software-field input, #specific-software-field textarea').prop('disabled', true).val('');
+});
+
 function createCookie(name, value, days) {
    if (days) {
       var date = new Date();
@@ -215,6 +221,11 @@ jQuery(document).ready(function ($) {
    if (initialCountry) {
       updateRegionOptions(initialCountry);
    }
+   
+   // Ensure region field is visible
+   $('#region-field-container').show();
+   $('#inf_field_region').show();
+   
    // Bind region validation for current control as well
    $(document).on('change.inputRegion input.inputRegion', '#inf_field_region', function(){
       validateTextSelectField(this);
@@ -1060,15 +1071,38 @@ jQuery(document).ready(function ($) {
    $("#inf_field_countryphonecode").wrap("<div class='custom2'></div>");
    */
 
-   //$("#inf_field_Phone2").attr("style","margin-top: 3px");
+   // Simple approach: move phone number field into country code container
+   console.log('Phone number field HTML:', $("#liphonenumber").html());
+   console.log('Country code container exists:', $("#licountryphonecode").length);
+   
    $("#licountryphonecode").append($("#liphonenumber").html());
    $("#liphonenumber").html("");
+   
+   // Hide the country code label text since it's not needed
    $("label[for=inf_field_countryphonecode]").find("span.text").hide();
-   $("label[for=inf_field_countryphonecode]").attr("style", "float:left");
-   $("label[for=inf_field_countryphonecode]").find("div.custom").attr("style", "top:22px");
-   $("label[for=inf_field_Phone2]").attr("style", "width:75%;float:left");
-   $("label[for=inf_field_Phone2]").find("span.text").attr("style", "margin-left:-178px");
-   $("label[for=inf_field_Phone2]").find("span.text").addClass("phone-number-text");
+   
+   console.log('Phone number field after move:', $("#licountryphonecode input[type='text']").length);
+   
+   // Apply styling for better layout
+   $("#licountryphonecode").addClass("phone-number-container");
+   $("#licountryphonecode").css({
+     "display": "flex",
+     "align-items": "center",
+     "gap": "10px",
+     "margin-bottom": "2em"
+   });
+   
+   // Style the country code dropdown
+   $("#licountryphonecode .custom").css({
+     "width": "30%",
+     "margin": "0"
+   });
+   
+   // Style the phone number input
+   $("#licountryphonecode input[type='text']").css({
+     "width": "70%",
+     "margin": "0"
+   });
 
 
    $("#PreferToContactOthers").hide();
@@ -1149,7 +1183,7 @@ jQuery(document).ready(function ($) {
       var $submitLi = getFieldLiByInput($('#submit_part2_step1'));
 
       // Insert screen-out message container after the over18 field
-      var messageText = "Thanks for your interest! Currently, we're only able to accept members aged 18 and over for our insight community.";
+      var messageText = "Thanks for your interest! Currently, we're only able to accept members aged 18 and over for our online community.";
       var $screenMsg = $('<li class="clear" id="over18-screenout-msg" style="display:none;"><div role="alert" aria-live="polite">'+ messageText +'</div></li>');
       if ($over18Li.length) {
          $over18Li.after($screenMsg);
@@ -1231,9 +1265,7 @@ jQuery(document).ready(function ($) {
          }
       });
 
-   })();
-
-   // Real-time email matching validation
+         // Real-time email matching validation
    $(document).on('blur', '#inf_field_re_Email', function() {
       var email1 = $('#inf_field_Email').val();
       var email2 = $(this).val();
@@ -1256,6 +1288,8 @@ jQuery(document).ready(function ($) {
          doTextSelectSuccess($('#inf_field_re_Email'));
       }
    });
+
+   })();
 
    /****************** Form is submitted **************************/
    $('.contact').find('input[type="submit"]').on('click', function (e) {
@@ -1587,37 +1621,59 @@ jQuery(document).ready(function ($) {
 
          }
       }
-      if ($(obj).attr('data-v-email-match')) {
-         if (($myVal.length > 0) && ($myVal !== $('#inf_field_Email').val())) {
-            $errMsg = $(obj).attr('data-v-email-match');
-            doTextSelectFail($(obj), $errMsg);
-            return false; // End out of function
-         }
-      }
       // Still here the show success
       doTextSelectSuccess($(obj));
       return true;
    }
 
    function doTextSelectSuccess(obj) {
+      // var $errorsEl = ($(obj).is('select')) ? $(obj).closest('.custom').next('.errors') : $(obj).next('.errors');
       // var $errorsEl = ($(obj).is('select')) ? $(obj).closest('.custom').next('.errors') : $(obj).closest('label').find('.errors');
       var $errorsEl = ($(obj).is('select')) ? $(obj).closest('.custom').next('.errors') : $('#' + obj.attr('id') + '_error');
+
       var $labelEl = $(obj).closest('label');
       $(obj).attr('aria-invalid', 'false');
+      
+      // Remove any existing error messages
+      $(obj).nextAll('.errors').remove();
+      
       if ($errorsEl.length) { $errorsEl.html(''); }
       if ($labelEl.length) { $labelEl.addClass('valid'); }
    }
 
    function doTextSelectFail(obj, message) {
-      // var $errorsEl = ($(obj).is('select')) ? $(obj).closest('.custom').next('.errors') : $(obj).closest('label').find('.errors');
       var $errorsEl = ($(obj).is('select')) ? $(obj).closest('.custom').next('.errors') : $('#' + obj.attr('id') + '_error');
       var $labelEl = $(obj).closest('label');
       $(obj).attr('aria-invalid', 'true');
-      if ($errorsEl.length) { $errorsEl.html(message); }
+      
+      // Remove any existing error messages first to prevent duplicates
+      $(obj).nextAll('.errors').remove();
+      
+      // Check if error element already exists to prevent duplicates
+      if ($errorsEl.length) { 
+         $errorsEl.html(message);
+      } else {
+         // Create error element if it doesn't exist
+         var $errorSpan = $('<span class="errors" style="color: #CC063B; display: block; margin-top: 5px;">' + message + '</span>');
+         $(obj).after($errorSpan);
+      }
       if ($labelEl.length) { $labelEl.removeClass('valid'); }
-      // Add error message to array for reporting on screen
-      console.log($(obj).attr('id') + ', ' + message);
-      $errArray.push([$(obj).attr('id'), message]);
+      
+      // Check if error already exists for this field before adding to array
+      var fieldId = $(obj).attr('id');
+      var errorExists = false;
+      for (var i = 0; i < $errArray.length; i++) {
+         if ($errArray[i][0] === fieldId) {
+            errorExists = true;
+            break;
+         }
+      }
+      
+      // Add error message to array for reporting on screen only if it doesn't already exist
+      if (!errorExists) {
+         console.log($(obj).attr('id') + ', ' + message);
+         $errArray.push([$(obj).attr('id'), message]);
+      }
    }
 
    function doRadioCheckboxGroupFail(obj, message) {
@@ -1629,9 +1685,22 @@ jQuery(document).ready(function ($) {
       $(obj).children('ul').addClass('error');
       $(obj).children('.fieldseterrors').html(message);
       $(obj).children('legend').removeClass('valid');
-      // Add error message to array for reporting on screen
-      console.log($(obj).find('legend').attr('id') + ', ' + message);
-      $errArray.push([$(obj).find('legend').attr('id'), message]);
+      
+      // Check if error already exists for this field before adding to array
+      var fieldId = $(obj).find('legend').attr('id');
+      var errorExists = false;
+      for (var i = 0; i < $errArray.length; i++) {
+         if ($errArray[i][0] === fieldId) {
+            errorExists = true;
+            break;
+         }
+      }
+      
+      // Add error message to array for reporting on screen only if it doesn't already exist
+      if (!errorExists) {
+         console.log($(obj).find('legend').attr('id') + ', ' + message);
+         $errArray.push([$(obj).find('legend').attr('id'), message]);
+      }
 
    }
 
@@ -1653,9 +1722,22 @@ jQuery(document).ready(function ($) {
       $(obj).children('.fieldseterrors').html(message);
       $(obj).find('li.dob-d select').attr('aria-invalid', 'true');
       $(obj).children('legend').removeClass('valid');
-      // Add error message to array for reporting on screen
-      console.log($(obj).find('legend').attr('id') + ', ' + message);
-      $errArray.push([$(obj).find('legend').attr('id'), message]);
+      
+      // Check if error already exists for this field before adding to array
+      var fieldId = $(obj).find('legend').attr('id');
+      var errorExists = false;
+      for (var i = 0; i < $errArray.length; i++) {
+         if ($errArray[i][0] === fieldId) {
+            errorExists = true;
+            break;
+         }
+      }
+      
+      // Add error message to array for reporting on screen only if it doesn't already exist
+      if (!errorExists) {
+         console.log($(obj).find('legend').attr('id') + ', ' + message);
+         $errArray.push([$(obj).find('legend').attr('id'), message]);
+      }
    }
 
    function doDobSuccess(obj) {
@@ -1775,6 +1857,67 @@ function hideshowOpenText(element) {
       console.log('element', element)
       jQuery(element).parent().find('input[type=text]').hide();
    }
+   
+   // Check if "Prefer not to respond" is selected and hide all open text fields in the same fieldset
+   checkPreferNotToRespond(element);
+}
+
+function checkPreferNotToRespond(element) {
+   // Get the fieldset that contains this checkbox
+   var fieldset = jQuery(element).closest('fieldset');
+   
+   // Check if "Prefer not to respond" is checked in this fieldset
+   var preferNotToRespond = fieldset.find('input[value="PreferNotToSay"]');
+   
+   console.log('checkPreferNotToRespond called', element, preferNotToRespond.length, preferNotToRespond.prop('checked'));
+   
+   if (preferNotToRespond.length > 0 && preferNotToRespond.prop('checked')) {
+      // Hide all open text fields in this fieldset
+      fieldset.find('input[type=text]').hide();
+      fieldset.find('input[type=text]').prop('disabled', true).val('');
+      
+      // Also hide the specific "Other. Please describe" text fields
+      fieldset.find('input[id*="OtherPleaseSpecify_OpenText"]').hide();
+      fieldset.find('input[id*="OtherPleaseSpecify_OpenText"]').prop('disabled', true).val('');
+      
+      // Additional targeting for the specific text fields
+      fieldset.find('input[name*="OtherPleaseSpecify_OpenText"]').hide();
+      fieldset.find('input[name*="OtherPleaseSpecify_OpenText"]').prop('disabled', true).val('');
+      
+      // Target specific known IDs
+      jQuery('#OtherNeedsOtherPleaseSpecify_OpenText').hide();
+      jQuery('#OtherNeedsOtherPleaseSpecify_OpenText').prop('disabled', true).val('');
+      jQuery('#OtherTechnologiesOtherPleaseSpecify_OpenText').hide();
+      jQuery('#OtherTechnologiesOtherPleaseSpecify_OpenText').prop('disabled', true).val('');
+      
+      console.log('Hiding text fields in fieldset');
+   } else {
+      // Show open text fields only for "OtherPleaseSpecify" checked options
+      fieldset.find('input[type=checkbox]:checked').each(function() {
+         if (jQuery(this).val() !== 'PreferNotToSay' && jQuery(this).val() === 'OtherPleaseSpecify') {
+            jQuery(this).parent().find('input[type=text]').show();
+            jQuery(this).parent().find('input[type=text]').prop('disabled', false);
+         }
+      });
+      
+      // Show "Other. Please describe" text field if "Other. Please describe" is checked
+      var otherPleaseSpecify = fieldset.find('input[value="OtherPleaseSpecify"]');
+      if (otherPleaseSpecify.length > 0 && otherPleaseSpecify.prop('checked')) {
+         fieldset.find('input[id*="OtherPleaseSpecify_OpenText"]').show();
+         fieldset.find('input[id*="OtherPleaseSpecify_OpenText"]').prop('disabled', false);
+         
+         fieldset.find('input[name*="OtherPleaseSpecify_OpenText"]').show();
+         fieldset.find('input[name*="OtherPleaseSpecify_OpenText"]').prop('disabled', false);
+         
+         // Show specific known IDs
+         jQuery('#OtherNeedsOtherPleaseSpecify_OpenText').show();
+         jQuery('#OtherNeedsOtherPleaseSpecify_OpenText').prop('disabled', false);
+         jQuery('#OtherTechnologiesOtherPleaseSpecify_OpenText').show();
+         jQuery('#OtherTechnologiesOtherPleaseSpecify_OpenText').prop('disabled', false);
+      }
+      
+      console.log('Showing text fields in fieldset');
+   }
 }
 
 function selectResearchRelatedOptions(){
@@ -1791,7 +1934,10 @@ function selectResearchRelatedOptions(){
 }
 
 function hideOpenText(element) {
-   document.getElementById('inf_option_Gender_776_OpenText').style.display = 'none';
+   var openTextElement = document.getElementById('inf_option_Gender_776_OpenText');
+   if (openTextElement) {
+      openTextElement.style.display = 'none';
+   }
 }
 
 function clearOffText(element, targetId) {
@@ -1813,3 +1959,146 @@ function myFunction() {
    const element = document.getElementById("edit-part");
    element.scrollIntoView();
 }
+
+// Function to toggle specific software field based on digital technology selections
+function toggleSpecificSoftwareField() {
+   var specificSoftwareField = jQuery('#specific-software-field');
+   var shouldShow = false;
+   
+   // Check if any of the triggering software options are selected
+   var screenReaderSelected = jQuery('#DigitalandScreenTechnologies_ScreenReader').prop('checked');
+   var screenMagnifierSelected = jQuery('#DigitalandScreenTechnologies_ScreenMagnifier').prop('checked');
+   var dragonSelected = jQuery('#DigitalandScreenTechnologies_Dragonandother').prop('checked');
+   var readAloudSelected = jQuery('#DigitalandScreenTechnologies_ReadAloudSoftware').prop('checked');
+   
+   console.log('toggleSpecificSoftwareField called', {
+      screenReader: screenReaderSelected,
+      screenMagnifier: screenMagnifierSelected,
+      dragon: dragonSelected,
+      readAloud: readAloudSelected
+   });
+   
+   if (screenReaderSelected || screenMagnifierSelected || dragonSelected || readAloudSelected) {
+      shouldShow = true;
+   }
+   
+   if (shouldShow) {
+      specificSoftwareField.show();
+      specificSoftwareField.find('input, textarea').prop('disabled', false);
+      console.log('Showing specific software field');
+   } else {
+      specificSoftwareField.hide();
+      specificSoftwareField.find('input, textarea').prop('disabled', true).val('');
+      console.log('Hiding specific software field');
+   }
+}
+
+// Function to initialize the specific software field as hidden by default
+function initializeSpecificSoftwareField() {
+   var specificSoftwareField = jQuery('#specific-software-field');
+   if (specificSoftwareField.length > 0) {
+      // Add CSS to hide the field by default
+      specificSoftwareField.css('display', 'none');
+      specificSoftwareField.find('input, textarea').prop('disabled', true).val('');
+      console.log('Initialized specific software field as hidden');
+      
+      // Then check if it should be shown based on current selections
+      toggleSpecificSoftwareField();
+   }
+}
+
+// Function to toggle ethnicity text field based on selection
+function toggleEthnicityTextField() {
+   var ethnicityTextField = jQuery('#ethnicity-text-field');
+   var selfDescribeSelected = jQuery('#inf_option_ethnicity_self_describe').prop('checked');
+   
+   if (selfDescribeSelected) {
+      ethnicityTextField.show();
+      ethnicityTextField.find('input').prop('disabled', false);
+   } else {
+      ethnicityTextField.hide();
+      ethnicityTextField.find('input').prop('disabled', true).val('');
+   }
+}
+
+// Function to handle pronouns "Other" field
+function togglePronounsTextField() {
+   var pronounsOtherField = jQuery('#inf_option_pronouns_other_please_specify_OpenText');
+   var otherSelected = jQuery('#inf_option_pronouns_other_please_specify').prop('checked');
+   
+   if (otherSelected) {
+      pronounsOtherField.show();
+      pronounsOtherField.prop('disabled', false);
+   } else {
+      pronounsOtherField.hide();
+      pronounsOtherField.prop('disabled', true).val('');
+   }
+}
+
+   // Bind change handlers to pronouns radio buttons
+   $('input[name="inf_option_pronouns"]').on('change', function() {
+      togglePronounsTextField();
+   });
+
+   // Initialize pronouns field visibility on page load
+   togglePronounsTextField();
+
+   // Bind change handlers to checkboxes with "Prefer not to respond" options
+   $('input[value="PreferNotToSay"]').on('change', function() {
+      checkPreferNotToRespond(this);
+   });
+
+   // Bind change handlers to "Other. Please describe" checkboxes
+   $('input[value="OtherPleaseSpecify"]').on('change', function() {
+      checkPreferNotToRespond(this);
+   });
+
+   // Initialize "Prefer not to respond" behavior on page load
+   $('input[value="PreferNotToSay"]').each(function() {
+      checkPreferNotToRespond(this);
+   });
+   
+   // Initialize "Other. Please describe" behavior on page load
+   $('input[value="OtherPleaseSpecify"]').each(function() {
+      checkPreferNotToRespond(this);
+   });
+
+   // Bind change handlers to specific digital technology checkboxes that trigger the software field
+   $('input[id="DigitalandScreenTechnologies_ScreenReader"]').on('change', function() {
+      toggleSpecificSoftwareField();
+   });
+   
+   $('input[id="DigitalandScreenTechnologies_ScreenMagnifier"]').on('change', function() {
+      toggleSpecificSoftwareField();
+   });
+   
+   $('input[id="DigitalandScreenTechnologies_Dragonandother"]').on('change', function() {
+      toggleSpecificSoftwareField();
+   });
+   
+   $('input[id="DigitalandScreenTechnologies_ReadAloudSoftware"]').on('change', function() {
+      toggleSpecificSoftwareField();
+   });
+
+   // Initialize the specific software field immediately
+   initializeSpecificSoftwareField();
+   
+// Initialize the conditional logic when document is ready
+jQuery(document).ready(function($) {
+   // Bind change handlers to the digital technology checkboxes using event delegation
+   $(document).on('change', 'input[id^="DigitalandScreenTechnologies_"]', function() {
+      console.log('Digital technology checkbox changed:', this.id, this.checked);
+      toggleSpecificSoftwareField();
+   });
+
+   // Bind change handlers to ethnicity radio buttons
+   $('input[name="inf_field_identify_terms"]').on('change', function() {
+      toggleEthnicityTextField();
+   });
+   
+   
+   // Initialize on page load
+   initializeSpecificSoftwareField();
+   toggleEthnicityTextField();
+   togglePronounsTextField();
+});

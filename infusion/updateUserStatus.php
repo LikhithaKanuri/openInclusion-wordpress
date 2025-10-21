@@ -6,7 +6,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 $properties_ini = parse_ini_file("myproperties.ini");
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING & ~E_DEPRECATED & ~E_STRICT);
-require("isdk.php");
+require_once("isdk.php");
 $app = new isdk();
 
 $fieldData = $_REQUEST;

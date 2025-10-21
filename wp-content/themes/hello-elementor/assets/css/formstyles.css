@@ -437,6 +437,70 @@ label div.custom::after {
   margin-top: 6px;
 }
 
+/* Phone number field styling */
+#licountryphonecode {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 1em;
+}
+
+.phone-inputs-wrapper .custom {
+  width: 30% !important;
+  margin: 0 !important;
+  flex-shrink: 0;
+}
+
+#licountryphonecode label[for="inf_field_Phone2"] {
+  width: 70% !important;
+  margin-left: 0 !important;
+  flex: 1;
+}
+
+#licountryphonecode label[for="inf_field_Phone2"] .text {
+  margin-left: 0 !important;
+  position: static !important;
+}
+
+#licountryphonecode label[for="inf_field_Phone2"] input {
+  width: 100% !important;
+  margin-top: 0 !important;
+}
+
+/* Additional styling for phone number layout */
+.country-code-label {
+  display: inline-block;
+  width: 30%;
+  margin-right: 10px;
+}
+
+.phone-number-label {
+  display: inline-block;
+  width: 65%;
+  margin-left: 0;
+}
+
+.phone-number-label .text {
+  margin-left: 0 !important;
+  position: static !important;
+}
+
+/* Ensure proper alignment on mobile */
+@media screen and (max-width: 768px) {
+  #licountryphonecode {
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  #licountryphonecode .custom {
+    width: 100% !important;
+  }
+  
+  #licountryphonecode label[for="inf_field_Phone2"] {
+    width: 100% !important;
+  }
+}
+
 /* Account page edit button */
 /* .edit_profile_section {
   display: flex;

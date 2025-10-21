@@ -64,12 +64,12 @@ function openinc_create_form_defs_v3() {
                 <p>
                     Thank you for your interest in joining the Open Inclusion community! 
                     We\'re excited to welcome you to our global network, where your voice helps shape 
-                    more inclusive and accessible solutions and you’ll be paid for your valuable insights.
+                    more inclusive and accessible solutions and you\'ll be paid for your valuable insights.
                 </p>
                 <p>Joining is straightforward. There are three steps:</p>
                 <p><strong>1. Provide very basic info</strong> about yourself including your name, contact details and preferences.</p>
                 <p><strong>2.</strong> You will then <strong>receive a welcome email with a link</strong> you will need to click on to verify your account.</p>
-                <p><strong>3. From the welcome email link, you’ll go to our registration process</strong> where we will ask you about your 
+                <p><strong>3. From the welcome email link, you\'ll go to our registration process</strong> where we will ask you about your 
                 access needs, assistive technology usage, and some broader demographic questions. 
                 This will take approximately <strong>10-15 minutes to complete.</strong></p>
             ',
@@ -259,7 +259,7 @@ function openinc_create_form_defs_v3() {
          //    'type' => 'other-html',
          //    'name' => 'header2',
          //    'li-class' => 'clear',
-         //    'value' => '<h2 class="sectionhead">2. About you </h2>',
+         //    'value' => '<h2 class="sectionhead">2. About you </h2>',
          //    'validation' => array(
          //    )
          // ),
@@ -313,7 +313,7 @@ function openinc_create_form_defs_v3() {
          //    'type' => 'other-html',
          //    'name' => 'header4_1',
          //    'li-class' => 'clear',
-         //    'value' => '<span class=terms-and-condition-community>Welcome to Open Inclusion’s Disability and Age-Inclusive Community</span>',
+         //    'value' => '<span class=terms-and-condition-community>Welcome to Open Inclusion's Disability and Age-Inclusive Community</span>',
          //    'validation' => array(
          //    )
          // ),
@@ -334,7 +334,7 @@ function openinc_create_form_defs_v3() {
          //       <li><b>We prefer selecting community members who are Open Verified</b> particularly for more involved, higher paid research. Some projects may be only available to Open Verified members. These members have shown us identification or met with us (online or in person) so that we are sure that they are who they say they are, and have genuine lived experiences as described to us. </li>
          //       <li><b>At Open we expect and ask that everyone is treated with respect and courtesy at all times</b> including other community members, research participants, researchers, or anyone else involved in the work. We ask everyone to interact in a considerate and kind manner at all times, including while using the Open Inclusion community hub, or in any other digital, phone based or in-person surveys, forums or engagement. We reserve the right to expel anyone from research or the community who behaves in a way that breaches this.</li>
          //       <li><b>We are conscious that we can err also.</b> If you ever have any constructive feedback or a complaint about your experiences with Open Inclusion please contact <a href="feedback@openinclusion.com"> feedback@openinclusion.com </a>. This goes directly to our leadership team who will take steps to understand and address the issue, both for you and for future engagements. We always appreciate learning how we can do better. </li>
-         //       <li><b>All research we conduct is carried out in accordance with the current <a href="https://www.mrs.org.uk/standards/code-of-conduct">Market Research Society’s Code of Conduct. </a></b></li>
+         //       <li><b>All research we conduct is carried out in accordance with the current <a href="https://www.mrs.org.uk/standards/code-of-conduct">Market Research Society's Code of Conduct. </a></b></li>
          //       <li><b>Privacy and General Data Protection Regular protections </b></li>
          //       <ul class="sub-list">
          //          <li>
@@ -344,7 +344,7 @@ function openinc_create_form_defs_v3() {
          //             <b>Your personal data will be kept safe.</b> Open Inclusion will take all reasonable technical and organisational precautions to prevent the loss, misuse, or alteration of the information you have given. Data is stored in an encrypted database. 
          //          </li>
          //          <li>
-         //             <b>You can unsubscribe</b> from receiving research invitations or any other emails from us at any time. To do so just hit the ‘unsubscribe’ link which is at the bottom of all emails.
+         //             <b>You can unsubscribe</b> from receiving research invitations or any other emails from us at any time. To do so just hit the 'unsubscribe' link which is at the bottom of all emails.
          //          </li>
          //          <li>
          //             <b>To amend or remove any of the personal information</b> we hold about you, you can contact us or update the information on your profile page. To remove all personal data from our database please email us at <a href="support@openinclusion.com"> support@openinclusion.com.</a>.
@@ -483,7 +483,7 @@ function getProfileFields() {
             'type' => 'other-html',
             'name' => 'header2',
             'li-class' => 'clear',
-            'value' => '<h2 class="sectionhead">3. About you </h2>',
+            'value' => '<h2 class="sectionhead">3. About you </h2>',
             'validation' => array(
             )
          ),
@@ -702,7 +702,7 @@ function getProfileEditFields() {
             'type' => 'other-html',
             'name' => 'header2',
             'li-class' => 'clear',
-            'value' => '<span>Thank you for your interest in being invited to paid research opportunities within the Open Inclusion disability and age-inclusive insight community.</span>',
+            'value' => '<span>Thank you for your interest in being invited to paid research opportunities within the Open Inclusion disability and age-inclusive online community.</span>',
          ),
          array(
             'label' => '',
@@ -835,48 +835,112 @@ function getProfileEditFields() {
             'name' => 'DigitalandScreenTechnologies',
             'li-class' => 'clear',
             'options' => get_digitalandscreentechnologies(),
-            'validation' => array(               
+            'validation' => array(
+                  // Optional: Users may not use digital technologies
             )
-         ), 
+         ),
 
          array(
-            'label' => __( 'Movement, canes and service animals:', 'openinclusion' ),
+            'label' => __( 'Please share the names of any specific software you regularly use (e.g., JAWS, Dragon NaturallySpeaking)', 'openinclusion' ),
+            'type' => 'text',
+            'name' => 'DigitalandScreenTechnologiesSpecificSoftware',
+            'li-class' => 'clear',
+            'maxlen' => 500,
+            'validation' => array(
+                  array('len', __( 'Software description can only be %1$d characters long', 'openinclusion' )),
+            )
+         ),
+
+         array(
+            'label' => __( 'Printed media aids or adaptations:', 'openinclusion' ),
+            'type' => 'chkboxgroup-inf',
+            'name' => 'PrintMedia',
+            'li-class' => 'clear',
+            'options' => get_printMedia(),
+            'validation' => array(
+                  // Optional: Users may not use print media aids
+            )
+         ),
+
+         array(
+            'label' => __( 'Movement: mobility devices, aids and service animals:', 'openinclusion' ),
             'type' => 'chkboxgroup-inf',
             'name' => 'MovementCanesandServiceAnimals',
             'li-class' => 'clear',
             'options' => get_movementcanesandserviceanimals(),
-            'validation' => array(               
+            'validation' => array(
+                  // Optional: Users may not use movement aids
             )
-         ),         
-         
+         ),
+
          array(
-            'label' => __( 'Communication, verbal and written preferences:', 'openinclusion' ),
+            'label' => __( 'Communication aids and alternatives:', 'openinclusion' ),
             'type' => 'chkboxgroup-inf',
             'name' => 'CommunicationPreferences',
             'li-class' => 'clear',
             'options' => get_communicationpreferences(),
-            'validation' => array(               
+            'validation' => array(
+                  // Optional: Users may not use communication aids
             )
-         ),  
+         ),
+
          array(
             'label' => __( 'Personal support and home:', 'openinclusion' ),
             'type' => 'chkboxgroup-inf',
             'name' => 'PersonalSupportandHome',
             'li-class' => 'clear',
             'options' => get_personalsupportandhome(),
-            'validation' => array(               
+            'validation' => array(
+                  // Optional: Users may not use personal support
             )
-         ),           
-         
+         ),
+
          array(
-            'label' => __( 'Other', 'openinclusion' ),
+            'label' => __( 'Other technologies or support:', 'openinclusion' ),
             'type' => 'chkboxgroup-inf',
             'name' => 'OtherTechnologies',
             'li-class' => 'clear',
             'options' => get_othertechnologies(),
-            'validation' => array(               
+            'validation' => array(
+                  // Optional: Users may not use other technologies
             )
-         ),   
+         ),
+
+         array(
+            'label' => __( "What research formats would you most like to be invited to?", 'openinclusion' ),
+            'type' => 'chkboxgroup-inf',
+            'name' => 'ResearchFormats',
+            'li-class' => 'clear',
+            'options' => get_research_formats(),
+            'validation' => array(
+                  array('reqd', __( 'Please select at least one research format you are interested in', 'openinclusion' )),
+            )
+         ),
+
+         array(
+            'label' => __( 'Were you referred by someone to the Open Inclusion community?', 'openinclusion' ),
+            'type' => 'radiogroup-inf',
+            'name' => 'inf_field_referred',
+            'li-class' => 'clear',
+            'options' => array(
+               array('Yes', __( 'Yes', 'openinclusion' ), 'inf_option_referred_yes'),
+               array('No', __( 'No', 'openinclusion' ), 'inf_option_referred_no'),
+            ),
+            'validation' => array(
+               array('reqd', __( 'Please let us know if you were referred by someone', 'openinclusion' )),
+            )
+         ),
+
+         array(
+            'label' => __( 'If yes, please share the name of the person or organisation that referred you so we can thank them.', 'openinclusion' ),
+            'type' => 'text',
+            'name' => 'inf_field_referred_name',
+            'li-class' => 'clear',
+            'maxlen' => 250,
+            'validation' => array(
+               array('len', __( 'Referrer name can only be %1$d characters long', 'openinclusion' )),
+            )
+         ),
 
          array(
             'type' => 'hidden',
@@ -953,7 +1017,7 @@ function getProfileEditFields() {
          ),
          array(
             'label' => __( 'How do you identify in terms of ethnicity and race? <br /> Please self-describe as is most relevant to you.  
-            E.g. Black British, Japanese Asian or Asian Australian (please note that your identity does not necessarily align to where you live). If you do not wish to respond please write “prefer not to respond”.
+            E.g. Black British, Japanese Asian or Asian Australian (please note that your identity does not necessarily align to where you live). If you do not wish to respond please write "prefer not to respond".
             ', 'openinclusion' ),
             'type' => 'text',
             'name' => 'inf_field_identify_terms',
@@ -1093,7 +1157,7 @@ $part2Step1Form = array(
                <li><strong>The assistive technologies and adaptive solutions you use</strong></li>
                <li><strong>Some key demographics such as your gender and age</strong></li>
             </ul>
-            <p>Once completed, including reviewing and consenting to Open Inclusion\'s Terms and Conditions, you\'ll be part of the Open Inclusion Insight Community. We look forward to working with you.</p>
+            <p>Once completed, including reviewing and consenting to Open Inclusion\'s Terms and Conditions, you\'ll be part of the Open Inclusion online Community. We look forward to working with you.</p>
             <p>Required questions are marked with an asterisk *</p>
          ',
          'validation' => array()
@@ -1292,57 +1356,70 @@ $part2Step2Form = array(
          'li-class' => 'clear',
          'value' => '
             <h2>PAGE 2: ABOUT MY ACCESS NEEDS</h2>
-            <p>Please select all that apply. Required questions are marked with an asterisk *</p>
+            <p><strong>Which of the following disabilities or conditions regularly impacts your activities or experiences?</strong></p>
+            <p>Please select all that apply - whether or not you have a formal diagnosis. </p>
          ',
          'validation' => array()
       ),
       array(
-         'label' => __( 'Sensory needs:', 'openinclusion' ),
+         'label' => '<strong>'.__( 'Sensory needs:', 'openinclusion' ).'</strong>',
          'type' => 'chkboxgroup-inf',
          'name' => 'SensoryNeeds',
          'li-class' => 'clear',
          'options' => get_sensory_needs(),
-         'validation' => array()
+         'validation' => array(
+            // Note: Access needs are typically optional but at least one category should be selected
+         )
       ),
       array(
-         'label' => __( 'Physical needs:', 'openinclusion' ),
+         'label' => '<strong>'.__( 'Physical needs:', 'openinclusion' ).'</strong>',
          'type' => 'chkboxgroup-inf',
          'name' => 'PhysicalNeeds',
          'li-class' => 'clear',
          'options' => get_physical_needs(),
-         'validation' => array()
+         'validation' => array(
+            // Note: Access needs are typically optional but at least one category should be selected
+         )
       ),
       array(
-         'label' => __( 'Cognitive and mental health needs:', 'openinclusion' ),
+         'label' => '<strong>'.__( 'Cognitive and mental health needs:', 'openinclusion' ).'</strong>',
          'type' => 'chkboxgroup-inf',
          'name' => 'CognitiveAndMentalhealthNeeds',
          'li-class' => 'clear',
          'options' => get_cognitive_and_mentalhealth_needs(),
-         'validation' => array()
+         'validation' => array(
+            // Note: Access needs are typically optional but at least one category should be selected
+         )
       ),
       array(
-         'label' => __( 'Communication needs:', 'openinclusion' ),
+         'label' => '<strong>'.__( 'Communication needs:', 'openinclusion' ).'</strong>',
          'type' => 'chkboxgroup-inf',
          'name' => 'CommunicationNeeds',
          'li-class' => 'clear',
          'options' => get_communication_needs(),
-         'validation' => array()
+         'validation' => array(
+            // Note: Access needs are typically optional but at least one category should be selected
+         )
       ),
       array(
-         'label' => __( 'Chronic health needs:', 'openinclusion' ),
+         'label' => '<strong>'.__( 'Chronic health needs:', 'openinclusion' ).'</strong>',
          'type' => 'chkboxgroup-inf',
          'name' => 'ChronichealthNeeds',
          'li-class' => 'clear',
          'options' => get_chronichealth_needs(),
-         'validation' => array()
+         'validation' => array(
+            // Note: Access needs are typically optional but at least one category should be selected
+         )
       ),
       array(
-         'label' => __( 'Other', 'openinclusion' ),
+         'label' => '<strong>'.__( 'Other', 'openinclusion' ).'</strong>',
          'type' => 'chkboxgroup-inf',
          'name' => 'OtherNeeds',
          'li-class' => 'clear',
          'options' => get_other_needs(),
-         'validation' => array()
+         'validation' => array(
+            // Note: Access needs are typically optional but at least one category should be selected
+         )
       ),
       array(
          'name' => 'save_continue_later_step2',
@@ -1385,76 +1462,94 @@ $part2Step3Form = array(
          'li-class' => 'clear',
          'value' => '
             <h2>PAGE 3: ASSISTIVE TECHNOLOGIES I USE</h2>
-            <p>Please select all that apply. Required questions are marked with an asterisk *</p>
+            <p><strong>* Adaptive approaches or assistive technologies that you use.</strong></p>
+            <p>Please select all that you use at least some of the time.</p>
          ',
          'validation' => array()
       ),
       array(
-         'label' => __( 'Digital and screen technologies, including hardware:', 'openinclusion' ),
+         'label' => '<strong>'.__( 'Digital: including software and hardware', 'openinclusion' ).'</strong>',
          'type' => 'chkboxgroup-inf',
          'name' => 'DigitalandScreenTechnologies',
          'li-class' => 'clear',
          'options' => get_digitalandscreentechnologies(),
-         'validation' => array()
+         'validation' => array(
+            // Optional: Users may not use digital technologies
+         )
       ),
       array(
-         'label' => __( 'Please share the names of any specific software you regularly use (e.g., JAWS, Dragon NaturallySpeaking)', 'openinclusion' ),
+         'label' => '<strong>'.__( 'Please share the name/s of any specific software you regularly use (e.g., JAWS, Dragon Naturally Speaking)', 'openinclusion' ).'</strong>',
          'type' => 'text',
          'name' => 'DigitalandScreenTechnologiesSpecificSoftware',
          'li-class' => 'clear',
+         'li-id' => 'specific-software-field',
          'maxlen' => 500,
-         'validation' => array()
+         'validation' => array(
+            array('len', __( 'Software description can only be %1$d characters long', 'openinclusion' )),
+         )
       ),
       array(
-         'label' => __( 'Printed media aids or adaptations:', 'openinclusion' ),
+         'label' => '<strong>'.__( 'Printed media', 'openinclusion' ).'</strong>',
          'type' => 'chkboxgroup-inf',
          'name' => 'PrintMedia',
          'li-class' => 'clear',
          'options' => get_printMedia(),
-         'validation' => array()
+         'validation' => array(
+            // Optional: Users may not use print media aids
+         )
       ),
       array(
-         'label' => __( 'Movement: mobility devices, aids and service animals:', 'openinclusion' ),
+         'label' => '<strong>'.__( 'Movement: mobility devices, aids and service animals', 'openinclusion' ).'</strong>',
          'type' => 'chkboxgroup-inf',
          'name' => 'MovementCanesandServiceAnimals',
          'li-class' => 'clear',
          'options' => get_movementcanesandserviceanimals(),
-         'validation' => array()
+         'validation' => array(
+            // Optional: Users may not use movement aids
+         )
       ),
       array(
-         'label' => __( 'Communication aids and alternatives:', 'openinclusion' ),
+         'label' => '<strong>'.__( 'Communication:', 'openinclusion' ).'</strong>',
          'type' => 'chkboxgroup-inf',
          'name' => 'CommunicationPreferences',
          'li-class' => 'clear',
          'options' => get_communicationpreferences(),
-         'validation' => array()
+         'validation' => array(
+            // Optional: Users may not use communication aids
+         )
       ),
       array(
-         'label' => __( 'Personal support and home:', 'openinclusion' ),
+         'label' => '<strong>'.__( 'Personal support and home:', 'openinclusion' ).'</strong>',
          'type' => 'chkboxgroup-inf',
          'name' => 'PersonalSupportandHome',
          'li-class' => 'clear',
          'options' => get_personalsupportandhome(),
-         'validation' => array()
+         'validation' => array(
+            // Optional: Users may not use personal support
+         )
       ),
       array(
-         'label' => __( 'Other technologies or support:', 'openinclusion' ),
+         'label' => '<strong>'.__( 'Other:', 'openinclusion' ).'</strong>',
          'type' => 'chkboxgroup-inf',
          'name' => 'OtherTechnologies',
          'li-class' => 'clear',
          'options' => get_othertechnologies(),
-         'validation' => array()
+         'validation' => array(
+            // Optional: Users may not use other technologies
+         )
       ),
       array(
-         'label' => __( "What research formats would you most like to be invited to?", 'openinclusion' ),
+         'label' => '<strong>'.__( "What research formats would you most like to be invited to?", 'openinclusion' ).'</strong>',
          'type' => 'chkboxgroup-inf',
          'name' => 'ResearchFormats',
          'li-class' => 'clear',
          'options' => get_research_formats(),
-         'validation' => array()
+         'validation' => array(
+            array('reqd', __( 'Please select at least one research format you are interested in', 'openinclusion' )),
+         )
       ),
       array(
-         'label' => __( 'Were you referred by someone to the Open Inclusion community?', 'openinclusion' ),
+         'label' => '<strong>'.__( 'Were you referred by someone to the Open Inclusion community?', 'openinclusion' ).'</strong>',
          'type' => 'radiogroup-inf',
          'name' => 'inf_field_referred',
          'li-class' => 'clear',
@@ -1462,15 +1557,19 @@ $part2Step3Form = array(
             array('Yes', __( 'Yes', 'openinclusion' ), 'inf_option_referred_yes'),
             array('No', __( 'No', 'openinclusion' ), 'inf_option_referred_no'),
          ),
-         'validation' => array()
+         'validation' => array(
+            array('reqd', __( 'Please let us know if you were referred by someone', 'openinclusion' )),
+         )
       ),
       array(
-         'label' => __( 'If yes, please share the name of the person or organisation that referred you so we can thank them.', 'openinclusion' ),
+         'label' => '<strong>'.__( 'Were you referred by someone to the Open Inclusion community?', 'openinclusion' ).'</strong>',
          'type' => 'text',
          'name' => 'inf_field_referred_name',
          'li-class' => 'clear',
          'maxlen' => 250,
-         'validation' => array()
+         'validation' => array(
+            array('len', __( 'Referrer name can only be %1$d characters long', 'openinclusion' )),
+         )
       ),
       array(
          'name' => 'save_continue_later_step3',
@@ -1514,7 +1613,8 @@ $part2Step4Form = array(
          'li-class' => 'clear',
          'value' => '
             <h2>PAGE 4: OTHER PERSONAL CHARACTERISTICS</h2>
-            <p>Anything you choose to share will be handled with care, kept secure, and always treated with respect.</p>
+            <p>As researchers, it is helpful for us to know about your other personal characteristics and identities that can impact your product or service experiences.</p>
+            <p>We recognize that your identity is deeply personal and multi-dimentional. By sharing additional aspects of your identity you will help us create more balanced and nuanced research that better reflects the diversity of disability. Anything you choose to share will be handled with care, kept secure, and always treated with respect.</p>
          ',
          'validation' => array()
       ),
@@ -1564,12 +1664,18 @@ $part2Step4Form = array(
       ),
       array(
          'label' => __( 'Please describe your racial and ethnic identity as makes most sense to you. (e.g., Black British, White New Zealander or Luo Kenyan)', 'openinclusion' ),
-         'type' => 'text',
+         // 'type' => 'text',
+         'type' => 'radiogroup-inf',
          'name' => 'inf_field_identify_terms',
          'li-class' => 'clear',
-         'maxlen' => 250,
+         // 'maxlen' => 250,
+         'options' => array(
+            array('SelfDescribe', __( 'Please self describe', 'openinclusion' ), 'inf_option_ethnicity_self_describe'),
+            array('PreferNotToRespond', __( 'Prefer not to respond', 'openinclusion' ), 'inf_option_ethnicity_prefer_not_to_respond'),
+         ),
          'validation' => array(
-            array('reqd', __( 'Please provide your description or choose prefer not to respond', 'openinclusion' )),
+            array('reqd', __( 'Please select one option', 'openinclusion' )),
+            // array('reqd', __( 'Please provide your description or choose prefer not to respond', 'openinclusion' )),
          )
       ),
       array(
@@ -1583,6 +1689,321 @@ $part2Step4Form = array(
          'type' => 'submit',
          'li-class' => 'submit',
          'value' => __('Save & Next Step', 'openinclusion' )
+      ),
+   )
+);
+?>
+<?php
+// Part 2 Step 5 form definition (Joining the Open Inclusion Insight Community)
+$part2Step5Form = array(
+   'cont-id' => '',
+   'cont-class' => 'contact panel-contact',
+   'form-id' => 'part2-step5-form',
+   'client-val' => true,
+   'mand-ind' => '*',
+   'success-img' => '',
+   'error-img' => '',
+   'error-sect-id' => 'sub-errs',
+   'error-sect-class' => '',
+   'error-sect-hdr' => __( 'Submission Problems', 'openinclusion' ),
+   'error-sect-hdr-level' => 2,
+   'error-sect-intro' => '<p>'.__( 'We were not able to process your enquiry. Please review the following items and check what you entered', 'openinclusion' ).'</p>',
+   'nonce-name' => 'part2_step5_nonce',
+   'sq-reqd' => false,
+   'sq-id' => 'sq',
+   'sq-label' => __( 'Please answer this question:', 'openinclusion' ).' %1$s <span class="clarify">('.__( 'Helps stop spam', 'openinclusion' ).')</span>',
+   'fields' => array(
+      array(
+         'label' => '',
+         'type' => 'other-html',
+         'name' => 'banner5',
+         'li-class' => 'clear',
+         'value' => <<<HTML
+            <style>
+               .nested-list-circle {
+                  list-style-type: circle !important;
+               }
+               .nested-list-circle li {
+                  list-style-type: circle !important;
+               }
+            </style>
+            <h2>PAGE 5: JOINING THE OPEN INCLUSION INSIGHT COMMUNITY</h2>
+            <ul class="form-intro-list" style="list-style-type: disc; margin-left: 20px;">
+               <li style="margin-bottom: 15px;"><strong>Once you have read and confirmed the terms and conditions (if satisfied with them) we look forward to welcoming you into the Open Inclusion Insight Community. You will then be able to, </strong>
+                  <ul class="nested-list-circle" style="margin-left: 20px; margin-top: 10px;">
+                     <li style="margin-bottom: 8px;">Be invited to participate in paid research</li>
+                     <li style="margin-bottom: 8px;">Engage in the online community discussions with others from across our community to share disability or age related experiences, barriers, creative approaches and solutions</li>
+                  </ul>
+               </li>
+             <li style="margin-bottom: 15px;"><strong>Paid research opportunities</strong> can vary from short surveys, to more in-depth research such as mystery shopping, interviews, product or service user testing, transport journey testing, interviews or focus groups. Most are conducted online. Depending on where you live, we sometimes also have in-person consumer research. Incentives are aligned to the time and effort required to complete the research.</li>
+               <li style="margin-bottom: 15px;"><strong>There is never an obligation for you to take part in any research</strong> that you are invited to. You can "opt in" to any opportunities that you wish to join, or simply wait for another one that better suits you.</li>
+               <li style="margin-bottom: 15px;"><strong>There is no obligation for Open to provide you with research.</strong> Although we wish to engage everyone in our community, we select participants from the people who are interested in taking part. We need to balance the range of personal characteristics to meet the needs of the project. You may not always get selected for projects you would like to be part of. Please ask again next time. We love that you wish to be involved.</li>
+               <li style="margin-bottom: 15px;"><strong>We ensure our responses are valid, not fraudulent. For many projects you must be Open Verified</strong> particularly for more involved, higher paid research. These members have shown us identification or met with us (online or in person) so that we are sure that they are who they say they are.</li>
+              <li style="margin-bottom: 15px;">(online or in person) so that we are sure that they are who they say they are.</li>
+               <li style="margin-bottom: 15px;"><strong>At Open we expect and ask that everyone is treated with respect and courtesy at all times</strong>, including other community members, research participants, researchers, clients or anyone else involved. We ask everyone to interact in a considerate and kind manner at all times, including while using the online Open Inclusion community space, or in any other digital, phone based or in-person surveys, forums or engagement. We reserve the right to expel anyone from research or the community who behaves in a way that breaches this.</li>
+               <li style="margin-bottom: 15px;"><strong>Although we try, we don't always get it right.</strong> If you have any constructive feedback or a complaint about your experiences with Open Inclusion, please contact <a href="mailto:contact@openinclusion.com">contact@openinclusion.com</a>. Please describe what happened and why something didn't work for you, or provide us with constructive feedback to make our research better. This goes directly to our leadership team who will take steps to understand and address the issue, both for you and for future engagements. We always appreciate learning how we can do better.</li>
+               <li style="margin-bottom: 15px;">All research we conduct is carried out in accordance with the current <strong><a href="https://www.mrs.org.uk/standards/code-of-conduct" target="_blank">Market Research Society's Code of Conduct</a></strong>. Open Inclusion is a member of the Market Research Society. We are also a signatory to the <strong><a href="https://www.mrs.org.uk/resources/ceo-inclusion-pledge" target="_blank">MRS Inclusion Pledge</a></strong> and have committed to the five elements that ensure equitable opportunities both in our workplace and through our work.</li>
+               <li style="margin-bottom: 15px;">Our community is currently only open to those currently <strong>18 years old or older</strong>. If you are not yet 18, thank you for your interest, but we do not currently extend to your age range. Please come back when you are.</li>
+            </ul>
+        HTML
+         ,
+         'validation' => array()
+      ),
+      array(
+         'label' => __( '', 'openinclusion' ),
+         'type' => 'chkboxgroup-inf',
+         'name' => 'CommunityAgreement',
+         'li-class' => 'clear',
+         'options' => array(
+            array('agree', __( 'I agree', 'openinclusion' ), 'CommunityAgreement[]', 'CommunityAgreement_agree')
+         ),
+         'validation' => array()
+      ),
+      array(
+         'name' => 'submit_part2_step5',
+         'type' => 'submit',
+         'li-class' => 'submit',
+         'value' => __('Save & Next Step', 'openinclusion' )
+      ),
+   )
+);
+?>
+<?php
+// Part 2 Step 6 form definition (Your Privacy Protections)
+$part2Step6Form = array(
+   'cont-id' => '',
+   'cont-class' => 'contact panel-contact',
+   'form-id' => 'part2-step6-form',
+   'client-val' => true,
+   'mand-ind' => '*',
+   'success-img' => '',
+   'error-img' => '',
+   'error-sect-id' => 'sub-errs',
+   'error-sect-class' => '',
+   'error-sect-hdr' => __( 'Submission Problems', 'openinclusion' ),
+   'error-sect-hdr-level' => 2,
+   'error-sect-intro' => '<p>'.__( 'We were not able to process your enquiry. Please review the following items and check what you entered', 'openinclusion' ).'</p>',
+   'nonce-name' => 'part2_step6_nonce',
+   'sq-reqd' => false,
+   'sq-id' => 'sq',
+   'sq-label' => __( 'Please answer this question:', 'openinclusion' ).' %1$s <span class="clarify">('.__( 'Helps stop spam', 'openinclusion' ).')</span>',
+   'fields' => array(
+      array(
+         'label' => '',
+         'type' => 'other-html',
+         'name' => 'banner6',
+         'li-class' => 'clear',
+         'value' => <<<HTML
+            <h2>PAGE 6: YOUR PRIVACY PROTECTIONS</h2>
+            <p>Maintaining your data privacy and trust is our top priority. As a General Data Privacy Regulations (GDPR)-compliant organization, we proactively train our staff and manage your personal information to ensure your privacy, safety and confidence.</p>
+            <p>We collect personal information to match you with relevant research opportunities, balance and understand the range of perspectives that we gather. We protect your data with industry-standard encryption and never share personally identifiable details without your explicit consent.</p>
+            <p>Every research project has a clear separate consent that you will be sent to review, ask questions as you wish and need to sign if you wish to take part. It describes exactly how your data will be used, who will manage it and who will see it. It is always your choice to be involved or not once all the details are clear as relevant to that project.</p>
+            <p>You have full control over your personal information. At any time, you can access and update your information or ask us to remove your data by contacting us at <a href="mailto:contact@openinclusion.com">contact@openinclusion.com</a>. You can also unsubscribe from our communications at any time with a single click.</p>
+            <p>For a comprehensive understanding of how we handle your data, including your full GDPR rights, please review our detailed Privacy Policy and Terms and Conditions available on our website.</p>
+            <p>Required questions are marked with an asterisk *</p>
+HTML
+         ,
+         'validation' => array()
+      ),
+      array(
+         'label' => __('<span>Please confirm</span>', 'openinclusion'),
+         'type' => 'chkboxgroup-inf',
+         'name' => 'PleaseConfirm',
+         'li-class' => 'clear',
+         'options' => get_confirm_methods(),
+         'validation' => array(
+            array('reqd', __( 'Please select all conditions', 'openinclusion' )),
+            array('check_all_selected', __( 'Please select all conditions', 'openinclusion' )),
+         ),
+      ),
+      array(
+         'name' => 'submit_part2_step6',
+         'type' => 'submit',
+         'li-class' => 'submit',
+         'value' => __('Save & Next Step', 'openinclusion' )
+      ),
+   )
+);
+?>
+<?php
+// Part 2 Step 7 form definition (Identity Verification)
+$part2Step7Form = array(
+   'cont-id' => '',
+   'cont-class' => 'contact panel-contact',
+   'form-id' => 'part2-step7-form',
+   'client-val' => true,
+   'mand-ind' => '*',
+   'success-img' => '',
+   'error-img' => '',
+   'error-sect-id' => 'sub-errs',
+   'error-sect-class' => '',
+   'error-sect-hdr' => __( 'Submission Problems', 'openinclusion' ),
+   'error-sect-hdr-level' => 2,
+   'error-sect-intro' => '<p>'.__( 'We were not able to process your enquiry. Please review the following items and check what you entered', 'openinclusion' ).'</p>',
+   'nonce-name' => 'part2_step7_nonce',
+   'sq-reqd' => false,
+   'sq-id' => 'sq',
+   'sq-label' => __( 'Please answer this question:', 'openinclusion' ).' %1$s <span class="clarify">('.__( 'Helps stop spam', 'openinclusion' ).')</span>',
+   'fields' => array(
+      array(
+         'label' => '',
+         'type' => 'other-html',
+         'name' => 'banner7',
+         'li-class' => 'clear',
+         'value' => <<<HTML
+            <h2>PAGE 7: IDENTITY VERIFICATION</h2>
+            <p>To be invited to the more in-depth research, please verify your identity.</p>
+            <p>We prefer inviting people to our research who are Open Verified. They have completed this final step.</p>
+            <p>Open Verified is a layer of additional personal verification that helps us know that you are who you say you are. This reduces the risks of research fraud and increases our confidence in the insights that we provide to our clients.</p>
+            <p>To become Open Verified, you simply need to share a valid government-provided identity document or similar. We have a range of options to suit people from different backgrounds and with differing levels of documentation and access needs.</p>
+            <p>If you would like to verify your identity, please tick the box below. You will then receive an email with a link to upload your identity document or schedule an online appointment to be verified.</p>
+HTML
+         ,
+         'validation' => array()
+      ),
+      array(
+         'label' => __( '', 'openinclusion' ),
+         'type' => 'chkboxgroup-inf',
+         'name' => 'OpenVerifiedOptIn',
+         'li-class' => 'clear',
+         'options' => array(
+            array('yes', __( 'I would like to be Open Verified', 'openinclusion' ), 'OpenVerifiedOptIn[]', 'OpenVerifiedOptIn_yes')
+         ),
+         'validation' => array(
+         ),
+      ),
+      array(
+         'name' => 'submit_part2_step7',
+         'type' => 'submit',
+         'li-class' => 'submit',
+         'value' => __('Save & Next Step', 'openinclusion' )
+      ),
+   )
+);
+?>
+<?php
+// Part 2 Step 8 form definition (Create Community Login)
+$part2Step8Form = array(
+   'cont-id' => '',
+   'cont-class' => 'contact panel-contact',
+   'form-id' => 'part2-step8-form',
+   'client-val' => true,
+   'mand-ind' => '*',
+   'success-img' => '',
+   'error-img' => '',
+   'error-sect-id' => 'sub-errs',
+   'error-sect-class' => '',
+   'error-sect-hdr' => __( 'Submission Problems', 'openinclusion' ),
+   'error-sect-hdr-level' => 2,
+   'error-sect-intro' => '<p>'.__( 'We were not able to process your enquiry. Please review the following items and check what you entered', 'openinclusion' ).'</p>',
+   'nonce-name' => 'part2_step8_nonce',
+   'sq-reqd' => false,
+   'sq-id' => 'sq',
+   'sq-label' => __( 'Please answer this question:', 'openinclusion' ).' %1$s <span class="clarify">('.__( 'Helps stop spam', 'openinclusion' ).')</span>',
+   'fields' => array(
+      array(
+         'label' => '',
+         'type' => 'other-html',
+         'name' => 'banner8',
+         'li-class' => 'clear',
+         'value' => <<<HTML
+            <h2>PAGE 8: CREATE YOUR COMMUNITY LOGIN</h2>
+            <p>In order to log into the community we have generated a username for you. Please create a password of your choice to log in.</p>
+            <p>Passwords need to have 8 characters minimum and have a mix of letters and numbers.</p>
+            <p>Required questions are marked with an asterisk *</p>
+HTML
+         ,
+         'validation' => array()
+      ),
+      array(
+         'label' => __( 'Auto generated Open Inclusion Community username:', 'openinclusion' ),
+         'type' => 'text',
+         'name' => 'inf_field_UserName',
+         'li-class' => 'clear',
+         'maxlen' => 250,
+         'validation' => array(
+            array('reqd', __( 'Please keep a username value', 'openinclusion' )),
+            array('len', __( 'Your username can only be %1$d characters long', 'openinclusion' )),
+         )
+      ),
+      array(
+         'label' => __( 'Please create a password for the online Open Inclusion Community:', 'openinclusion' ),
+         'type' => 'password',
+         'name' => 'inf_field_Password',
+         'li-class' => 'clear',
+         'maxlen' => 250,
+         'validation' => array(
+            array('reqd', __( 'Please supply your password', 'openinclusion' )),
+            array('len', __( 'Your password can only be %1$d characters long', 'openinclusion' )),
+         )
+      ),
+      array(
+         'label' => __( 'Please re-enter your password:', 'openinclusion' ),
+         'type' => 'password',
+         'name' => 'inf_field_Password_reenter',
+         'li-class' => 'clear',
+         'maxlen' => 250,
+         'validation' => array(
+            array('reqd', __( 'Please re-enter your password', 'openinclusion' )),
+            array('len', __( 'Your password can only be %1$d characters long', 'openinclusion' )),
+         )
+      ),
+      array(
+         'name' => 'submit_part2_step8',
+         'type' => 'submit',
+         'li-class' => 'submit',
+         'value' => __('Save & Next Step', 'openinclusion' )
+      ),
+   )
+);
+?>
+<?php
+// Part 2 Step 9 form definition (Thank You)
+$part2Step9Form = array(
+   'cont-id' => '',
+   'cont-class' => 'contact panel-contact',
+   'form-id' => 'part2-step9-form',
+   'client-val' => true,
+   'mand-ind' => '*',
+   'success-img' => '',
+   'error-img' => '',
+   'error-sect-id' => 'sub-errs',
+   'error-sect-class' => '',
+   'error-sect-hdr' => __( 'Submission Problems', 'openinclusion' ),
+   'error-sect-hdr-level' => 2,
+   'error-sect-intro' => '',
+   'nonce-name' => 'part2_step9_nonce',
+   'sq-reqd' => false,
+   'sq-id' => 'sq',
+   'sq-label' => __( 'Please answer this question:', 'openinclusion' ).' %1$s <span class="clarify">('.__( 'Helps stop spam', 'openinclusion' ).')</span>',
+   'fields' => array(
+      array(
+         'label' => '',
+         'type' => 'other-html',
+         'name' => 'banner9',
+         'li-class' => 'clear',
+         'value' => <<<HTML
+            <h2>PAGE 9: THANK YOU!</h2>
+            <p>We look forward to working with you on paid research opportunities soon.</p>
+            <p>We cannot know exactly when the next research opportunity will arise that includes respondents with your access needs and other characteristics. We hope that it will not be long.</p>
+            <p>In the meantime please engage with others across our community in discussions.</p>
+            <p>On the Open Inclusion digital community space you can meet and engage with others in Open's community to:</p>
+            <ul class="form-intro-list">
+               <li><strong>Share challenges and find inclusive and innovative solutions</strong></li>
+               <li><strong>Help others experiencing challenges where you may have helpful ideas or suggestions</strong></li>
+               <li><strong>Tell us and others about things you love or frustrations you have experienced</strong></li>
+               <li><strong>Share an event coming up or describe an event you attended that others in the community may like to know about</strong></li>
+            </ul>
+            <p>It is a space that was designed by and for our community, and is continually evolving with your and other members' input.</p>
+HTML
+         ,
+         'validation' => array()
+      ),
+      array(
+         'name' => 'submit_part2_step9',
+         'type' => 'submit',
+         'li-class' => 'submit',
+         'value' => __('Finish', 'openinclusion' )
       ),
    )
 );
