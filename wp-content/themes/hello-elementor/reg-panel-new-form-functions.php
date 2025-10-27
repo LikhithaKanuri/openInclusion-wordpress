@@ -268,7 +268,7 @@ function opinc_part2_step3_form_sc($atts, $content = null) {
             'Communication Preferences' => 'CommunicationPreferences',
             'PersonalSupportandHome' => 'PersonalSupportandHome',
             'Other Technologies' => 'OtherTechnologies',
-            'Research Formats' => 'Research Formats'
+            'ResearchFormats' => 'ResearchFormats'
          ) as $metaKey => $fieldKey) {
             if(isset($user_info[$metaKey][0])) {
                $val = $user_info[$metaKey][0];
@@ -321,7 +321,7 @@ function opinc_part2_step4_form_sc($atts, $content = null) {
          if(isset($user_info['inf_field_gender_at_birth_diff'][0])) $clean['inf_field_gender_at_birth_diff'] = $user_info['inf_field_gender_at_birth_diff'][0];
          if(isset($user_info['SexualOrientations'][0])) {
             $val = $user_info['SexualOrientations'][0];
-            $clean['SexualOrientations'] = strpos($val,'|') !== false ? explode('|', $val) : array($val);
+            $clean['SexualOrientations'] = strpos($val,'|') !== false ? explode(', ', $val) : array($val);
          }
          if(isset($user_info['inf_option_pronouns'][0])) $clean['inf_option_pronouns'] = $user_info['inf_option_pronouns'][0];
                   if(isset($user_info['pronouns_other_text'][0])) $clean['inf_option_pronouns_other_please_specify_OpenText'] = $user_info['pronouns_other_text'][0];
@@ -434,6 +434,28 @@ function redirectAfterPart2Step6(){
          $userMetaData = prepareUserMetaData();
          foreach( $userMetaData as $key => $val ) { update_user_meta( $userid, $key, $val ); }
 
+                  // Update Keap with Step 6 data
+         if (file_exists(__DIR__."/../../../infusion/updateMultiStepData.php")) {
+            include_once (__DIR__."/../../../infusion/updateMultiStepData.php");
+            $user_info = get_user_meta($userid);
+            $user_email = isset($user_info['Email'][0]) ? $user_info['Email'][0] : '';
+            
+            // If no email in meta, try to get from user object
+            if (empty($user_email)) {
+                $user_email = $current_user->user_email;
+            }
+            
+            // Only proceed if we have a valid email
+            if (!empty($user_email)) {
+                $result = updateKeapMultiStepData('step6', $_POST, $user_email);
+                error_log("Keap update result for step6: " . ($result ? 'SUCCESS' : 'FAILED'));
+            } else {
+                error_log("No valid email found for step6");
+            }
+         }
+
+
+
          // Update status
          update_user_meta( $userid, 'Part2Step6Completed', 'Yes' );
 
@@ -500,6 +522,26 @@ function redirectAfterPart2Step7(){
          $userMetaData = prepareUserMetaData();
          foreach( $userMetaData as $key => $val ) { update_user_meta( $userid, $key, $val ); }
 
+                  // Update Keap with Step 7 data
+         if (file_exists(__DIR__."/../../../infusion/updateMultiStepData.php")) {
+            include_once (__DIR__."/../../../infusion/updateMultiStepData.php");
+            $user_info = get_user_meta($userid);
+            $user_email = isset($user_info['Email'][0]) ? $user_info['Email'][0] : '';
+            
+            // If no email in meta, try to get from user object
+            if (empty($user_email)) {
+                $user_email = $current_user->user_email;
+            }
+            
+            // Only proceed if we have a valid email
+            if (!empty($user_email)) {
+                $result = updateKeapMultiStepData('step7', $_POST, $user_email);
+                error_log("Keap update result for step7: " . ($result ? 'SUCCESS' : 'FAILED'));
+            } else {
+                error_log("No valid email found for step7");
+            }
+         }
+
          // Update status
          update_user_meta( $userid, 'Part2Step7Completed', 'Yes' );
 
@@ -528,26 +570,28 @@ function redirectAfterPart2Step7(){
             
             <h3 style=\"font-family: Poppins; color: #2a3258;\">Your information and how we use it</h3>
             
-            <p style=\"font-family: Poppins;\">We will ask you to confirm your name, email address and to upload your photographic ID. By continuing, you agree to these simple terms:</p>
+            <p style=\"font-family: Poppins; color: #000;\">We will ask you to confirm your name, email address and to upload your photographic ID. By continuing, you agree to these simple terms:</p>
             
-            <p style=\"font-family: Poppins;\"><strong>Why we need this:</strong> We're only using your information to confirm your identity (that you are who you say you are) as a Verified Member.</p>
+            <p style=\"font-family: Poppins; color: #000;\"><strong>Why we need this:</strong> We're only using your information to confirm your identity (that you are who you say you are) as a Verified Member.</p>
             
-            <p style=\"font-family: Poppins;\"><strong>Who handles your data:</strong> Open Inclusion is in charge of your data.</p>
+            <p style=\"font-family: Poppins; color: #000;\"><strong>Who handles your data:</strong> Open Inclusion is in charge of your data.</p>
             
-            <p style=\"font-family: Poppins;\"><strong>How we keep your data safe:</strong> We'll collect your information through a secure tool called SurveyMonkey. Only Open Inclusion team members can see the information. This system has strong security in place to protect it.</p>
+            <p style=\"font-family: Poppins; color: #000;\"><strong>How we keep your data safe:</strong> We'll collect your information through a secure tool called SurveyMonkey. Only Open Inclusion team members can see the information. This system has strong security in place to protect it.</p>
             
-            <p style=\"font-family: Poppins;\"><strong>Sharing:</strong> We will not share your personal information with anyone outside of the small, authorized Verification team at Open Inclusion who need it.</p>
+            <p style=\"font-family: Poppins; color: #000;\"><strong>Sharing:</strong> We will not share your personal information with anyone outside of the small, authorized Verification team at Open Inclusion who need it.</p>
             
-            <p style=\"font-family: Poppins;\"><strong>Keeping it:</strong> We will securely and permanently delete all your personal data, including your photo ID, within 30 days of your verification.</p>
+            <p style=\"font-family: Poppins; color: #000;\"><strong>Keeping it:</strong> We will securely and permanently delete all your personal data, including your photo ID, within 30 days of your verification.</p>
             
-            <p style=\"font-family: Poppins;\"><strong>Your rights:</strong> You can ask to see, correct, or delete your data at any time. Just email research@openinclusion.com if you wish to do any of these things.</p>
+            <p style=\"font-family: Poppins; color: #000;\"><strong>Your rights:</strong> You can ask to see, correct, or delete your data at any time. Just email research@openinclusion.com if you wish to do any of these things.</p>
+            
+            
             
             </div>
             <div>
             <table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"left\" style=\"height: 50px;background: #2a3258;border-radius: 23px;\">
             <tr>
             <td style=\"text-align: left; padding-top:10px;padding-right:15px;padding-bottom:10px;padding-left:15px;\">
-            <a href=\"https://www.surveymonkey.com/r/N7PQ9TF\" target=\"_blank\" rel=\"noopener\" style=\"border-radius: 23px;background: #2a3258;text-decoration: none;font-family: Poppins-Medium, Poppins;font-style: normal;font-weight: 500;line-height: 38px;height: 50px;padding: 6px; content: left; font-size: 24px\">
+             <a href=\"https://www.surveymonkey.com/r/N7PQ9TF\" target=\"_blank\" rel=\"noopener\" style=\"border-radius: 23px;background: #2a3258;text-decoration: none;font-family: Poppins-Medium, Poppins;font-style: normal;font-weight: 500;line-height: 38px;height: 50px;padding: 6px; content: left; font-size: 24px\">
             <span style=\"color:#ffffff;\">Complete Verification Form</span>
             </a>
             </td>
@@ -617,6 +661,72 @@ function opinc_part2_step8_form_sc($atts, $content = null) {
    global $part2Step8Form;
    $strHtml = printFormNew($part2Step8Form, $clean, $arrErrs );
    $strHtml.= "<script>jQuery(document).ready(function($) { jQuery('#content').find('header').remove(); });</script>";
+     // Add Step 8 specific JavaScript
+   $strHtml .= <<<HTML
+   <script>
+   jQuery(document).ready(function($) {
+      // Auto-generate username
+      function generateUsername() {
+         var firstName = '';
+         var lastName = '';
+         
+         // Get user data from PHP
+         var userData = {
+            firstName: '{$current_user->first_name}',
+            lastName: '{$current_user->last_name}'
+         };
+         
+         if (userData.firstName && userData.lastName) {
+            var baseUsername = userData.firstName + ' ' + userData.lastName.charAt(0);
+            $('#inf_field_UserName').val(baseUsername);
+         }
+      }
+      
+      // Password generation
+      function generatePassword() {
+         var length = 12;
+         var charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+         var password = "";
+         for (var i = 0, n = charset.length; i < length; ++i) {
+            password += charset.charAt(Math.floor(Math.random() * n));
+         }
+         return password;
+      }
+      
+      // Toggle password visibility
+      $(document).on('click', '.toggle-password', function() {
+         var target = $(this).data('target');
+         var input = $('#' + target);
+         var button = $(this);
+         
+         if (input.attr('type') === 'password') {
+            input.attr('type', 'text');
+            button.text('Hide');
+         } else {
+            input.attr('type', 'password');
+            button.text('Show');
+         }
+      });
+      
+      // Generate password
+      $(document).on('click', '.generate-password', function() {
+         var target = $(this).data('target');
+         var input = $('#' + target);
+         var password = generatePassword();
+         input.val(password);
+         
+         // Also update the re-enter field if it's empty
+         if (target === 'inf_field_Password' && $('#inf_field_Password_reenter').val() === '') {
+            $('#inf_field_Password_reenter').val(password);
+         }
+      });
+      
+      // Initialize username generation
+      generateUsername();
+   });
+   </script>
+HTML;
+   
    return $strHtml;
 }
 add_shortcode("opinc-part2-step8", "opinc_part2_step8_form_sc");
@@ -655,6 +765,25 @@ function redirectAfterPart2Step8(){
          // Save meta
          $userMetaData = prepareUserMetaData();
          foreach( $userMetaData as $key => $val ) { update_user_meta( $userid, $key, $val ); }
+                  // Update Keap with Step 8 data
+         if (file_exists(__DIR__."/../../../infusion/updateMultiStepData.php")) {
+            include_once (__DIR__."/../../../infusion/updateMultiStepData.php");
+            $user_info = get_user_meta($userid);
+            $user_email = isset($user_info['Email'][0]) ? $user_info['Email'][0] : '';
+            
+            // If no email in meta, try to get from user object
+            if (empty($user_email)) {
+                $user_email = $current_user->user_email;
+            }
+            
+            // Only proceed if we have a valid email
+            if (!empty($user_email)) {
+                $result = updateKeapMultiStepData('step8', $_POST, $user_email);
+                error_log("Keap update result for step8: " . ($result ? 'SUCCESS' : 'FAILED'));
+            } else {
+                error_log("No valid email found for step8");
+            }
+         }
 
          if(isset($_POST['save_continue_later_step8'])) {
             if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/mywordpress/thank-you-2/'; }
@@ -689,7 +818,37 @@ function redirectAfterPart2Step9(){
    ob_clean();
    ob_start();
    if(isset($_POST['submit_part2_step9'])) {
-      // Final redirect to community login page
+         $current_user = wp_get_current_user();
+      if($current_user) {
+         $userid = $current_user->ID;
+         
+         // Update Keap with Step 9 data (final step)
+         if (file_exists(__DIR__."/../../../infusion/updateMultiStepData.php")) {
+            include_once (__DIR__."/../../../infusion/updateMultiStepData.php");
+            $user_info = get_user_meta($userid);
+            $user_email = isset($user_info['Email'][0]) ? $user_info['Email'][0] : '';
+            
+            // If no email in meta, try to get from user object
+            if (empty($user_email)) {
+                $user_email = $current_user->user_email;
+            }
+            
+            // Only proceed if we have a valid email
+            if (!empty($user_email)) {
+                $result = updateKeapMultiStepData('step9', $_POST, $user_email);
+                error_log("Keap update result for step9: " . ($result ? 'SUCCESS' : 'FAILED'));
+            } else {
+                error_log("No valid email found for step9");
+            }
+         }
+         
+         // Mark final completion
+         update_user_meta($userid, 'Part2Step9Completed', 'Yes');
+         update_user_meta($userid, 'RegistrationComplete', 'Yes');
+      }
+      // Final redirect to completion page
+      // if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/registration-complete/'; }
+      // else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/registration-complete/"; }
       $redirectUrl = "https://openinclusion.com/login/?redirect_to=https://community.openinclusion.com/entry/signin/";
       wp_redirect($redirectUrl); exit;
    }
@@ -943,6 +1102,60 @@ function isValidUserInput() {
 /**********************************************************************************************
       This function sents the user activation mail
 **********************************************************************************************/
+function sentUserActivationMail($toEmailId, $name, $activation_link) {
+   $headers = array(
+      'Content-Type: text/html; charset=UTF-8',
+      'From: Open Inclusion <contact@openinclusion.com>'
+    );
+   // $headers = 'From: Open Inclusion';
+   // $headers .= 'Content-Type: text/html; charset=UTF-8';
+   $subject = "Please confirm your email for Open Inclusion's new community engagement platform";
+   $content = "
+   <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">
+   <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>
+   <link href=\"https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap\" rel=\"stylesheet\">
+   <div style=\"background: #f2f2f2;\">
+   <div style=\"height: 50px;background:#E5E8E8\"></div>
+   <div style=\"max-width: 560px; padding: 20px; background: #ffffff; border-radius: 5px; margin: 40px auto; font-family: Poppins; color: #666;\">
+   <div style=\"color: #444444; font-weight: normal;\"></div>
+   <div style=\"padding: 0 30px 30px 30px;\">
+   <div style=\"padding: 30px 0; font-size: 24px; text-align: center; line-height: 40px;\">
+   <img src=\"https://staging4.openinclusion.com/wp-content/uploads/cropped-1.-MAIN-OpenInclusion_Stack_Navy-scaled-1.jpg\" style=\"height:100px\" />
+   <div style=\"padding: 30px 0px; font-size: 24px; line-height: 40px; text-align: left;\">
+   Dear ".ucwords(strtolower($name)).",
+   
+   <p style=\"font-family: Poppins;\"> Thank you for registering with Open Inclusion's online community.<br/><strong>Please confirm your email to complete the initial set-up</strong> of your profile by clicking the button below:</p> 
+  
+   
+   </div>
+   <div>
+   <table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"left\" style=\"height: 50px;background: #2a3258;border-radius: 23px;\">
+   <tr>
+   <td style=\"text-align: left; padding-top:10px;padding-right:15px;padding-bottom:10px;padding-left:15px;\">
+   <a href=\"".$activation_link."\" target=\"_blank\" rel=\"noopener\" style=\"border-radius: 23px;background: #2a3258;text-decoration: none;font-family: Poppins-Medium, Poppins;font-style: normal;font-weight: 500;line-height: 38px;height: 50px;padding: 6px; content: left; font-size: 24px\">
+   <span style=\"color:#ffffff;\">Verify your email and login</span>
+   </a>
+   </td>
+   </tr>
+   </table>
+   </div>
+   <br />
+    <div style=\"padding: 30px 0px; font-family: Poppins; font-size: 24px; line-height: 40px; text-align: left; content: left\">
+   <p style=\"font-family: Poppins;content: left; font-size: 24px\">When you log in for the first time, you'll be directed to the second part of the registration form, where you will have the opportunity to update your access needs and assistive technology preferences. <br>   </p>
+   <p style=\"font-family: Poppins;content: left; font-size: 24px; margin-top: 10px; color: #500050;\">This helps us invite you to research opportunities that best suit you.</p>
+   <p style=\"font-family: Poppins; font-size: 24px;\">
+   Thank you, <br />The Open Inclusion Team
+   </p>
+   </div>
+   </div>
+   </div>
+   </div>
+   <div style=\"height: 50px;background:#E5E8E8\"></div>
+   </div>";
+
+   return wp_mail( $toEmailId, $subject, $content, $headers);     
+}
+
 function sendContinueRegistrationEmail($toEmailId, $name, $nextStepUrl) {
    $headers = array(
       'Content-Type: text/html; charset=UTF-8',
@@ -993,60 +1206,6 @@ function sendContinueRegistrationEmail($toEmailId, $name, $nextStepUrl) {
    </div>";
 
    wp_mail( $toEmailId, $subject, $content, $headers);
-}
-
-function sentUserActivationMail($toEmailId, $name, $activation_link) {
-   $headers = array(
-      'Content-Type: text/html; charset=UTF-8',
-      'From: Open Inclusion <contact@openinclusion.com>'
-    );
-   // $headers = 'From: Open Inclusion';
-   // $headers .= 'Content-Type: text/html; charset=UTF-8';
-   $subject = "Please confirm your email for Open Inclusion's new community engagement platform";
-   $content = "
-   <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">
-   <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>
-   <link href=\"https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap\" rel=\"stylesheet\">
-   <div style=\"background: #f2f2f2;\">
-   <div style=\"height: 50px;background:#E5E8E8\"></div>
-   <div style=\"max-width: 560px; padding: 20px; background: #ffffff; border-radius: 5px; margin: 40px auto; font-family: Poppins; color: #666;\">
-   <div style=\"color: #444444; font-weight: normal;\"></div>
-   <div style=\"padding: 0 30px 30px 30px;\">
-   <div style=\"padding: 30px 0; font-size: 24px; text-align: center; line-height: 40px;\">
-   <img src=\"https://staging4.openinclusion.com/wp-content/uploads/cropped-1.-MAIN-OpenInclusion_Stack_Navy-scaled-1.jpg\" style=\"height:100px\" />
-   <div style=\"padding: 30px 0px; font-size: 24px; line-height: 40px; text-align: left;\">
-   Dear ".ucwords(strtolower($name)).",
-   
-   <p style=\"font-family: Poppins;\"> Thank you for registering with Open Inclusion's online community.<br/><strong>Please confirm your email to complete the initial set-up</strong> of your profile by clicking the button below:</p> 
-  
-   
-   </div>
-   <div>
-   <table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"left\" style=\"height: 50px;background: #2a3258;border-radius: 23px;\">
-   <tr>
-   <td style=\"text-align: left; padding-top:10px;padding-right:15px;padding-bottom:10px;padding-left:15px;\">
-   <a href=\"".$activation_link."\" target=\"_blank\" rel=\"noopener\" style=\"border-radius: 23px;background: #2a3258;text-decoration: none;font-family: Poppins-Medium, Poppins;font-style: normal;font-weight: 500;line-height: 38px;height: 50px;padding: 6px; content: left; font-size: 24px\">
-   <span style=\"color:#ffffff;\">Verify your email and login</span>
-   </a>
-   </td>
-   </tr>
-   </table>
-   </div>
-   <br />
-    <div style=\"padding: 30px 0px; font-family: Poppins; font-size: 24px; line-height: 40px; text-align: left; content: left\">
-   <p style=\"font-family: Poppins;content: left; font-size: 24px\">When you log in for the first time, you'll be directed to the second part of the registration form, where you will have the opportunity to update your access needs and assistive technology preferences. <br> This helps us invite you to research opportunities that best suit you
-   </p>
-   <p style=\"font-family: Poppins; font-size: 24px\">
-   Thank you, <br />The Open Inclusion Team
-   </p>
-   </div>
-   </div>
-   </div>
-   </div>
-   <div style=\"height: 50px;background:#E5E8E8\"></div>
-   </div>";
-
-   return wp_mail( $toEmailId, $subject, $content, $headers);     
 }
 
 /**********************************************************************************************
@@ -1376,40 +1535,25 @@ function redirectAfterPart2Step1(){
             }
          }
          
-         // Check if user selected "None of the above" - screen them out
-         // if(isset($_POST['RelationShip']) && in_array('None-of-the-above', $_POST['RelationShip'])) {
-         //    if(isset($_POST['RelationShip']) && user_should_be_screened_out($_POST['RelationShip'])) {
-         //    // Mark user as screened out
-         //    update_user_meta( $userid, 'ScreenedOut', 'Yes');
-         //    update_user_meta( $userid, 'ScreenedOutReason', 'None of the above relationship options selected');
-            
-         //    // Redirect to a "thank you but not eligible" page
-         //    if(isset($_SERVER['HTTP_HOST'])) {
-         //       if($_SERVER['HTTP_HOST'] == 'localhost') {
-         //          $redirectUrl = "http://" . $_SERVER['HTTP_HOST']."/openinclusion/not-eligible/";
-         //       }
-         //       else {
-         //          $redirectUrl = "https://". $_SERVER['HTTP_HOST']. "/not-eligible/";
-         //       }         
-         //       wp_redirect($redirectUrl);
-         //       exit;      
-         //    }
-         // }
-         
          // Update user meta data with Part 2 Step 1 information
          $userMetaData = prepareUserMetaData();
          foreach( $userMetaData as $key => $val ) {
             update_user_meta( $userid, $key, $val ); 
          }
 
+                  // Include processv2.php for Keap API call
+        //  if (file_exists(__DIR__."/../../../infusion/processv2.php")) {
+        //     include_once (__DIR__."/../../../infusion/processv2.php");
+        //  }
+
                   // Update Keap with Step 1 data
-         if (function_exists('class_exists') && !class_exists('iSDK') && file_exists(__DIR__."/../../../infusion/updateMultiStepData.php")) {
+        //  if (function_exists('class_exists') && !class_exists('iSDK') && file_exists(__DIR__."/../../../infusion/updateMultiStepData.php")) {
+        // if (file_exists(__DIR__."/../../../infusion/updateMultiStepData.php")) {
+        if (file_exists(__DIR__."/../../../infusion/updateMultiStepData.php")) {
             include_once (__DIR__."/../../../infusion/updateMultiStepData.php");
             $user_info = get_user_meta($userid);
-         //    $user_email = $user_info['Email'][0];
-         //    updateKeapMultiStepData('step1', $_POST, $user_email);
-         // }
-                     $user_email = isset($user_info['Email'][0]) ? $user_info['Email'][0] : '';
+
+            $user_email = isset($user_info['Email'][0]) ? $user_info['Email'][0] : '';
             
             // If no email in meta, try to get from user object
             if (empty($user_email)) {
@@ -1418,7 +1562,10 @@ function redirectAfterPart2Step1(){
             
             // Only proceed if we have a valid email
             if (!empty($user_email)) {
-                updateKeapMultiStepData('step1', $_POST, $user_email);
+                $result = updateKeapMultiStepData('step1', $_POST, $user_email);
+                error_log("Keap update result: " . ($result ? 'SUCCESS' : 'FAILED'));
+            } else {
+                error_log("=== KEAP DEBUG: No valid email found for step1 ===");
             }
          }
          
@@ -1442,7 +1589,7 @@ function redirectAfterPart2Step1(){
         //     wp_redirect($redirectUrl);
         //     exit;      
         //  } 
-         // Check if "Save & Continue Later" button was clicked
+        // Check if "Save & Continue Later" button was clicked
          if(isset($_POST['save_continue_later'])) {
             // Send continue registration email
             $nextStepUrl = "https://" . $_SERVER['HTTP_HOST'] . "/part2-step2/";
@@ -1450,7 +1597,6 @@ function redirectAfterPart2Step1(){
                $nextStepUrl = "http://" . $_SERVER['HTTP_HOST'] . "/openinclusion/part2-step2/";
             }
             sendContinueRegistrationEmail($current_user->user_email, $current_user->first_name, $nextStepUrl);
-            
             // Don't mark as completed, just save the data and redirect to thank you page
             if(isset($_SERVER['HTTP_HOST'])) {
                if($_SERVER['HTTP_HOST'] == 'localhost') {
@@ -1682,7 +1828,8 @@ function redirectAfterPart2Step2(){
          }
 
                   // Update Keap with Step 2 data
-         if (function_exists('class_exists') && !class_exists('iSDK') && file_exists(__DIR__."/../../../infusion/updateMultiStepData.php")) {
+        //  if (function_exists('class_exists') && !class_exists('iSDK') && file_exists(__DIR__."/../../../infusion/updateMultiStepData.php")) {
+                 if (file_exists(__DIR__."/../../../infusion/updateMultiStepData.php")) {
             include_once (__DIR__."/../../../infusion/updateMultiStepData.php");
             $user_info = get_user_meta($userid);
          //    $user_email = $user_info['Email'][0];
@@ -1697,18 +1844,20 @@ function redirectAfterPart2Step2(){
             
             // Only proceed if we have a valid email
             if (!empty($user_email)) {
-                updateKeapMultiStepData('step2', $_POST, $user_email);
+                $result = updateKeapMultiStepData('step2', $_POST, $user_email);
+                error_log("Keap update result for step2: " . ($result ? 'SUCCESS' : 'FAILED'));
+            } else {
+                error_log("No valid email found for step2");
             }
          }
          
          if(isset($_POST['save_continue_later_step2'])) {
-            // Send continue registration email
+             // Send continue registration email
             $nextStepUrl = "https://" . $_SERVER['HTTP_HOST'] . "/part2-step3/";
             if($_SERVER['HTTP_HOST'] == 'localhost') {
                $nextStepUrl = "http://" . $_SERVER['HTTP_HOST'] . "/openinclusion/part2-step3/";
             }
             sendContinueRegistrationEmail($current_user->user_email, $current_user->first_name, $nextStepUrl);
-            
             if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/mywordpress/thank-you-2/'; }
             else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/thank-you-2/"; }
             wp_redirect($redirectUrl); exit;
@@ -1782,7 +1931,8 @@ function redirectAfterPart2Step3(){
             }
 
                      // Update Keap with Step 3 data
-         if (function_exists('class_exists') && !class_exists('iSDK') && file_exists(__DIR__."/../../../infusion/updateMultiStepData.php")) {
+        //  if (function_exists('class_exists') && !class_exists('iSDK') && file_exists(__DIR__."/../../../infusion/updateMultiStepData.php")) {
+        if (file_exists(__DIR__."/../../../infusion/updateMultiStepData.php")) {
             include_once (__DIR__."/../../../infusion/updateMultiStepData.php");
             $user_info = get_user_meta($userid);
          //    $user_email = $user_info['Email'][0];
@@ -1825,13 +1975,12 @@ function redirectAfterPart2Step3(){
          }
          
          if(isset($_POST['save_continue_later_step3'])) {
-            // Send continue registration email
+              // Send continue registration email
             $nextStepUrl = "https://" . $_SERVER['HTTP_HOST'] . "/part2-step4/";
             if($_SERVER['HTTP_HOST'] == 'localhost') {
                $nextStepUrl = "http://" . $_SERVER['HTTP_HOST'] . "/openinclusion/part2-step4/";
             }
             sendContinueRegistrationEmail($current_user->user_email, $current_user->first_name, $nextStepUrl);
-            
             if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/mywordpress/thank-you-2/'; }
             else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/thank-you-2/"; }
          } else {
@@ -1896,7 +2045,8 @@ function redirectAfterPart2Step4(){
          $userMetaData = prepareUserMetaData();
          foreach( $userMetaData as $key => $val ) { update_user_meta( $userid, $key, $val ); }
                  // Update Keap with Step 4 data
-         if (function_exists('class_exists') && !class_exists('iSDK') && file_exists(__DIR__."/../../../infusion/updateMultiStepData.php")) {
+        if (file_exists(__DIR__."/../../../infusion/updateMultiStepData.php")) {
+        //  if (function_exists('class_exists') && !class_exists('iSDK') && file_exists(__DIR__."/../../../infusion/updateMultiStepData.php")) {
             include_once (__DIR__."/../../../infusion/updateMultiStepData.php");
             $user_info = get_user_meta($userid);
          //    $user_email = $user_info['Email'][0];
@@ -1915,13 +2065,12 @@ function redirectAfterPart2Step4(){
             }
          }
          if(isset($_POST['save_continue_later_step4'])) {
-            // Send continue registration email
+             // Send continue registration email
             $nextStepUrl = "https://" . $_SERVER['HTTP_HOST'] . "/part2-step5/";
             if($_SERVER['HTTP_HOST'] == 'localhost') {
                $nextStepUrl = "http://" . $_SERVER['HTTP_HOST'] . "/openinclusion/part2-step5/";
             }
             sendContinueRegistrationEmail($current_user->user_email, $current_user->first_name, $nextStepUrl);
-            
             if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/mywordpress/thank-you-2/'; }
             else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/thank-you-2/"; }
          } else {
@@ -1954,6 +2103,26 @@ function redirectAfterPart2Step5(){
          foreach( $userMetaData as $key => $val ) { update_user_meta( $userid, $key, $val ); }
          // Mark completion
          update_user_meta( $userid, 'Part2Step5Completed', 'Yes');
+
+                  // Update Keap with Step 5 data
+         if (file_exists(__DIR__."/../../../infusion/updateMultiStepData.php")) {
+            include_once (__DIR__."/../../../infusion/updateMultiStepData.php");
+            $user_info = get_user_meta($userid);
+            $user_email = isset($user_info['Email'][0]) ? $user_info['Email'][0] : '';
+            
+            // If no email in meta, try to get from user object
+            if (empty($user_email)) {
+                $user_email = $current_user->user_email;
+            }
+            
+            // Only proceed if we have a valid email
+            if (!empty($user_email)) {
+                $result = updateKeapMultiStepData('step5', $_POST, $user_email);
+                error_log("Keap update result for step5: " . ($result ? 'SUCCESS' : 'FAILED'));
+            } else {
+                error_log("No valid email found for step5");
+            }
+         }
          
          // Add error handling around updateUserStatus.php
          if(file_exists(__DIR__."/../../../infusion/updateUserStatus.php")) {
@@ -2646,9 +2815,109 @@ function update_user_role(){
       $response = curl_exec($curl);
       curl_close($curl);
       $contactData=[
-         "User Status"                       => 'Member'
+         "User Status" => 'Member'
       ];
    }
    return $user_role;
  }
+
+ /**
+ * Apply Keap tags for registration step completion
+ */
+function applyKeapStepTag($step, $userEmail) {
+   try {
+        // Check if files exist before including
+        $isdk_path = get_template_directory() . '/../infusion/isdk.php';
+        $properties_path = get_template_directory() . '/../infusion/myproperties.ini';
+        
+        if (!file_exists($isdk_path)) {
+            error_log("iSDK file not found at: $isdk_path");
+            return false;
+        }
+        
+        if (!file_exists($properties_path)) {
+            error_log("Properties file not found at: $properties_path");
+            return false;
+        }
+        
+        // Include the Keap integration files only if class doesn't exist
+        if (!class_exists('isdk')) {
+            include_once $isdk_path;
+        }
+        
+        // Parse properties file
+        $properties_ini = parse_ini_file($properties_path);
+        if (!$properties_ini) {
+            error_log("Failed to parse properties file");
+            return false;
+        }
+        
+        // Initialize Keap app
+        $app = new isdk();
+        
+        if ($app->cfgCon("connectionName")) {
+            // Find contact by email
+            $returnFields = ['Id', 'FirstName', 'LastName', 'Email'];
+            $conDat = $app->findByEmail($userEmail, $returnFields);
+            
+            if (!empty($conDat) && is_array($conDat) && isset($conDat[0]['Id'])) {
+                $contactId = $conDat[0]['Id'];
+                
+                // Apply step completion tag
+                $stepTag = isset($properties_ini['step_' . $step . '_completed']) ? 
+                           $properties_ini['step_' . $step . '_completed'] : null;
+                
+                if ($stepTag) {
+                    $tagResult = $app->grpAssign($contactId, $stepTag);
+                    error_log("Step completion tag applied for step $step: " . print_r($tagResult, true));
+                }
+                
+                // Apply phase tag
+                $phaseTag = getPhaseTagForStep($step, $properties_ini);
+                if ($phaseTag) {
+                    $phaseTagResult = $app->grpAssign($contactId, $phaseTag);
+                    error_log("Phase tag applied for step $step: " . print_r($phaseTagResult, true));
+                }
+                
+                // Update registration status
+                $statusUpdate = ['_RegistrationStatus' => 'In Progress - Step ' . substr($step, -1)];
+                $app->updateCon($contactId, $statusUpdate);
+                
+                return true;
+            } else {
+                error_log("Contact not found for email: $userEmail when applying step $step tag");
+            }
+        } else {
+            error_log("Keap connection failed when applying step $step tag");
+        }
+    } catch (Exception $e) {
+        error_log("Error in applyKeapStepTag: " . $e->getMessage());
+    }
+    
+    return false;
+}
+
+/**
+ * Get the appropriate phase tag for a given step
+ */
+function getPhaseTagForStep($step, $properties_ini) {
+    $phaseMapping = array(
+        'step1' => 'phase_basic_info',
+        'step2' => 'phase_access_needs', 
+        'step3' => 'phase_technologies',
+        'step4' => 'phase_demographics',
+        'step5' => 'phase_community_agreement',
+        'step6' => 'phase_privacy_consent',
+        'step7' => 'phase_identity_verification',
+        'step8' => 'phase_login_creation',
+        'step9' => 'phase_complete'
+    );
+    
+    if (isset($phaseMapping[$step])) {
+        $phaseKey = $phaseMapping[$step];
+        return isset($properties_ini[$phaseKey]) ? $properties_ini[$phaseKey] : null;
+    }
+    
+    return null;
+}
 ?>

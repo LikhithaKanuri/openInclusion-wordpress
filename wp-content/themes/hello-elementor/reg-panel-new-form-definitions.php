@@ -1253,7 +1253,7 @@ $part2Step1Form = array(
       ),
       
       // array(
-      //    'name' => 'submit_part2_step1',
+      //    'name' => '',
       //    'type' => 'submit',
       //    'li-class' => 'submit',
       //    'value' => __('Continue to Next Step', 'openinclusion' )
@@ -1921,16 +1921,18 @@ HTML
          'name' => 'inf_field_UserName',
          'li-class' => 'clear',
          'maxlen' => 250,
+         'readonly' => true,
+         'value' => '', // Will be auto-populated by JavaScript
          'validation' => array(
             array('reqd', __( 'Please keep a username value', 'openinclusion' )),
             array('len', __( 'Your username can only be %1$d characters long', 'openinclusion' )),
          )
       ),
       array(
-         'label' => __( 'Please create a password for the online Open Inclusion Community:', 'openinclusion' ),
+         'label' => __( '*Please create a password for the online Open Inclusion Community:', 'openinclusion' ),
          'type' => 'password',
          'name' => 'inf_field_Password',
-         'li-class' => 'clear',
+         'li-class' => 'clear password-field-container',
          'maxlen' => 250,
          'validation' => array(
             array('reqd', __( 'Please supply your password', 'openinclusion' )),
@@ -1938,15 +1940,42 @@ HTML
          )
       ),
       array(
-         'label' => __( 'Please re-enter your password:', 'openinclusion' ),
+         'label' => '',
+         'type' => 'other-html',
+         'name' => 'password_buttons',
+         'li-class' => 'password-buttons',
+         'value' => <<<HTML
+            <div class="password-field-wrapper">
+               <button type="button" class="toggle-password" data-target="inf_field_Password">Show</button>
+               <button type="button" class="generate-password" data-target="inf_field_Password">Generate</button>
+            </div>
+HTML
+         ,
+         'validation' => array()
+      ),
+      array(
+         'label' => __( '*Please Re-enter your password:', 'openinclusion' ),
          'type' => 'password',
          'name' => 'inf_field_Password_reenter',
-         'li-class' => 'clear',
+         'li-class' => 'clear password-field-container',
          'maxlen' => 250,
          'validation' => array(
             array('reqd', __( 'Please re-enter your password', 'openinclusion' )),
             array('len', __( 'Your password can only be %1$d characters long', 'openinclusion' )),
          )
+      ),
+      array(
+         'label' => '',
+         'type' => 'other-html',
+         'name' => 'password_reenter_buttons',
+         'li-class' => 'password-buttons',
+         'value' => <<<HTML
+            <div class="password-field-wrapper">
+               <button type="button" class="toggle-password" data-target="inf_field_Password_reenter">Show</button>
+            </div>
+HTML
+         ,
+         'validation' => array()
       ),
       array(
          'name' => 'submit_part2_step8',

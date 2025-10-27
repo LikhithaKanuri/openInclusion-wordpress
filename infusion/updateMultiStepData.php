@@ -5,9 +5,25 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 $properties_ini = parse_ini_file("myproperties.ini");
+// $current_dir = dirname(__FILE__);
+// $properties_ini = parse_ini_file($current_dir . "/myproperties.ini");
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING & ~E_DEPRECATED & ~E_STRICT);
+require("isdk.php");
 require_once("isdk.php");
 require("conn.cfg.php");
+// Check if files exist before including
+// if (file_exists($current_dir . "/isdk.php")) {
+//     require_once($current_dir . "/isdk.php");
+// } else {
+//     error_log("isdk.php not found in: " . $current_dir);
+// }
+
+// if (file_exists($current_dir . "/conn.cfg.php")) {
+//     require($current_dir . "/conn.cfg.php");
+// } else {
+//     error_log("conn.cfg.php not found in: " . $current_dir);
+// }
+
 $app = new isdk();
 
 /**
@@ -16,16 +32,170 @@ $app = new isdk();
  * @param array $fieldData - The form data from the current step
  * @param string $userEmail - The user's email address
  */
+// function updateKeapMultiStepData($step, $fieldData, $userEmail) {
+//     global $app, $properties_ini;
+//        try {
+//         if (!$app || !is_object($app)) {
+//             $app = new isdk();
+//         }
+        
+//         // Ensure properties_ini is loaded
+//         if (!isset($properties_ini) || empty($properties_ini)) {
+//             $current_dir = dirname(__FILE__);
+//             $properties_ini = parse_ini_file($current_dir . "/myproperties.ini");
+//         }
+        
+//         if (!$properties_ini) {
+//             error_log("Failed to load properties_ini in updateKeapMultiStepData");
+//             return false;
+//         }
+    
+//     error_log("Attempting Keap connection...");
+//     $connectionResult = $app->cfgCon("connectionName");
+//     error_log("Keap connection result: " . ($connectionResult ? 'SUCCESS' : 'FAILED'));
+    
+//     if (!$connectionResult) {
+//         error_log("Keap connection failed for step: " . $step);
+//         return false;
+//     }
+    
+//     // Validate user email
+//     if (empty($userEmail) || !filter_var($userEmail, FILTER_VALIDATE_EMAIL)) {
+//         error_log("Invalid or empty user email for step: " . $step);
+//         return false;
+//     }
+    
+//     // Check for existing contact
+//    //  $returnFields = ['Id'];
+//    $returnFields = ['Id', 'FirstName', 'LastName', 'Email'];
+
+//     error_log("Looking for contact with email: " . $userEmail);
+//     $conDat = $app->findByEmail($userEmail, $returnFields);
+//         error_log("Contact lookup result: " . print_r($conDat, true));
+
+//     // if (empty($conDat)) {
+//         if (!is_array($conDat) || empty($conDat)) {
+//         error_log("Contact not found for email: " . $userEmail . " in step: " . $step);
+//         error_log("This might be because the contact doesn't exist in Keap yet. The contact should be created during Part 1 registration.");
+
+    
+//    //  $contactId = $conDat[0]['Id'];
+//            // Try to create a new contact if it doesn't exist
+//         error_log("Attempting to create new contact for email: " . $userEmail);
+//         $newContactData = [
+//             'Email' => $userEmail,
+//             'FirstName' => 'Unknown',
+//             'LastName' => 'User'
+//         ];
+//         $newContactId = $app->addCon($newContactData);
+//         if ($newContactId) {
+//             error_log("New contact created with ID: " . $newContactId);
+//             $contactId = $newContactId;
+//         } else {
+//             error_log("Failed to create new contact");
+//             return false;
+//         }
+//     } else {
+//         // $contactId = $conDat[0]['Id'];
+//         // error_log("Found existing contact with ID: " . $contactId);
+//                 if (is_array($conDat) && isset($conDat[0]) && is_array($conDat[0]) && isset($conDat[0]['Id'])) {
+//             $contactId = $conDat[0]['Id'];
+//             error_log("Found existing contact with ID: " . $contactId);
+//         } else {
+//             error_log("Invalid contact data structure: " . print_r($conDat, true));
+//             return false;
+//         }
+//     }
+//     $contactData = [];
+    
+//     // Prepare data based on step
+//     switch ($step) {
+//         case 'step1':
+//             $contactData = prepareStep1Data($fieldData);
+//             break;
+//         case 'step2':
+//             $contactData = prepareStep2Data($fieldData);
+//             break;
+//         case 'step3':
+//             $contactData = prepareStep3Data($fieldData);
+//             break;
+//         case 'step4':
+//             $contactData = prepareStep4Data($fieldData);
+//             break;
+//         case 'step5':
+//             $contactData = prepareStep5Data($fieldData);
+//             break;
+//         case 'step6':
+//             $contactData = prepareStep6Data($fieldData);
+//             break;
+//         case 'step7':
+//             $contactData = prepareStep7Data($fieldData);
+//             break;
+//         case 'step8':
+//             $contactData = prepareStep8Data($fieldData);
+//             break;
+//         default:
+//             error_log("Unknown step: " . $step);
+//             return false;
+//     }
+    
+//     // Update contact with step data
+//     if (!empty($contactData)) {
+//         error_log("Updating Keap contact ID: " . $contactId . " with data: " . print_r($contactData, true));
+//         $result = $app->updateCon($contactId, $contactData);
+//         error_log("Keap updateCon result: " . print_r($result, true));
+        
+//         // Assign step completion tag
+//         $stepTag = isset($properties_ini['step_' . $step . '_completed']) ? 
+//                    $properties_ini['step_' . $step . '_completed'] : null;
+        
+//         if ($stepTag) {
+//             $tagResult = $app->grpAssign($contactId, $stepTag);
+//             error_log("Step completion tag assignment result: " . print_r($tagResult, true));
+//         }
+
+//         // Assign phase-specific tags based on step
+//         $phaseTag = getPhaseTagForStep($step, $properties_ini);
+//         if ($phaseTag) {
+//             $phaseTagResult = $app->grpAssign($contactId, $phaseTag);
+//             error_log("Phase tag assignment result: " . print_r($phaseTagResult, true));
+//         }
+        
+//         // Update registration status
+//         $statusUpdate = ['_RegistrationStatus' => 'In Progress - Step ' . substr($step, -1)];
+//         $statusResult = $app->updateCon($contactId, $statusUpdate);
+//         error_log("Registration status update result: " . print_r($statusResult, true));
+        
+//         error_log("Keap data updated for step: " . $step . " - Contact ID: " . $contactId);
+//         return true;
+//     } else {
+//         error_log("No contact data to update for step: " . $step);
+//     }
+    
+//     return false;
+// }
+
 function updateKeapMultiStepData($step, $fieldData, $userEmail) {
     global $app, $properties_ini;
     
-    error_log("=== KEAP FUNCTION CALLED: updateKeapMultiStepData ===");
-    error_log("Step: " . $step);
-    error_log("Email: " . $userEmail);
-    error_log("Field data keys: " . implode(', ', array_keys($fieldData)));
-    error_log("App object exists: " . (isset($app) ? 'YES' : 'NO'));
-    error_log("App object type: " . (isset($app) ? get_class($app) : 'N/A'));
-    error_log("Connection info loaded: " . (isset($connInfo) ? 'YES' : 'NO'));
+    try {
+        // Initialize Keap app if not already done
+        if (!$app || !is_object($app)) {
+            $app = new isdk();
+        }
+        
+        // Ensure properties_ini is loaded
+        if (!isset($properties_ini) || empty($properties_ini)) {
+            $current_dir = dirname(__FILE__);
+            $properties_ini = parse_ini_file($current_dir . "/myproperties.ini");
+        }
+        
+        if (!$properties_ini) {
+            error_log("Failed to load properties_ini in updateKeapMultiStepData");
+            return false;
+        }
+    
+    error_log("updateKeapMultiStepData called for step: " . $step . " with email: " . $userEmail);
     
     // Check if app object exists and connection is established
     if (!$app || !is_object($app) || !method_exists($app, 'cfgCon')) {
@@ -49,16 +219,22 @@ function updateKeapMultiStepData($step, $fieldData, $userEmail) {
     }
     
     // Check for existing contact
-    $returnFields = ['Id', 'FirstName', 'LastName', 'Email'];
+   //  $returnFields = ['Id'];
+   $returnFields = ['Id', 'FirstName', 'LastName', 'Email'];
+
     error_log("Looking for contact with email: " . $userEmail);
     $conDat = $app->findByEmail($userEmail, $returnFields);
-    error_log("Contact lookup result: " . print_r($conDat, true));
-    
-    if (empty($conDat)) {
+        error_log("Contact lookup result: " . print_r($conDat, true));
+
+    // Check if $conDat is an array and not empty
+    if (!is_array($conDat) || empty($conDat)) {
         error_log("Contact not found for email: " . $userEmail . " in step: " . $step);
         error_log("This might be because the contact doesn't exist in Keap yet. The contact should be created during Part 1 registration.");
-        
-        // Try to create a new contact if it doesn't exist
+   //      return false;
+   //  }
+    
+   //  $contactId = $conDat[0]['Id'];
+           // Try to create a new contact if it doesn't exist
         error_log("Attempting to create new contact for email: " . $userEmail);
         $newContactData = [
             'Email' => $userEmail,
@@ -74,17 +250,21 @@ function updateKeapMultiStepData($step, $fieldData, $userEmail) {
             return false;
         }
     } else {
-        $contactId = $conDat[0]['Id'];
-        error_log("Found existing contact with ID: " . $contactId);
+        // Additional safety check to ensure $conDat is an array and has the expected structure
+        if (is_array($conDat) && isset($conDat[0]) && is_array($conDat[0]) && isset($conDat[0]['Id'])) {
+            $contactId = $conDat[0]['Id'];
+            error_log("Found existing contact with ID: " . $contactId);
+        } else {
+            error_log("Invalid contact data structure: " . print_r($conDat, true));
+            return false;
+        }
     }
     $contactData = [];
     
     // Prepare data based on step
     switch ($step) {
         case 'step1':
-            error_log("Preparing Step 1 data...");
             $contactData = prepareStep1Data($fieldData);
-            error_log("Step 1 contact data prepared: " . print_r($contactData, true));
             break;
         case 'step2':
             $contactData = prepareStep2Data($fieldData);
@@ -97,6 +277,15 @@ function updateKeapMultiStepData($step, $fieldData, $userEmail) {
             break;
         case 'step5':
             $contactData = prepareStep5Data($fieldData);
+            break;
+        case 'step6':
+            $contactData = prepareStep6Data($fieldData);
+            break;
+        case 'step7':
+            $contactData = prepareStep7Data($fieldData);
+            break;
+        case 'step8':
+            $contactData = prepareStep8Data($fieldData);
             break;
         default:
             error_log("Unknown step: " . $step);
@@ -117,7 +306,9 @@ function updateKeapMultiStepData($step, $fieldData, $userEmail) {
             $tagResult = $app->grpAssign($contactId, $stepTag);
             error_log("Step completion tag assignment result: " . print_r($tagResult, true));
         }
-        
+        assignStepTags($contactId, $step, $fieldData);
+
+                
         // Update registration status
         $statusUpdate = ['_RegistrationStatus' => 'In Progress - Step ' . substr($step, -1)];
         $statusResult = $app->updateCon($contactId, $statusUpdate);
@@ -130,23 +321,51 @@ function updateKeapMultiStepData($step, $fieldData, $userEmail) {
     }
     
     return false;
+    } catch (Exception $e) {
+        error_log("Exception in updateKeapMultiStepData: " . $e->getMessage());
+        error_log("Stack trace: " . $e->getTraceAsString());
+        return false;
+    }
+}
+
+/**
+ * Helper function to clean array data and join with pipe separator
+ * @param array $array - The array to clean and join
+ * @return string - Cleaned and joined string
+ */
+function cleanAndJoinArray($array) {
+    if (!is_array($array)) {
+        return '';
+    }
+    
+    // Log the original array for debugging
+    error_log("cleanAndJoinArray - Original array: " . print_r($array, true));
+    
+    // Filter out empty values and clean the array
+    $cleanArray = array_filter($array, function($value) {
+        return !empty($value) && trim($value) !== '';
+    });
+    
+    $result = !empty($cleanArray) ? implode(", ", $cleanArray) : '';
+    error_log("cleanAndJoinArray - Cleaned result: " . $result);
+    
+    return $result;
 }
 
 /**
  * Prepare data for Step 1 (Basic Information)
  */
 function prepareStep1Data($fieldData) {
-    $contactData = [];
-    
+    $contactData = []; 
     // Part 2 Step 1 fields - Basic location and demographics
     if (isset($fieldData['inf_field_country'])) {
-        $contactData['Country'] = $fieldData['inf_field_country'];
+        $contactData['_Country1'] = $fieldData['inf_field_country'];
     }
     if (isset($fieldData['inf_field_region'])) {
         $contactData['_Region'] = $fieldData['inf_field_region'];
     }
     if (isset($fieldData['inf_field_postcode'])) {
-        $contactData['PostalCode'] = $fieldData['inf_field_postcode'];
+        $contactData['_Postcode'] = $fieldData['inf_field_postcode'];
     }
     if (isset($fieldData['inf_field_over18'])) {
         $contactData['_Over18'] = $fieldData['inf_field_over18'];
@@ -157,8 +376,8 @@ function prepareStep1Data($fieldData) {
     if (isset($fieldData['inf_field_hasDisability'])) {
         $contactData['_HasDisability'] = $fieldData['inf_field_hasDisability'];
     }
-    if (isset($fieldData['RelationShip']) && is_array($fieldData['RelationShip'])) {
-        $contactData['_RelationShip'] = implode('|', $fieldData['RelationShip']);
+    if (isset($fieldData['RelationShip'])) {
+        $contactData['_RelationShip'] = cleanAndJoinArray($fieldData['RelationShip']);
     }
     
     return $contactData;
@@ -170,36 +389,74 @@ function prepareStep1Data($fieldData) {
 function prepareStep2Data($fieldData) {
     $contactData = [];
     
-    // Age and relationship information
-    if (isset($fieldData['inf_field_over18'])) {
-        $contactData['_Over18'] = $fieldData['inf_field_over18'];
-    }
-    if (isset($fieldData['inf_custom_YearBorn'])) {
-        $contactData['_YearBorn'] = $fieldData['inf_custom_YearBorn'];
-    }
-    if (isset($fieldData['inf_option_Gender'])) {
-        $contactData['_Gender'] = $fieldData['inf_option_Gender'];
-    }
-    if (isset($fieldData['inf_option_pronouns'])) {
-        $contactData['_Pronouns'] = $fieldData['inf_option_pronouns'];
-    }
-    if (isset($fieldData['inf_option_ethnicity'])) {
-        $contactData['_Ethnicity'] = $fieldData['inf_option_ethnicity'];
-    }
-    if (isset($fieldData['SexualOrientations'])) {
-        $contactData['_SexualOrientation'] = is_array($fieldData['SexualOrientations']) ? 
-                                           implode('|', $fieldData['SexualOrientations']) : 
-                                           $fieldData['SexualOrientations'];
+    // // Age and relationship information
+    // if (isset($fieldData['inf_field_over18'])) {
+    //     $contactData['_Over18'] = $fieldData['inf_field_over18'];
+    // }
+    // if (isset($fieldData['inf_custom_YearBorn'])) {
+    //     $contactData['_YearBorn'] = $fieldData['inf_custom_YearBorn'];
+    // }
+    // if (isset($fieldData['inf_option_Gender'])) {
+    //     $contactData['_Gender'] = $fieldData['inf_option_Gender'];
+    // }
+    // if (isset($fieldData['inf_option_pronouns'])) {
+    //     $contactData['_Pronouns'] = $fieldData['inf_option_pronouns'];
+    // }
+    // if (isset($fieldData['inf_option_ethnicity'])) {
+    //     $contactData['_Ethnicity'] = $fieldData['inf_option_ethnicity'];
+    // }
+    // if (isset($fieldData['SexualOrientations'])) {
+    //     $contactData['_SexualOrientation'] = cleanAndJoinArray($fieldData['SexualOrientations']);
+    // }
+    
+    // // Relationship to disability
+    // if (isset($fieldData['RelationShip'])) {
+    //     $contactData['_RelationshipToDisability'] = cleanAndJoinArray($fieldData['RelationShip']);
+    // }
+    
+    // // How they found the community
+    // if (isset($fieldData['OurCommunity'])) {
+    //     $contactData['_HowFoundCommunity'] = $fieldData['OurCommunity'];
+    // }
+    
+    // return $contactData;
+     // Sensory needs
+    if (isset($fieldData['SensoryNeeds'])) {
+        $contactData['_SensoryNeed'] = cleanAndJoinArray($fieldData['SensoryNeeds']);
     }
     
-    // Relationship to disability
-    if (isset($fieldData['RelationShip']) && is_array($fieldData['RelationShip'])) {
-        $contactData['_RelationshipToDisability'] = implode('|', $fieldData['RelationShip']);
+    // Physical needs
+    if (isset($fieldData['PhysicalNeeds'])) {
+        $contactData['_PhysicalNeed'] = cleanAndJoinArray($fieldData['PhysicalNeeds']);
     }
     
-    // How they found the community
-    if (isset($fieldData['OurCommunity'])) {
-        $contactData['_HowFoundCommunity'] = $fieldData['OurCommunity'];
+    // Cognitive and mental health needs
+    if (isset($fieldData['CognitiveAndMentalhealthNeeds'])) {
+        $contactData['_cognitiveandmentalhealthneed'] = cleanAndJoinArray($fieldData['CognitiveAndMentalhealthNeeds']);
+    }
+    
+    // Communication needs
+    if (isset($fieldData['CommunicationNeeds'])) {
+        $contactData['_communicationneed'] = cleanAndJoinArray($fieldData['CommunicationNeeds']);
+    }
+    
+    // Chronic health needs
+    if (isset($fieldData['ChronichealthNeeds'])) {
+        $contactData['_chronichealthneed'] = cleanAndJoinArray($fieldData['ChronichealthNeeds']);
+    }
+    
+    // Other needs
+    if (isset($fieldData['OtherNeedsOtherPleaseSpecify'])) {
+        $contactData['_OtherNeed'] = $fieldData['OtherNeedsOtherPleaseSpecify'];
+    }
+    
+    // Temporary access needs
+    if (isset($fieldData['TemporaryAccessNeedsYes'])) {
+        $contactData['_TemporaryAccessNeed'] = 'Yes';
+    } elseif (isset($fieldData['TemporaryAccessNeedsNo'])) {
+        $contactData['_TemporaryAccessNeed'] = 'No';
+    } elseif (isset($fieldData['TemporaryAccessNeedsNA'])) {
+        $contactData['_TemporaryAccessNeed'] = 'Not Applicable';
     }
     
     return $contactData;
@@ -211,44 +468,52 @@ function prepareStep2Data($fieldData) {
 function prepareStep3Data($fieldData) {
     $contactData = [];
     
-    // Sensory needs
-    if (isset($fieldData['SensoryNeeds']) && is_array($fieldData['SensoryNeeds'])) {
-        $contactData['_SensoryNeeds'] = implode('|', $fieldData['SensoryNeeds']);
+    // Digital: including software and hardware
+    if (isset($fieldData['DigitalandScreenTechnologies'])) {
+        $contactData['_Digitalincludingsoftwareandhardware'] = cleanAndJoinArray($fieldData['DigitalandScreenTechnologies']);
     }
     
     // Physical needs
-    if (isset($fieldData['PhysicalNeeds']) && is_array($fieldData['PhysicalNeeds'])) {
-        $contactData['_PhysicalNeeds'] = implode('|', $fieldData['PhysicalNeeds']);
+    if (isset($fieldData['PrintMedia'])) {
+        $contactData['_Printedmedia'] = cleanAndJoinArray($fieldData['PrintMedia']);
     }
     
     // Cognitive and mental health needs
-    if (isset($fieldData['CognitiveAndMentalhealthNeeds']) && is_array($fieldData['CognitiveAndMentalhealthNeeds'])) {
-        $contactData['_CognitiveMentalHealthNeeds'] = implode('|', $fieldData['CognitiveAndMentalhealthNeeds']);
+    if (isset($fieldData['MovementCanesandServiceAnimals'])) {
+        $contactData['_Movement'] = cleanAndJoinArray($fieldData['MovementCanesandServiceAnimals']);
     }
     
     // Communication needs
-    if (isset($fieldData['CommunicationNeeds']) && is_array($fieldData['CommunicationNeeds'])) {
-        $contactData['_CommunicationNeeds'] = implode('|', $fieldData['CommunicationNeeds']);
+    if (isset($fieldData['CommunicationPreferences'])) {
+        $contactData['_Communication'] = cleanAndJoinArray($fieldData['CommunicationPreferences']);
     }
     
     // Chronic health needs
-    if (isset($fieldData['ChronichealthNeeds']) && is_array($fieldData['ChronichealthNeeds'])) {
-        $contactData['_ChronicHealthNeeds'] = implode('|', $fieldData['ChronichealthNeeds']);
+    if (isset($fieldData['PersonalSupportandHome'])) {
+        $contactData['_Personalsupportandhome'] = cleanAndJoinArray($fieldData['PersonalSupportandHome']);
+    }
+
+
+    // Research Formats
+    if (isset($fieldData['ResearchFormats'])) {
+        $contactData['_ResearchFormats'] = cleanAndJoinArray($fieldData['ResearchFormats']);
     }
     
     // Other needs
-    if (isset($fieldData['OtherNeedsOtherPleaseSpecify'])) {
-        $contactData['_OtherNeeds'] = $fieldData['OtherNeedsOtherPleaseSpecify'];
+    if (isset($fieldData['OtherTechnologies'])) {
+        $contactData['_OtherTechnology'] = $fieldData['OtherTechnologies'];
     }
+
+
     
-    // Temporary access needs
-    if (isset($fieldData['TemporaryAccessNeedsYes'])) {
-        $contactData['_TemporaryAccessNeeds'] = 'Yes';
-    } elseif (isset($fieldData['TemporaryAccessNeedsNo'])) {
-        $contactData['_TemporaryAccessNeeds'] = 'No';
-    } elseif (isset($fieldData['TemporaryAccessNeedsNA'])) {
-        $contactData['_TemporaryAccessNeeds'] = 'Not Applicable';
-    }
+    // // Temporary access needs
+    // if (isset($fieldData['TemporaryAccessNeedsYes'])) {
+    //     $contactData['_TemporaryAccessNeed'] = 'Yes';
+    // } elseif (isset($fieldData['TemporaryAccessNeedsNo'])) {
+    //     $contactData['_TemporaryAccessNeed'] = 'No';
+    // } elseif (isset($fieldData['TemporaryAccessNeedsNA'])) {
+    //     $contactData['_TemporaryAccessNeed'] = 'Not Applicable';
+    // }
     
     return $contactData;
 }
@@ -259,42 +524,38 @@ function prepareStep3Data($fieldData) {
 function prepareStep4Data($fieldData) {
     $contactData = [];
     
-    // Digital and screen technologies
-    if (isset($fieldData['DigitalandScreenTechnologies']) && is_array($fieldData['DigitalandScreenTechnologies'])) {
-        $contactData['_DigitalScreenTechnologies'] = implode('|', $fieldData['DigitalandScreenTechnologies']);
-    }
+    // if (isset($fieldData['inf_option_Gender'])) {
+    //     $contactData['_Gender'] = $fieldData['inf_option_Gender'];
+    // }
+         if (isset($fieldData['inf_option_Gender'])) {
+         // Map numeric values to text values for gender
+         $genderMap = array(
+             '507' => 'Woman',
+             '505' => 'Man', 
+             '782' => 'Non-binary/non-conforming',
+             '776' => 'Other (please self-describe)',
+             '774' => 'Prefer not to respond'
+         );
+         $genderValue = isset($genderMap[$fieldData['inf_option_Gender']]) ? 
+                        $genderMap[$fieldData['inf_option_Gender']] : 
+                        $fieldData['inf_option_Gender'];
+         $contactData['_Gender'] = $genderValue;
+     }
+     
+     if (isset($fieldData['SexualOrientations'])) {
+         $contactData['_SexualOrientation'] = cleanAndJoinArray($fieldData['SexualOrientations']);
+     }
     
-    // Print media preferences
-    if (isset($fieldData['PrintMedia']) && is_array($fieldData['PrintMedia'])) {
-        $contactData['_PrintMediaPreferences'] = implode('|', $fieldData['PrintMedia']);
-    }
-    
-    // Movement, canes and service animals
-    if (isset($fieldData['MovementCanesandServiceAnimals']) && is_array($fieldData['MovementCanesandServiceAnimals'])) {
-        $contactData['_MovementCanesServiceAnimals'] = implode('|', $fieldData['MovementCanesandServiceAnimals']);
+    if (isset($fieldData['inf_option_pronouns'])) {
+        $contactData['_Pronouns'] = $fieldData['inf_option_pronouns'];
     }
     
     // Communication preferences
-    if (isset($fieldData['CommunicationPreferences']) && is_array($fieldData['CommunicationPreferences'])) {
-        $contactData['_CommunicationPreferences'] = implode('|', $fieldData['CommunicationPreferences']);
+    if (isset($fieldData['inf_field_identify_terms'])) {
+        $contactData['_RacialandEthnicIdentity'] = $fieldData['inf_field_identify_terms'];
     }
-    
-    // Personal support and home
-    if (isset($fieldData['PersonalSupportandHome']) && is_array($fieldData['PersonalSupportandHome'])) {
-        $contactData['_PersonalSupportHome'] = implode('|', $fieldData['PersonalSupportandHome']);
-    }
-    
-    // Other technologies
-    if (isset($fieldData['OtherTechnologiesOtherPleaseSpecify'])) {
-        $contactData['_OtherTechnologies'] = $fieldData['OtherTechnologiesOtherPleaseSpecify'];
-    }
-    
-    // Research format preferences
-    if (isset($fieldData['ResearchFormats']) && is_array($fieldData['ResearchFormats'])) {
-        $contactData['_ResearchFormatPreferences'] = implode('|', $fieldData['ResearchFormats']);
-    }
-    
-    return $contactData;
+ 
+   return $contactData;
 }
 
 /**
@@ -327,12 +588,12 @@ function assignStepTags($contactId, $step, $fieldData) {
     }
     
     // Assign step completion tag
-    $stepTag = isset($properties_ini['step_' . $step . '_completed']) ? 
-               $properties_ini['step_' . $step . '_completed'] : null;
+    // $stepTag = isset($properties_ini['step_' . $step . '_completed']) ? 
+    //            $properties_ini['step_' . $step . '_completed'] : null;
     
-    if ($stepTag) {
-        $app->grpAssign($contactId, $stepTag);
-    }
+    // if ($stepTag) {
+    //     $app->grpAssign($contactId, $stepTag);
+    // }
     
     // Assign specific tags based on step data
     switch ($step) {
@@ -381,6 +642,55 @@ function assignStepTags($contactId, $step, $fieldData) {
             }
             break;
     }
+}
+
+/**
+ * Prepare data for Step 6 (Confirmations)
+ */
+function prepareStep6Data($fieldData) {
+    $contactData = [];
+    
+    // Confirmations
+    if (isset($fieldData['PleaseConfirm'])) {
+        $contactData['_Confirmations'] = cleanAndJoinArray($fieldData['PleaseConfirm']);
+    }
+    
+    return $contactData;
+}
+
+/**
+ * Prepare data for Step 7 (Open Verified Opt-in)
+ */
+function prepareStep7Data($fieldData) {
+    $contactData = [];
+    
+    // Open Verified opt-in
+    if (isset($fieldData['OpenVerifiedOptIn'])) {
+        $contactData['_OpenVerifiedOptIn'] = 'Yes';
+    } else {
+        $contactData['_OpenVerifiedOptIn'] = 'No';
+    }
+    
+    return $contactData;
+}
+
+/**
+ * Prepare data for Step 8 (Community Login)
+ */
+function prepareStep8Data($fieldData) {
+    $contactData = [];
+    
+    // Username
+    if (isset($fieldData['inf_field_UserName'])) {
+        $contactData['_CommunityUsername'] = $fieldData['inf_field_UserName'];
+    }
+    
+    // Password (we don't store the actual password, just that it was set)
+    if (isset($fieldData['inf_field_Password']) && !empty($fieldData['inf_field_Password'])) {
+        $contactData['_PasswordSet'] = 'Yes';
+    }
+    
+    return $contactData;
 }
 
 ?>

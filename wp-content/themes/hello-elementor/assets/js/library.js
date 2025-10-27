@@ -1071,38 +1071,9 @@ jQuery(document).ready(function ($) {
    $("#inf_field_countryphonecode").wrap("<div class='custom2'></div>");
    */
 
-   // Simple approach: move phone number field into country code container
-   console.log('Phone number field HTML:', $("#liphonenumber").html());
-   console.log('Country code container exists:', $("#licountryphonecode").length);
-   
+   // Very simple approach: just move phone number field next to country code
    $("#licountryphonecode").append($("#liphonenumber").html());
    $("#liphonenumber").html("");
-   
-   // Hide the country code label text since it's not needed
-   $("label[for=inf_field_countryphonecode]").find("span.text").hide();
-   
-   console.log('Phone number field after move:', $("#licountryphonecode input[type='text']").length);
-   
-   // Apply styling for better layout
-   $("#licountryphonecode").addClass("phone-number-container");
-   $("#licountryphonecode").css({
-     "display": "flex",
-     "align-items": "center",
-     "gap": "10px",
-     "margin-bottom": "2em"
-   });
-   
-   // Style the country code dropdown
-   $("#licountryphonecode .custom").css({
-     "width": "30%",
-     "margin": "0"
-   });
-   
-   // Style the phone number input
-   $("#licountryphonecode input[type='text']").css({
-     "width": "70%",
-     "margin": "0"
-   });
 
 
    $("#PreferToContactOthers").hide();

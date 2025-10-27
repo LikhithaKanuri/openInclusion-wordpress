@@ -437,34 +437,26 @@ label div.custom::after {
   margin-top: 6px;
 }
 
-/* Phone number field styling */
+/* Phone number field styling - simple alignment fix */
 #licountryphonecode {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 10px;
   margin-bottom: 1em;
+  width: 100%;
+  clear: both;
 }
 
-.phone-inputs-wrapper .custom {
+#licountryphonecode .custom {
   width: 30% !important;
   margin: 0 !important;
   flex-shrink: 0;
 }
 
-#licountryphonecode label[for="inf_field_Phone2"] {
+#licountryphonecode input[type="text"] {
   width: 70% !important;
-  margin-left: 0 !important;
+  margin: 0 !important;
   flex: 1;
-}
-
-#licountryphonecode label[for="inf_field_Phone2"] .text {
-  margin-left: 0 !important;
-  position: static !important;
-}
-
-#licountryphonecode label[for="inf_field_Phone2"] input {
-  width: 100% !important;
-  margin-top: 0 !important;
 }
 
 /* Additional styling for phone number layout */
@@ -706,4 +698,52 @@ ul.sub-list li {
   margin: 0;
   font-size: 14px;
   color: #555;
+}
+
+/* Step 8 Password Field Styling */
+.password-field-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.password-field-wrapper input[type="password"],
+.password-field-wrapper input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.toggle-password,
+.generate-password {
+  padding: 8px 12px;
+  background-color: #007cba;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.toggle-password:hover,
+.generate-password:hover {
+  background-color: #005a87;
+}
+
+.generate-password {
+  background-color: #28a745;
+}
+
+.generate-password:hover {
+  background-color: #1e7e34;
+}
+
+/* Username field styling */
+#inf_field_UserName {
+  background-color: #f8f9fa;
+  color: #6c757d;
 }

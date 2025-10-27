@@ -13,6 +13,7 @@
 // );
 
  $contact_method_array = array(
+
    array('Email',__( 'Please contact me via email', 'openinclusion' ),'PreferToContact_Email'),
    array('SMS',__( 'SMS / Text message', 'openinclusion' ), 'PreferToContact_SMS'),
    array('Phone',__( 'Phone call', 'openinclusion' ), 'PreferToContact_Phone'),
