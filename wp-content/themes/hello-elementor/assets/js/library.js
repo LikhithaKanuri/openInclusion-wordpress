@@ -1,7 +1,22 @@
-// Immediately hide the specific software field on page load
+// Initialize the specific software field - hide by default, then check if it should be shown
 jQuery(document).ready(function($) {
-   $('#specific-software-field').hide();
-   $('#specific-software-field input, #specific-software-field textarea').prop('disabled', true).val('');
+   // First hide the field
+   var specificSoftwareField = $('#specific-software-field');
+   if (specificSoftwareField.length > 0) {
+      specificSoftwareField.hide();
+      specificSoftwareField.find('input, textarea').prop('disabled', true);
+      
+      // Then check if any triggering checkboxes are already checked (e.g., when editing)
+      var screenReaderSelected = $('#DigitalandScreenTechnologies_ScreenReader').prop('checked');
+      var screenMagnifierSelected = $('#DigitalandScreenTechnologies_ScreenMagnifier').prop('checked');
+      var dragonSelected = $('#DigitalandScreenTechnologies_Dragonandother').prop('checked');
+      var readAloudSelected = $('#DigitalandScreenTechnologies_ReadAloudSoftware').prop('checked');
+      
+      if (screenReaderSelected || screenMagnifierSelected || dragonSelected || readAloudSelected) {
+         specificSoftwareField.show();
+         specificSoftwareField.find('input, textarea').prop('disabled', false);
+      }
+   }
 });
 
 function createCookie(name, value, days) {
@@ -1264,6 +1279,41 @@ jQuery(document).ready(function ($) {
 
    /****************** Form is submitted **************************/
    $('.contact').find('input[type="submit"]').on('click', function (e) {
+      // Check if this is a "Previous" button - if so, skip ALL validation
+      var buttonName = $(this).attr('name');
+      var buttonClass = $(this).attr('class');
+      
+      // Check if it's a previous button by name or class
+      if ((buttonName && (buttonName.indexOf('previous_') === 0 || buttonName === 'previous')) ||
+          (buttonClass && buttonClass.indexOf('previous-button') >= 0)) {
+         // This is a previous button - remove all validation attributes temporarily
+         var $form = $(this).parents('form');
+         
+         // Remove data-v-reqd attributes from all fields to bypass validation
+         $form.find('[data-v-reqd]').each(function() {
+            $(this).attr('data-v-reqd-backup', $(this).attr('data-v-reqd'));
+            $(this).removeAttr('data-v-reqd');
+         });
+         
+         // Remove fieldset validation attributes (including reqd-all for checkboxes)
+         $form.find('fieldset[data-v-reqd]').each(function() {
+            $(this).attr('data-v-reqd-backup', $(this).attr('data-v-reqd'));
+            $(this).removeAttr('data-v-reqd');
+         });
+         $form.find('fieldset[data-v-reqd-all]').each(function() {
+            $(this).attr('data-v-reqd-all-backup', $(this).attr('data-v-reqd-all'));
+            $(this).removeAttr('data-v-reqd-all');
+         });
+         
+         // Clear any existing error displays
+         $form.find('.errors').html('');
+         $form.find('.fieldseterrors').html('');
+         $form.find('[aria-invalid]').attr('aria-invalid', 'false');
+         
+         // Allow form submission without validation
+         return true;
+      }
+      
       $fieldId = '';
       $errInProgress = false;
       // Initialise error array
@@ -1820,15 +1870,28 @@ function hideshowPassword(elementId) {
 }
 
 function hideshowOpenText(element) {
-   console.log('e', element)
-   if (jQuery(element).prop('checked')) {
-      jQuery(element).parent().find('input[type=text]').show();
+   var $element = jQuery(element);
+   var $textInputs = $element.parent().find('input[type=text]');
+
+   if ($element.prop('checked')) {
+      $textInputs.each(function() {
+         var $input = jQuery(this);
+         $input.show().prop('disabled', false);
+         if (this.id === 'inf_option_Gender_opentext' || this.id === 'inf_option_Gender_776_OpenText') {
+            $input.attr('data-v-reqd', 'Please supply an answer');
+         }
+      });
+   } else {
+      $textInputs.each(function() {
+         var $input = jQuery(this);
+         $input.hide().prop('disabled', true).val('');
+         if (this.id === 'inf_option_Gender_opentext' || this.id === 'inf_option_Gender_776_OpenText') {
+            $input.removeAttr('data-v-reqd');
+         }
+      });
    }
-   else {
-      console.log('element', element)
-      jQuery(element).parent().find('input[type=text]').hide();
-   }
-   
+
+   toggleGenderSelfDescribeField();
    // Check if "Prefer not to respond" is selected and hide all open text fields in the same fieldset
    checkPreferNotToRespond(element);
 }
@@ -1905,10 +1968,27 @@ function selectResearchRelatedOptions(){
 }
 
 function hideOpenText(element) {
+   // Hide all open text fields in the same fieldset when other options are selected
+   var fieldset = jQuery(element).closest('fieldset');
+   fieldset.find('input[type=text]').each(function() {
+      var $input = jQuery(this);
+      $input.hide().prop('disabled', true);
+      if ($input.is('#inf_option_Gender_opentext') || $input.is('#inf_option_Gender_776_OpenText')) {
+         $input.removeAttr('data-v-reqd');
+      }
+   });
+   
+   // Also specifically hide the gender text field for backward compatibility
    var openTextElement = document.getElementById('inf_option_Gender_776_OpenText');
    if (openTextElement) {
       openTextElement.style.display = 'none';
    }
+   var openTextElement2 = document.getElementById('inf_option_Gender_opentext');
+   if (openTextElement2) {
+      openTextElement2.style.display = 'none';
+   }
+
+   toggleGenderSelfDescribeField();
 }
 
 function clearOffText(element, targetId) {
@@ -1924,6 +2004,8 @@ function clearOffText(element, targetId) {
       jQuery("#" + targetId).val("");
       jQuery("#" + targetId).removeAttr("data-v-reqd");
    }
+
+   toggleGenderSelfDescribeField();
 }
 
 function myFunction() {
@@ -1931,50 +2013,259 @@ function myFunction() {
    element.scrollIntoView();
 }
 
-// Function to toggle specific software field based on digital technology selections
-function toggleSpecificSoftwareField() {
-   var specificSoftwareField = jQuery('#specific-software-field');
-   var shouldShow = false;
-   
-   // Check if any of the triggering software options are selected
-   var screenReaderSelected = jQuery('#DigitalandScreenTechnologies_ScreenReader').prop('checked');
-   var screenMagnifierSelected = jQuery('#DigitalandScreenTechnologies_ScreenMagnifier').prop('checked');
-   var dragonSelected = jQuery('#DigitalandScreenTechnologies_Dragonandother').prop('checked');
-   var readAloudSelected = jQuery('#DigitalandScreenTechnologies_ReadAloudSoftware').prop('checked');
-   
-   console.log('toggleSpecificSoftwareField called', {
-      screenReader: screenReaderSelected,
-      screenMagnifier: screenMagnifierSelected,
-      dragon: dragonSelected,
-      readAloud: readAloudSelected
-   });
-   
-   if (screenReaderSelected || screenMagnifierSelected || dragonSelected || readAloudSelected) {
-      shouldShow = true;
+// Specific software helper configuration
+var SPECIFIC_SOFTWARE_TRIGGER_IDS = [
+   '#DigitalandScreenTechnologies_ScreenReader',
+   '#DigitalandScreenTechnologies_ScreenMagnifier',
+   '#DigitalandScreenTechnologies_Dragonandother',
+   '#DigitalandScreenTechnologies_ReadAloudSoftware'
+];
+
+var specificSoftwareHiddenInput = null;
+
+function getSoftwareLabelFromCheckbox(checkbox) {
+   if (!checkbox || !checkbox.length) {
+      return '';
    }
-   
-   if (shouldShow) {
-      specificSoftwareField.show();
-      specificSoftwareField.find('input, textarea').prop('disabled', false);
-      console.log('Showing specific software field');
-   } else {
-      specificSoftwareField.hide();
-      specificSoftwareField.find('input, textarea').prop('disabled', true).val('');
-      console.log('Hiding specific software field');
+
+   var label = checkbox.closest('label');
+   if (label.length) {
+      var cloned = label.clone();
+      cloned.children().remove();
+      var labelText = jQuery.trim(cloned.text());
+      if (labelText) {
+         return labelText;
+      }
+      return jQuery.trim(label.text());
    }
+
+   return checkbox.attr('aria-label') || checkbox.data('software-label') || checkbox.val() || '';
 }
 
-// Function to initialize the specific software field as hidden by default
+function ensureSpecificSoftwareHiddenInput() {
+   if (specificSoftwareHiddenInput && specificSoftwareHiddenInput.length) {
+      return specificSoftwareHiddenInput;
+   }
+
+   var templateLi = jQuery('#specific-software-field');
+   if (!templateLi.length) {
+      return null;
+   }
+
+   var fieldInput = templateLi.find('input, textarea').first();
+   if (!fieldInput.length) {
+      return null;
+   }
+
+   specificSoftwareHiddenInput = fieldInput;
+   if (fieldInput.attr('type') !== 'hidden') {
+      fieldInput.attr('type', 'hidden');
+   }
+   fieldInput.val('');
+
+   return specificSoftwareHiddenInput;
+}
+
 function initializeSpecificSoftwareField() {
-   var specificSoftwareField = jQuery('#specific-software-field');
-   if (specificSoftwareField.length > 0) {
-      // Add CSS to hide the field by default
-      specificSoftwareField.css('display', 'none');
-      specificSoftwareField.find('input, textarea').prop('disabled', true).val('');
-      console.log('Initialized specific software field as hidden');
-      
-      // Then check if it should be shown based on current selections
-      toggleSpecificSoftwareField();
+   var templateLi = jQuery('#specific-software-field');
+   if (!templateLi.length || templateLi.data('specific-software-ready')) {
+      return;
+   }
+
+   var hiddenInput = ensureSpecificSoftwareHiddenInput();
+   if (!hiddenInput) {
+      return;
+   }
+
+   templateLi.hide();
+   templateLi.data('specific-software-ready', true);
+}
+
+function createSpecificSoftwareField(checkbox) {
+   var templateLi = jQuery('#specific-software-field');
+   var hiddenInput = ensureSpecificSoftwareHiddenInput();
+
+   if (!templateLi.length || !hiddenInput) {
+      return null;
+   }
+
+   var baseId = hiddenInput.attr('id') || hiddenInput.attr('name') || 'DigitalandScreenTechnologiesSpecificSoftware';
+   var softwareId = checkbox.attr('id');
+   var softwareLabel = getSoftwareLabelFromCheckbox(checkbox) || 'Selected software';
+   var maxLength = hiddenInput.attr('maxlength') || 500;
+   var placeholder = hiddenInput.attr('placeholder');
+   var inputClass = hiddenInput.attr('class') || '';
+   var ariaBase = hiddenInput.attr('aria-label') || 'Specific software details';
+
+   var fieldId = baseId + '_' + softwareId;
+   var fieldPrompt = 'Please describe your use of ' + softwareLabel;
+
+   var newField = jQuery('<li class="specific-software-field-instance clear" data-software-id="' + softwareId + '"></li>');
+   var label = jQuery('<label></label>').attr('for', fieldId).text(fieldPrompt);
+   var input = jQuery('<input type="text" />')
+      .attr({
+         id: fieldId,
+         name: fieldId,
+         maxlength: maxLength,
+         'data-software-id': softwareId,
+         'data-software-label': softwareLabel,
+         'aria-label': ariaBase + ' for ' + softwareLabel
+      })
+      .addClass(inputClass);
+
+   if (placeholder) {
+      input.attr('placeholder', placeholder);
+   }
+
+   input.on('input change blur', updateSpecificSoftwareHiddenInput);
+
+   newField.append(label);
+   newField.append(input);
+
+   return newField;
+}
+
+function updateSpecificSoftwareHiddenInput() {
+   var hiddenInput = ensureSpecificSoftwareHiddenInput();
+   if (!hiddenInput) {
+      return;
+   }
+
+   var segments = [];
+
+   jQuery('.specific-software-field-instance').each(function() {
+      var fieldInput = jQuery(this).find('input, textarea').first();
+      if (!fieldInput.length) {
+         return;
+      }
+
+      var value = jQuery.trim(fieldInput.val());
+      if (!value) {
+         return;
+      }
+
+      var softwareLabel = fieldInput.data('software-label');
+      if (softwareLabel) {
+         segments.push(softwareLabel + ': ' + value);
+      } else {
+         segments.push(value);
+      }
+   });
+
+   hiddenInput.val(segments.join('; '));
+}
+
+function getExistingSpecificSoftwareValues() {
+   var hiddenInput = ensureSpecificSoftwareHiddenInput();
+   if (!hiddenInput || !hiddenInput.length) {
+      return {};
+   }
+
+   var value = hiddenInput.val();
+   if (!value) {
+      return {};
+   }
+
+   var map = {};
+   value.split(';').forEach(function(segment) {
+      var trimmed = jQuery.trim(segment);
+      if (!trimmed) {
+         return;
+      }
+
+      var colonIndex = trimmed.indexOf(':');
+      if (colonIndex === -1) {
+         return;
+      }
+
+      var label = jQuery.trim(trimmed.slice(0, colonIndex)).toLowerCase();
+      var text = jQuery.trim(trimmed.slice(colonIndex + 1));
+
+      if (label) {
+         map[label] = text;
+      }
+   });
+
+   return map;
+}
+
+function toggleSpecificSoftwareField(changedCheckbox) {
+   initializeSpecificSoftwareField();
+
+   var hasChecked = false;
+   var newlyRenderedInputs = [];
+   var existingValues = getExistingSpecificSoftwareValues();
+
+   SPECIFIC_SOFTWARE_TRIGGER_IDS.forEach(function(selector) {
+      var checkbox = jQuery(selector);
+      if (!checkbox.length) {
+         return;
+      }
+
+      var softwareId = checkbox.attr('id');
+      var existingField = jQuery('.specific-software-field-instance[data-software-id="' + softwareId + '"]');
+
+      if (checkbox.prop('checked')) {
+         hasChecked = true;
+         if (!existingField.length) {
+            var newField = createSpecificSoftwareField(checkbox);
+            if (!newField) {
+               return;
+            }
+
+            var parentLi = checkbox.closest('li');
+            if (parentLi.length) {
+               newField.insertAfter(parentLi);
+            } else {
+               var templateLi = jQuery('#specific-software-field');
+               if (templateLi.length) {
+                  templateLi.after(newField);
+               } else {
+                  checkbox.after(newField);
+               }
+            }
+
+            var inputField = newField.find('input').first();
+            if (inputField.length) {
+               var labelKey = (inputField.data('software-label') || '').toString().toLowerCase();
+               if (labelKey && existingValues.hasOwnProperty(labelKey)) {
+                  inputField.val(existingValues[labelKey]);
+               }
+               newlyRenderedInputs.push(inputField);
+            }
+         }
+      } else if (existingField.length) {
+         existingField.find('input, textarea').off('input change blur', updateSpecificSoftwareHiddenInput);
+         existingField.remove();
+      }
+   });
+
+   updateSpecificSoftwareHiddenInput();
+
+   var focusTarget = changedCheckbox && changedCheckbox.length ? changedCheckbox.attr('id') : null;
+
+   newlyRenderedInputs.forEach(function($input) {
+      if ($input && $input.length) {
+         $input.prop('disabled', false).show();
+         if (focusTarget && $input.data('software-id') === focusTarget && !$input.is(':focus')) {
+            $input.focus();
+         }
+      }
+   });
+}
+
+function toggleGenderSelfDescribeField() {
+   var $otherOption = jQuery('#inf_option_Gender_776');
+   var $otherInput = jQuery('#inf_option_Gender_opentext');
+
+   if (!$otherOption.length || !$otherInput.length) {
+      return;
+   }
+
+   if ($otherOption.prop('checked')) {
+      $otherInput.show().prop('disabled', false).attr('data-v-reqd', 'Please supply an answer');
+   } else {
+      $otherInput.hide().prop('disabled', true).removeAttr('data-v-reqd').val('');
    }
 }
 
@@ -2006,6 +2297,11 @@ function togglePronounsTextField() {
    }
 }
 
+   // Bind change handlers to gender radio buttons
+   $('input[name="inf_option_Gender"]').on('change', function() {
+      toggleGenderSelfDescribeField();
+   });
+
    // Bind change handlers to pronouns radio buttons
    $('input[name="inf_option_pronouns"]').on('change', function() {
       togglePronounsTextField();
@@ -2013,6 +2309,9 @@ function togglePronounsTextField() {
 
    // Initialize pronouns field visibility on page load
    togglePronounsTextField();
+
+   // Initialize gender self describe field visibility on page load
+   toggleGenderSelfDescribeField();
 
    // Bind change handlers to checkboxes with "Prefer not to respond" options
    $('input[value="PreferNotToSay"]').on('change', function() {
@@ -2036,19 +2335,19 @@ function togglePronounsTextField() {
 
    // Bind change handlers to specific digital technology checkboxes that trigger the software field
    $('input[id="DigitalandScreenTechnologies_ScreenReader"]').on('change', function() {
-      toggleSpecificSoftwareField();
+      toggleSpecificSoftwareField(jQuery(this));
    });
    
    $('input[id="DigitalandScreenTechnologies_ScreenMagnifier"]').on('change', function() {
-      toggleSpecificSoftwareField();
+      toggleSpecificSoftwareField(jQuery(this));
    });
    
    $('input[id="DigitalandScreenTechnologies_Dragonandother"]').on('change', function() {
-      toggleSpecificSoftwareField();
+      toggleSpecificSoftwareField(jQuery(this));
    });
    
    $('input[id="DigitalandScreenTechnologies_ReadAloudSoftware"]').on('change', function() {
-      toggleSpecificSoftwareField();
+      toggleSpecificSoftwareField(jQuery(this));
    });
 
    // Initialize the specific software field immediately
@@ -2059,7 +2358,7 @@ jQuery(document).ready(function($) {
    // Bind change handlers to the digital technology checkboxes using event delegation
    $(document).on('change', 'input[id^="DigitalandScreenTechnologies_"]', function() {
       console.log('Digital technology checkbox changed:', this.id, this.checked);
-      toggleSpecificSoftwareField();
+      toggleSpecificSoftwareField(jQuery(this));
    });
 
    // Bind change handlers to ethnicity radio buttons
@@ -2070,6 +2369,8 @@ jQuery(document).ready(function($) {
    
    // Initialize on page load
    initializeSpecificSoftwareField();
+   toggleSpecificSoftwareField();
    toggleEthnicityTextField();
    togglePronounsTextField();
+   toggleGenderSelfDescribeField();
 });

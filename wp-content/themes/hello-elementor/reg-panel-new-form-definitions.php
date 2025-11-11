@@ -166,23 +166,50 @@ function openinc_create_form_defs_v3() {
             )
          ),
 
-         array(
-            'label' => __( 'International phone number code', 'openinclusion' ),
-            'type' => 'select',
-            'name' => 'inf_field_countryphonecode',
-            'li-id' => 'licountryphonecode',
-            'li-class' => 'clear',
-            'options' => get_phoneCodes(),
-            'validation' => array(),
-         ),           
+         // array(
+         //    'label' => __( 'International phone number code', 'openinclusion' ),
+      //     array(
+      //      'label' => '',
+      //      'type'  => 'other-html',
+      //      'name'  => 'phone_label_combined',
+      //      'li-class' => 'clear',
+      //      'value' => '<label class="phone-combined-label">My phone number: <span class="mand">*</span></label>'
+      //   ),
+
+      //   array(
+      //      'label' => '', 
+      //       'label' => __( '', 'openinclusion' ),
+      //       'type' => 'select',
+      //       'name' => 'inf_field_countryphonecode',
+      //       'li-id' => 'licountryphonecode',
+      //       'li-class' => 'clear',
+      //       // 'li-class' => 'phone-field-part',
+      //       'options' => get_phoneCodes(),
+      //       'validation' => array(),
+      //    ),           
          
          array(
             'label' => __( 'My phone number:', 'openinclusion' ),
-            'type' => 'text',
-            'name' => 'inf_field_Phone2',
+            'type' => 'other-html',
+            'name' => 'phone_field_wrapper',
             'li-id' => 'liphonenumber',
             'li-class' => 'clear',
-            'maxlen' => 250,
+            'value' => <<<HTML
+            <label for="inf_field_Phone2" class="phone-combined-label">
+               <span class="text">My phone number: <span class="mand">*</span></span>
+            </label>
+            <div class="phone-field-combined-wrapper">
+               <div class="phone-country-code-wrapper">
+                  <select name="inf_field_countryphonecode" id="inf_field_countryphonecode" aria-label="Country phone code">
+                     <option value="">Select code</option>
+                  </select>
+               </div>
+               <div class="phone-number-input-wrapper">
+                  <input type="text" name="inf_field_Phone2" id="inf_field_Phone2" maxlength="250" required aria-label="Phone number" />
+               </div>
+            </div>
+HTML
+,
             'validation' => array(
                   array('reqd', __( 'Please provide your phone number', 'openinclusion' )),
                   array('len', __( 'Your mobile phone number can only be %1$d characters long', 'openinclusion' )),
@@ -1253,7 +1280,7 @@ $part2Step1Form = array(
       ),
       
       // array(
-      //    'name' => '',
+      //    'name' => 'submit_part2_step1',
       //    'type' => 'submit',
       //    'li-class' => 'submit',
       //    'value' => __('Continue to Next Step', 'openinclusion' )
@@ -1270,7 +1297,7 @@ $part2Step1Form = array(
          'name' => 'submit_part2_step1',
          'type' => 'submit',
          'li-class' => 'submit',
-         'value' => __('Save & Continue to Next Step', 'openinclusion' )
+         'value' => __('Save & Next Step', 'openinclusion' )
       ),
    )
 );
@@ -1422,6 +1449,12 @@ $part2Step2Form = array(
          )
       ),
       array(
+         'name' => 'previous_step2',
+         'type' => 'submit',
+         'li-class' => 'submit previous-button',
+         'value' => __('Previous', 'openinclusion' )
+      ),
+      array(
          'name' => 'save_continue_later_step2',
          'type' => 'submit',
          'li-class' => 'submit save-later',
@@ -1431,7 +1464,7 @@ $part2Step2Form = array(
          'name' => 'submit_part2_step2',
          'type' => 'submit',
          'li-class' => 'submit',
-         'value' => __('Save & Continue to Next Step', 'openinclusion' )
+         'value' => __('Save & Next Step', 'openinclusion' )
       ),
    )
 );
@@ -1572,6 +1605,12 @@ $part2Step3Form = array(
          )
       ),
       array(
+         'name' => 'previous_step3',
+         'type' => 'submit',
+         'li-class' => 'submit previous-button',
+         'value' => __('Previous', 'openinclusion' )
+      ),
+      array(
          'name' => 'save_continue_later_step3',
          'type' => 'submit',
          'li-class' => 'submit save-later',
@@ -1679,6 +1718,12 @@ $part2Step4Form = array(
          )
       ),
       array(
+         'name' => 'previous_step4',
+         'type' => 'submit',
+         'li-class' => 'submit previous-button',
+         'value' => __('Previous', 'openinclusion' )
+      ),
+      array(
          'name' => 'save_continue_later_step4',
          'type' => 'submit',
          'li-class' => 'submit save-later',
@@ -1727,12 +1772,12 @@ $part2Step5Form = array(
                   list-style-type: circle !important;
                }
             </style>
-            <h2>PAGE 5: JOINING THE OPEN INCLUSION INSIGHT COMMUNITY</h2>
+            <h2>PAGE 5: JOINING THE OPEN INCLUSION ONLINE COMMUNITY</h2>
             <ul class="form-intro-list" style="list-style-type: disc; margin-left: 20px;">
                <li style="margin-bottom: 15px;"><strong>Once you have read and confirmed the terms and conditions (if satisfied with them) we look forward to welcoming you into the Open Inclusion Insight Community. You will then be able to, </strong>
                   <ul class="nested-list-circle" style="margin-left: 20px; margin-top: 10px;">
-                     <li style="margin-bottom: 8px;">Be invited to participate in paid research</li>
-                     <li style="margin-bottom: 8px;">Engage in the online community discussions with others from across our community to share disability or age related experiences, barriers, creative approaches and solutions</li>
+                     <li style="margin-bottom: 8px;">Be invited to participate in paid research.</li>
+                     <li style="margin-bottom: 8px;">Engage in the online community discussions with others from across our community to share disability or age related experiences, barriers, creative approaches and solutions.</li>
                   </ul>
                </li>
              <li style="margin-bottom: 15px;"><strong>Paid research opportunities</strong> can vary from short surveys, to more in-depth research such as mystery shopping, interviews, product or service user testing, transport journey testing, interviews or focus groups. Most are conducted online. Depending on where you live, we sometimes also have in-person consumer research. Incentives are aligned to the time and effort required to complete the research.</li>
@@ -1755,9 +1800,23 @@ $part2Step5Form = array(
          'name' => 'CommunityAgreement',
          'li-class' => 'clear',
          'options' => array(
-            array('agree', __( 'I agree', 'openinclusion' ), 'CommunityAgreement[]', 'CommunityAgreement_agree')
+           array('agree', __( 'I agree to community rules', 'openinclusion' ), 'CommunityAgreement[]', 'CommunityAgreement_agree')
          ),
-         'validation' => array()
+         'validation' => array(
+            array('reqd', __( 'You must agree to proceed', 'openinclusion' )),
+         )
+      ),
+      array(
+         'name' => 'previous_step5',
+         'type' => 'submit',
+         'li-class' => 'submit previous-button',
+         'value' => __('Previous', 'openinclusion' )
+      ),
+      array(
+         'name' => 'save_continue_later_step5',
+         'type' => 'submit',
+         'li-class' => 'submit save-later',
+         'value' => __('Save & Continue Later', 'openinclusion' )
       ),
       array(
          'name' => 'submit_part2_step5',
@@ -1812,9 +1871,20 @@ HTML
          'li-class' => 'clear',
          'options' => get_confirm_methods(),
          'validation' => array(
-            array('reqd', __( 'Please select all conditions', 'openinclusion' )),
-            array('check_all_selected', __( 'Please select all conditions', 'openinclusion' )),
+            array('reqd-all', __( 'Please select all 4 statements to proceed', 'openinclusion' )),
          ),
+      ),
+      array(
+         'name' => 'previous_step6',
+         'type' => 'submit',
+         'li-class' => 'submit previous-button',
+         'value' => __('Previous', 'openinclusion' )
+      ),
+      array(
+         'name' => 'save_continue_later_step6',
+         'type' => 'submit',
+         'li-class' => 'submit save-later',
+         'value' => __('Save & Continue Later', 'openinclusion' )
       ),
       array(
          'name' => 'submit_part2_step6',
@@ -1856,7 +1926,7 @@ $part2Step7Form = array(
             <p>We prefer inviting people to our research who are Open Verified. They have completed this final step.</p>
             <p>Open Verified is a layer of additional personal verification that helps us know that you are who you say you are. This reduces the risks of research fraud and increases our confidence in the insights that we provide to our clients.</p>
             <p>To become Open Verified, you simply need to share a valid government-provided identity document or similar. We have a range of options to suit people from different backgrounds and with differing levels of documentation and access needs.</p>
-            <p>If you would like to verify your identity, please tick the box below. You will then receive an email with a link to upload your identity document or schedule an online appointment to be verified.</p>
+            <p><strong>If you would like to verify your identity</strong>, please tick the box below. You will then receive an email with a link to upload your identity document or schedule an online appointment to be verified.</p>
 HTML
          ,
          'validation' => array()
@@ -1908,8 +1978,9 @@ $part2Step8Form = array(
          'li-class' => 'clear',
          'value' => <<<HTML
             <h2>PAGE 8: CREATE YOUR COMMUNITY LOGIN</h2>
-            <p>In order to log into the community we have generated a username for you. Please create a password of your choice to log in.</p>
-            <p>Passwords need to have 8 characters minimum and have a mix of letters and numbers.</p>
+            <p>In order to log into the community we have generated a username for you.</p>
+            <p>You can create your own password or we can auto generate one for you.</p>
+            <p><strong>Password requirements:</strong> Passwords need to have a minimum of 8 characters and include a mix of letters (uppercase and lowercase), numbers, and special characters.</p>
             <p>Required questions are marked with an asterisk *</p>
 HTML
          ,
@@ -1922,7 +1993,7 @@ HTML
          'li-class' => 'clear',
          'maxlen' => 250,
          'readonly' => true,
-         'value' => '', // Will be auto-populated by JavaScript
+         'value' => '', 
          'validation' => array(
             array('reqd', __( 'Please keep a username value', 'openinclusion' )),
             array('len', __( 'Your username can only be %1$d characters long', 'openinclusion' )),
@@ -1930,52 +2001,50 @@ HTML
       ),
       array(
          'label' => __( '*Please create a password for the online Open Inclusion Community:', 'openinclusion' ),
-         'type' => 'password',
-         'name' => 'inf_field_Password',
-         'li-class' => 'clear password-field-container',
-         'maxlen' => 250,
+         'type' => 'other-html',
+         'name' => 'password_field_wrapper',
+         'li-class' => 'clear',
+                 'value' => <<<HTML
+            <label for="inf_field_Password" class="password-field-label">
+               <span class="text">*Please create a password for the online Open Inclusion Community:</span>
+            </label>
+            <p style="font-size: 14px; color: #666; margin-top: 5px; margin-bottom: 10px;">
+               You can create your own password or we can auto generate one for you.
+            </p>
+            <p style="font-size: 14px; color: #666; margin-top: 5px; margin-bottom: 10px;">
+               <strong>Password requirements:</strong> Passwords need to have a minimum of 8 characters and include a mix of letters (uppercase and lowercase), numbers, and special characters.
+            </p>
+           <div class="password-field-wrapper">
+              <input type="password" name="inf_field_Password" id="inf_field_Password" maxlength="250" required aria-label="Create a password for Open Inclusion Community" />
+              <button type="button" class="toggle-password" data-target="inf_field_Password" data-show-text="Show -- show password" data-hide-text="Hide" aria-label="Show password">Show -- show password</button>
+              <button type="button" class="generate-password" data-target="inf_field_Password" aria-label="Generate password">Generate Password</button>
+            </div>
+HTML
+         ,
          'validation' => array(
             array('reqd', __( 'Please supply your password', 'openinclusion' )),
             array('len', __( 'Your password can only be %1$d characters long', 'openinclusion' )),
          )
       ),
       array(
-         'label' => '',
+         'label' => __( '*Please Re-enter your password:', 'openinclusion' ),
          'type' => 'other-html',
-         'name' => 'password_buttons',
-         'li-class' => 'password-buttons',
+         'name' => 'password_reenter_field_wrapper',
+         'li-class' => 'clear',
          'value' => <<<HTML
-            <div class="password-field-wrapper">
-               <button type="button" class="toggle-password" data-target="inf_field_Password">Show</button>
-               <button type="button" class="generate-password" data-target="inf_field_Password">Generate</button>
+            <label for="inf_field_Password_reenter" class="password-field-label">
+               <span class="text">*Please Re-enter your password:</span>
+            </label>
+           <div class="password-field-wrapper">
+              <input type="password" name="inf_field_Password_reenter" id="inf_field_Password_reenter" maxlength="250" required aria-label="Re-enter the password you created or generated above" />
+              <button type="button" class="toggle-password" data-target="inf_field_Password_reenter" data-show-text="Show -- show password" data-hide-text="Hide" aria-label="Show password">Show -- show password</button>
             </div>
 HTML
          ,
-         'validation' => array()
-      ),
-      array(
-         'label' => __( '*Please Re-enter your password:', 'openinclusion' ),
-         'type' => 'password',
-         'name' => 'inf_field_Password_reenter',
-         'li-class' => 'clear password-field-container',
-         'maxlen' => 250,
          'validation' => array(
             array('reqd', __( 'Please re-enter your password', 'openinclusion' )),
             array('len', __( 'Your password can only be %1$d characters long', 'openinclusion' )),
          )
-      ),
-      array(
-         'label' => '',
-         'type' => 'other-html',
-         'name' => 'password_reenter_buttons',
-         'li-class' => 'password-buttons',
-         'value' => <<<HTML
-            <div class="password-field-wrapper">
-               <button type="button" class="toggle-password" data-target="inf_field_Password_reenter">Show</button>
-            </div>
-HTML
-         ,
-         'validation' => array()
       ),
       array(
          'name' => 'submit_part2_step8',
@@ -2016,12 +2085,12 @@ $part2Step9Form = array(
             <p>We look forward to working with you on paid research opportunities soon.</p>
             <p>We cannot know exactly when the next research opportunity will arise that includes respondents with your access needs and other characteristics. We hope that it will not be long.</p>
             <p>In the meantime please engage with others across our community in discussions.</p>
-            <p>On the Open Inclusion digital community space you can meet and engage with others in Open's community to:</p>
+            <p>On the Open Inclusion online community space you can meet and engage with others in Open's community to:</p>
             <ul class="form-intro-list">
-               <li><strong>Share challenges and find inclusive and innovative solutions</strong></li>
-               <li><strong>Help others experiencing challenges where you may have helpful ideas or suggestions</strong></li>
-               <li><strong>Tell us and others about things you love or frustrations you have experienced</strong></li>
-               <li><strong>Share an event coming up or describe an event you attended that others in the community may like to know about</strong></li>
+               <li><strong>Share challenges and find inclusive and innovative solutions.</strong></li>
+               <li><strong>Help others experiencing challenges where you may have helpful ideas or suggestions.</strong></li>
+               <li><strong>Tell us and others about things you love or frustrations you have experienced.</strong></li>
+               <li><strong>Share an event coming up or describe an event you attended that others in the community may like to know about.</strong></li>
             </ul>
             <p>It is a space that was designed by and for our community, and is continually evolving with your and other members' input.</p>
 HTML

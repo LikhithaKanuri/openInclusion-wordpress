@@ -27,7 +27,39 @@ input[type=date], input[type=email], input[type=number], input[type=password], i
   padding: 0;
   background: none;
   margin: 0 0 2em 0;
-  clear: left; }
+  clear: left;
+}
+
+/* Exception: phone number li should not clear left so it appears next to country code */
+#liphonenumber {
+  clear: none !important;
+}
+
+/* Clear float after phone number fields */
+#liphonenumber::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Ensure phone number li doesn't clear country code float so they appear side by side */
+#licountryphonecode + #liphonenumber {
+  clear: none !important;
+  margin-top: 0 !important;
+}
+
+/* Add label above both phone fields using the country code li */
+#licountryphonecode::before {
+  content: 'My phone number: *';
+  display: block;
+  width: 100%;
+  margin-bottom: 0.5em;
+  clear: both;
+  font-weight: normal;
+  line-height: 1.8em;
+  position: relative;
+  z-index: 1;
+}
 
 #content .contact ul li li {
   margin: 0; }
@@ -124,6 +156,12 @@ input[type=date], input[type=email], input[type=number], input[type=password], i
   width: 100%; 
 }
 
+/* Exception: phone number input should not be 100% width */
+#liphonenumber label input,
+#liphonenumber input {
+  width: 300px !important;
+}
+
 .contact select {
   background: #fff;
 }
@@ -131,53 +169,6 @@ input[type=date], input[type=email], input[type=number], input[type=password], i
 #content .contact li.submit input {
   width: auto;
   cursor: pointer; }
-
-/* Style for multiple submit buttons */
-#content .contact li.submit {
-  display: inline-block;
-  margin-right: 10px;
-}
-
-/* Container for submit buttons to control alignment */
-#content .contact ul li.submit:first-of-type {
-  float: left;
-}
-
-#content .contact ul li.submit:last-of-type {
-  float: right;
-}
-
-/* Clear float after submit buttons */
-#content .contact ul li.submit:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-#content .contact li.submit.save-later input {
-  background-color: #6c757d;
-  border-color: #6c757d;
-  color: white;
-}
-
-#content .contact li.submit.save-later input:hover {
-  background-color: #5a6268;
-  border-color: #545b62;
-}
-
-/* Ensure all text content in forms has normal font weight */
-#content .contact p,
-#content .contact li p,
-#content .contact ul li p,
-#content .contact .form-intro-list li {
-  font-weight: normal !important;
-}
-
-/* Override any strong/bold tags in form content */
-#content .contact strong,
-#content .contact b {
-  font-weight: normal !important;
-}
 
 #content .contact .clarify {
   font-size: 0.8rem; }
@@ -433,64 +424,9 @@ label div.custom::after {
 
 
 #licountryphonecode .custom {
-  width: 95% !important;
-  margin-top: 6px;
-}
-
-/* Phone number field styling - simple alignment fix */
-#licountryphonecode {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 1em;
-  width: 100%;
-  clear: both;
-}
-
-#licountryphonecode .custom {
-  width: 30% !important;
+  width: 100% !important;
   margin: 0 !important;
-  flex-shrink: 0;
-}
-
-#licountryphonecode input[type="text"] {
-  width: 70% !important;
-  margin: 0 !important;
-  flex: 1;
-}
-
-/* Additional styling for phone number layout */
-.country-code-label {
-  display: inline-block;
-  width: 30%;
-  margin-right: 10px;
-}
-
-.phone-number-label {
-  display: inline-block;
-  width: 65%;
-  margin-left: 0;
-}
-
-.phone-number-label .text {
-  margin-left: 0 !important;
-  position: static !important;
-}
-
-/* Ensure proper alignment on mobile */
-@media screen and (max-width: 768px) {
-  #licountryphonecode {
-    flex-direction: column;
-    gap: 5px;
-  }
-  
-  #licountryphonecode .custom {
-    width: 100% !important;
-  }
-  
-  #licountryphonecode label[for="inf_field_Phone2"] {
-    width: 100% !important;
-  }
+  /* margin-top: 6px; */
 }
 
 /* Account page edit button */
@@ -498,6 +434,160 @@ label div.custom::after {
   display: flex;
   justify-content: space-evenly;
 } */
+
+/* Phone number container styling - Single combined field */
+.phone-field-part {
+  margin-bottom: 0 !important;
+}
+
+/* Create a container for both phone fields */
+#licountryphonecode {
+  margin-bottom: 0 !important;
+  margin-right: 0 !important;
+  width: auto;
+  min-width: 150px;
+  max-width: 200px;
+  clear: none !important;
+  float: left !important;
+  display: inline-block;
+}
+
+/* Hide label for country code field */
+#licountryphonecode label,
+#licountryphonecode label .text {
+  display: none !important;
+}
+
+/* Style country code dropdown to look like part of combined input */
+#licountryphonecode .custom {
+  width: 100% !important;
+  margin: 0 !important;
+  display: block;
+}
+
+#licountryphonecode .custom select {
+  border-radius: 25px 0 0 25px !important;
+  border-right: none !important;
+  padding-right: 35px;
+  height: 100%;
+  width: 100%;
+}
+
+/* Position the phone number field container - float next to country code */
+#liphonenumber {
+  margin-bottom: 2em !important;
+  float: left !important;
+  width: auto !important;
+  min-width: 300px;
+  overflow: visible !important;
+  clear: none !important;
+  position: relative;
+  margin-left: 0 !important;
+  margin-top: 0 !important;
+  display: block !important;
+}
+
+/* Hide the label text since we're using ::before on country code */
+#liphonenumber label .text {
+  display: none !important;
+}
+
+/* Make label not interfere with input positioning */
+#liphonenumber label {
+  display: contents !important;
+  width: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  clear: none !important;
+  float: none !important;
+  overflow: visible !important;
+  position: relative;
+  visibility: visible !important;
+}
+
+/* CRITICAL: Make the phone number input visible and properly positioned next to country code */
+#liphonenumber label input[type="text"],
+#liphonenumber label input[type="tel"],
+#liphonenumber input[type="text"],
+#liphonenumber input[type="tel"],
+#inf_field_Phone2 {
+  border-radius: 0 25px 25px 0 !important;
+  border-left: none !important;
+  width: 300px !important;
+  min-width: 200px;
+  max-width: 400px;
+  margin: 0 !important;
+  margin-top: 0 !important;
+  padding: 8px 12px !important;
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  float: left !important;
+  clear: none !important;
+  position: relative !important;
+  z-index: 10 !important;
+  background-color: #fff !important;
+  border: 1px solid #ddd !important;
+  box-sizing: border-box !important;
+  height: 38px !important;
+  line-height: normal !important;
+  font-size: 16px !important;
+  color: #000 !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: textfield !important;
+}
+
+/* Additional override to ensure input is visible - target by ID directly */
+#inf_field_Phone2 {
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  width: 300px !important;
+  float: left !important;
+}
+
+/* Add focus states for combined appearance */
+#licountryphonecode .custom select:focus,
+#liphonenumber input:focus {
+  outline: none;
+  border-color: #2a3258;
+  box-shadow: 0 0 0 2px rgba(42, 50, 88, 0.2);
+}
+
+/* Ensure proper alignment on mobile */
+@media screen and (max-width: 768px) {
+  #licountryphonecode {
+    width: 100% !important;
+    max-width: 100%;
+    float: none !important;
+    margin-bottom: 0.5em;
+  }
+  
+  #licountryphonecode .custom {
+    width: 100% !important;
+  }
+  
+  #licountryphonecode .custom select {
+    border-radius: 25px !important;
+    border-right: 1px solid #ddd !important;
+    width: 100%;
+  }
+  
+  #liphonenumber {
+    width: 100% !important;
+    float: none !important;
+    clear: both !important;
+  }
+  
+  #liphonenumber input[type="text"],
+  #liphonenumber input[type="tel"] {
+    border-radius: 25px !important;
+    border-left: 1px solid #ddd !important;
+    width: 100% !important;
+    min-width: 100%;
+  }
+}
 
 .edit_button, .click-here {
   position: sticky;
@@ -746,4 +836,126 @@ ul.sub-list li {
 #inf_field_UserName {
   background-color: #f8f9fa;
   color: #6c757d;
+}
+
+/* Readonly password field styling */
+#inf_field_Password[readonly] {
+  background-color: #f8f9fa !important;
+  color: #000 !important;
+  cursor: default;
+}
+
+/* Password mismatch error styling */
+#password-mismatch-error {
+  color: #dc3545 !important;
+  display: block !important;
+  margin-top: 10px !important;
+  margin-bottom: 0 !important;
+  font-size: 14px;
+  clear: both;
+  width: 100%;
+}
+
+/* Phone field combined wrapper styling for registration form */
+.phone-field-combined-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 600px;
+  margin-top: 0.5em;
+}
+
+.phone-country-code-wrapper {
+  flex: 0 0 auto;
+  min-width: 150px;
+  max-width: 200px;
+  position: relative;
+  overflow: visible;
+}
+
+.phone-country-code-wrapper::after {
+  content: '';
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid #000;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.phone-country-code-wrapper select {
+  width: 100% !important;
+  padding: 8px 12px !important;
+  padding-right: 40px !important;
+  border: 1px solid #666 !important;
+  border-radius: 25px !important;
+  height: 38px !important;
+  font-size: 16px !important;
+  background-color: #666 !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  box-sizing: border-box !important;
+  position: relative;
+  z-index: 1;
+}
+
+.phone-number-input-wrapper {
+  flex: 1 1 auto;
+  min-width: 200px;
+}
+
+.phone-number-input-wrapper input {
+  width: 100% !important;
+  padding: 8px 12px !important;
+  border: 1px solid #ddd !important;
+  border-radius: 25px !important;
+  height: 38px !important;
+  font-size: 16px !important;
+  box-sizing: border-box !important;
+}
+
+.phone-combined-label {
+  display: block;
+  margin-bottom: 0.5em;
+  width: 100%;
+}
+
+.phone-combined-label .text {
+  display: block;
+  font-weight: normal;
+  line-height: 1.8em;
+}
+
+/* Responsive: stack phone components on smaller screens */
+@media screen and (max-width: 768px) {
+  .phone-field-combined-wrapper {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    max-width: 100%;
+  }
+  
+  .phone-country-code-wrapper {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .phone-country-code-wrapper select {
+    border-radius: 25px !important;
+  }
+  
+  .phone-number-input-wrapper {
+    width: 100%;
+  }
+  
+  .phone-number-input-wrapper input {
+    border-radius: 25px !important;
+  }
 }

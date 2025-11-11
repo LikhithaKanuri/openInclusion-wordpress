@@ -1,4 +1,51 @@
 <?php
+// Add after the opening <?php tag
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Add these session helper functions
+function storeFormStepData($step, $data) {
+    // Store user ID with session data to ensure it's for the current user
+    if (!isset($_SESSION['form_steps'])) {
+        $_SESSION['form_steps'] = array();
+    }
+    if (!isset($_SESSION['form_user_id'])) {
+        $_SESSION['form_user_id'] = get_current_user_id();
+    }
+    $_SESSION['form_steps'][$step] = $data;
+}
+
+function getFormStepData($step) {
+    // Check if session data belongs to current user
+    $currentUserId = get_current_user_id();
+    if (isset($_SESSION['form_user_id']) && $_SESSION['form_user_id'] != $currentUserId) {
+        // Different user - clear old session data
+        clearFormStepData();
+        return array();
+    }
+    return isset($_SESSION['form_steps'][$step]) ? $_SESSION['form_steps'][$step] : array();
+}
+
+function clearFormStepData() {
+    if (isset($_SESSION['form_steps'])) {
+        unset($_SESSION['form_steps']);
+    }
+    if (isset($_SESSION['form_user_id'])) {
+        unset($_SESSION['form_user_id']);
+    }
+}
+
+// Clear session data on logout
+add_action('wp_logout', 'clearFormStepData');
+
+// Clear session data when a new user logs in (if different from session user)
+add_action('wp_login', function($user_login, $user) {
+    if (isset($_SESSION['form_user_id']) && $_SESSION['form_user_id'] != $user->ID) {
+        clearFormStepData();
+    }
+}, 10, 2);
+
 add_action( 'wp_enqueue_scripts', 'openinclusion_script_enqueuer');
 
 function openinclusion_script_enqueuer() {
@@ -131,6 +178,42 @@ function opinc_panel_form_sc_v2($atts, $content = null) {
    $strHtml.= "<script>jQuery(document).ready(function($) { jQuery('#content').find('header').remove(); });</script>";
    // Need the javascript after the form
    // $strHtml .= '<script type="text/javascript" src="https://ly190.infusionsoft.com/app/webTracking/getTrackingCode?trackingId=3e8aae4c347ffce85759672e1959435e"></script>';
+   $phoneCodes = get_phoneCodes();
+   $phoneCodesJson = json_encode($phoneCodes);
+   $selectedCode = isset($clean['inf_field_countryphonecode']) ? htmlspecialchars($clean['inf_field_countryphonecode'], ENT_QUOTES, 'UTF-8') : '';
+   $selectedPhone = isset($clean['inf_field_Phone2']) ? htmlspecialchars($clean['inf_field_Phone2'], ENT_QUOTES, 'UTF-8') : '';
+   $strHtml .= <<<HTML
+   <script>
+   jQuery(document).ready(function($) {
+      // Populate country phone code dropdown
+      var phoneCodes = {$phoneCodesJson};
+      var select = $('#inf_field_countryphonecode');
+      
+      if (select.length && phoneCodes && phoneCodes.length > 0) {
+         $.each(phoneCodes, function(index, option) {
+            if (Array.isArray(option) && option.length >= 2) {
+               var value = option[0];
+               var label = option[1];
+               var selected = (value === '{$selectedCode}') ? ' selected="selected"' : '';
+               select.append('<option value="' + value + '"' + selected + '>' + label + '</option>');
+            }
+         });
+      }
+      
+      // Apply selected value if exists in form data
+      var storedCode = '{$selectedCode}';
+      if (storedCode) {
+         select.val(storedCode);
+      }
+      
+      // Pre-fill phone number if exists
+      var storedPhone = '{$selectedPhone}';
+      if (storedPhone) {
+         $('#inf_field_Phone2').val(storedPhone);
+      }
+   });
+   </script>
+HTML;
    return $strHtml;
 }
 
@@ -157,12 +240,27 @@ function opinc_part2_step1_form_sc($atts, $content = null) {
       wp_redirect( $redirect ); exit;
    }
 
+   // Clear session data if user hasn't started Part 2 Step 1 yet (fresh start)
+   $current_user = wp_get_current_user();
+   if($current_user) {
+      $userid = $current_user->ID;
+      $hasStartedStep1 = get_user_meta($userid, 'Part2Step1Completed', true);
+      // If they haven't completed step 1 yet and there's no POST data, clear old session
+      if(empty($hasStartedStep1) && !isset($_POST['submit_part2_step1']) && !isset($_POST['save_continue_later']) && !isset($_POST['previous_step1'])) {
+         clearFormStepData();
+      }
+   }
+   
    // Pull in stored values
    $arrErrs = getFormErrors();
    $clean = getClean();
-   
+
+   $sessionData = getFormStepData('step1');
+    if (!empty($sessionData)) {
+        $clean = $sessionData;
+    } 
    // If no form data, populate with existing user data
-   if (empty($clean) || !isset($clean['submitted'])) {
+   else if (empty($clean) || !isset($clean['submitted'])) {
       $current_user = wp_get_current_user();
       if($current_user) {
          $userid = $current_user->ID;
@@ -184,6 +282,14 @@ function opinc_part2_step1_form_sc($atts, $content = null) {
                $clean['RelationShip'] = array($relationship_data);
             }
          }
+         // Load relationship "Other" text field and ensure checkbox is checked
+         if(isset($user_info['Relationship Other Text'][0]) && !empty($user_info['Relationship Other Text'][0])) {
+            $clean['RelationShipOtherPleaseSpecify_OpenText'] = $user_info['Relationship Other Text'][0];
+            if(!isset($clean['RelationShip'])) $clean['RelationShip'] = array();
+            if(!in_array('OtherPleaseSpecify', $clean['RelationShip'])) {
+               $clean['RelationShip'][] = 'OtherPleaseSpecify';
+            }
+         }
       }
    }
    
@@ -191,7 +297,34 @@ function opinc_part2_step1_form_sc($atts, $content = null) {
    
    // Call the function to print out the form and return
    $strHtml = printFormNew($part2Step1Form, $clean, $arrErrs );
-   $strHtml.= "<script>jQuery(document).ready(function($) { jQuery('#content').find('header').remove(); });</script>";
+   
+   // Get saved region value for JavaScript
+   $savedRegion = isset($clean['inf_field_region']) ? htmlspecialchars($clean['inf_field_region'], ENT_QUOTES, 'UTF-8') : '';
+   
+   $strHtml.= "<script>
+   jQuery(document).ready(function($) { 
+      jQuery('#content').find('header').remove();
+      
+      // Auto-show text fields that have values when page loads
+      $('fieldset[data-type=\"chkbox\"] input[type=\"text\"]').each(function() {
+         var textField = $(this);
+         var textValue = textField.val();
+         
+         // If the text field has a value, show it
+         if (textValue && textValue.length > 0) {
+            textField.show();
+         }
+      });
+      
+      // Restore previously selected region after dropdown is populated
+      var savedRegion = '{$savedRegion}';
+      if (savedRegion) {
+         setTimeout(function() {
+            $('#inf_field_region').val(savedRegion);
+         }, 200);
+      }
+   });
+   </script>";
    
    return $strHtml;
 }
@@ -212,11 +345,15 @@ function opinc_part2_step2_form_sc($atts, $content = null) {
       wp_redirect($redirect); exit;
    }
 
+   // Don't clear session data - let it persist across navigation
+   
    $arrErrs = getFormErrors();
    $clean = getClean();
 
-   // Default to existing meta if not coming from a POST
-   if (empty($clean) || !isset($clean['submitted'])) {
+   $sessionData = getFormStepData('step2');
+    if (!empty($sessionData)) {
+        $clean = $sessionData;
+    } else if (empty($clean) || !isset($clean['submitted'])) {
       $current_user = wp_get_current_user();
       if($current_user) {
          $userid = $current_user->ID;
@@ -228,12 +365,70 @@ function opinc_part2_step2_form_sc($atts, $content = null) {
                $clean[$fieldKey] = strpos($val,'|') !== false ? explode('|', $val) : array($val);
             }
          }
+         // Load "Other" text fields and ensure corresponding checkboxes are checked
+         if(isset($user_info['Sensory Needs Open Text'][0]) && !empty($user_info['Sensory Needs Open Text'][0])) {
+            $clean['SensoryNeedsOtherPleaseSpecify_OpenText'] = $user_info['Sensory Needs Open Text'][0];
+            if(!isset($clean['SensoryNeeds'])) $clean['SensoryNeeds'] = array();
+            if(!in_array('OtherPleaseSpecify', $clean['SensoryNeeds'])) {
+               $clean['SensoryNeeds'][] = 'OtherPleaseSpecify';
+            }
+         }
+         if(isset($user_info['Physical Needs Open Text'][0]) && !empty($user_info['Physical Needs Open Text'][0])) {
+            $clean['PhysicalNeedsOtherPleaseSpecify_OpenText'] = $user_info['Physical Needs Open Text'][0];
+            if(!isset($clean['PhysicalNeeds'])) $clean['PhysicalNeeds'] = array();
+            if(!in_array('OtherPleaseSpecify', $clean['PhysicalNeeds'])) {
+               $clean['PhysicalNeeds'][] = 'OtherPleaseSpecify';
+            }
+         }
+         if(isset($user_info['Mental Health Open Text'][0]) && !empty($user_info['Mental Health Open Text'][0])) {
+            $clean['CognitiveAndMentalhealthNeedsOtherMentalHealth_OpenText'] = $user_info['Mental Health Open Text'][0];
+            if(!isset($clean['CognitiveAndMentalhealthNeeds'])) $clean['CognitiveAndMentalhealthNeeds'] = array();
+            if(!in_array('OtherMentalHealth', $clean['CognitiveAndMentalhealthNeeds'])) {
+               $clean['CognitiveAndMentalhealthNeeds'][] = 'OtherMentalHealth';
+            }
+         }
+         if(isset($user_info['Communication Needs Open Text'][0]) && !empty($user_info['Communication Needs Open Text'][0])) {
+            $clean['CommunicationNeedsOtherPleaseSpecify_OpenText'] = $user_info['Communication Needs Open Text'][0];
+            if(!isset($clean['CommunicationNeeds'])) $clean['CommunicationNeeds'] = array();
+            if(!in_array('OtherPleaseSpecify', $clean['CommunicationNeeds'])) {
+               $clean['CommunicationNeeds'][] = 'OtherPleaseSpecify';
+            }
+         }
+         if(isset($user_info['Chronic Health Open Text'][0]) && !empty($user_info['Chronic Health Open Text'][0])) {
+            $clean['ChronichealthNeedsOtherLongTermCondition_OpenText'] = $user_info['Chronic Health Open Text'][0];
+            if(!isset($clean['ChronichealthNeeds'])) $clean['ChronichealthNeeds'] = array();
+            if(!in_array('OtherLongTermCondition', $clean['ChronichealthNeeds'])) {
+               $clean['ChronichealthNeeds'][] = 'OtherLongTermCondition';
+            }
+         }
+         if(isset($user_info['Other Needs Open Text'][0]) && !empty($user_info['Other Needs Open Text'][0])) {
+            $clean['OtherNeedsOtherPleaseSpecify_OpenText'] = $user_info['Other Needs Open Text'][0];
+            if(!isset($clean['OtherNeeds'])) $clean['OtherNeeds'] = array();
+            if(!in_array('OtherPleaseSpecify', $clean['OtherNeeds'])) {
+               $clean['OtherNeeds'][] = 'OtherPleaseSpecify';
+            }
+         }
       }
    }
 
    global $part2Step2Form;
    $strHtml = printFormNew($part2Step2Form, $clean, $arrErrs );
-   $strHtml.= "<script>jQuery(document).ready(function($) { jQuery('#content').find('header').remove(); });</script>";
+   $strHtml.= "<script>
+   jQuery(document).ready(function($) { 
+      jQuery('#content').find('header').remove();
+      
+      // Auto-show text fields that have values when page loads
+      $('fieldset[data-type=\"chkbox\"] input[type=\"text\"]').each(function() {
+         var textField = $(this);
+         var textValue = textField.val();
+         
+         // If the text field has a value, show it
+         if (textValue && textValue.length > 0) {
+            textField.show();
+         }
+      });
+   });
+   </script>";
    return $strHtml;
 }
 add_shortcode("opinc-part2-step2", "opinc_part2_step2_form_sc");
@@ -245,17 +440,22 @@ function opinc_part2_step3_form_sc($atts, $content = null) {
 
    if (!is_user_logged_in()) {
       if($_SERVER['HTTP_HOST'] == 'localhost') {
-         $redirect = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/login';
+         $redirect = "http://" . $_SERVER['HTTP_HOST'].'openinclusion/login';
       } else {
          $redirect = "https://" . $_SERVER['HTTP_HOST']. "/login";
       }
       wp_redirect($redirect); exit;
    }
 
+   // Don't clear session data - let it persist across navigation
+   // Only clear when explicitly starting over or validation passes
+   
    $arrErrs = getFormErrors();
    $clean = getClean();
-
-   if (empty($clean) || !isset($clean['submitted'])) {
+    $sessionData = getFormStepData('step3');
+    if (!empty($sessionData)) {
+        $clean = $sessionData;
+    } else if (empty($clean) || !isset($clean['submitted'])) {
       $current_user = wp_get_current_user();
       if($current_user) {
          $userid = $current_user->ID;
@@ -275,21 +475,73 @@ function opinc_part2_step3_form_sc($atts, $content = null) {
                $clean[$fieldKey] = strpos($val,'|') !== false ? explode('|', $val) : array($val);
             }
          }
-         if(isset($user_info['DigitalandScreenTechnologiesSpecificSoftware'][0])) {
-            $clean['DigitalandScreenTechnologiesSpecificSoftware'] = $user_info['DigitalandScreenTechnologiesSpecificSoftware'][0];
+         if(isset($user_info['Digital and Screen Technologies Specific Software'][0])) {
+            $clean['DigitalandScreenTechnologiesSpecificSoftware'] = $user_info['Digital and Screen Technologies Specific Software'][0];
          }
-         if(isset($user_info['inf_field_referred'][0])) {
-            $clean['inf_field_referred'] = $user_info['inf_field_referred'][0];
+         // Load "Other" text fields for Step 3 and ensure corresponding checkboxes are checked
+         if(isset($user_info['Digital Technologies Open Text'][0]) && !empty($user_info['Digital Technologies Open Text'][0])) {
+            $clean['DigitalandScreenTechnologiesOtherPleaseSpecify_OpenText'] = $user_info['Digital Technologies Open Text'][0];
+            if(!isset($clean['DigitalandScreenTechnologies'])) $clean['DigitalandScreenTechnologies'] = array();
+            if(!in_array('OtherPleaseSpecify', $clean['DigitalandScreenTechnologies'])) {
+               $clean['DigitalandScreenTechnologies'][] = 'OtherPleaseSpecify';
+            }
          }
-         if(isset($user_info['inf_field_referred_name'][0])) {
-            $clean['inf_field_referred_name'] = $user_info['inf_field_referred_name'][0];
+         if(isset($user_info['Print Media Open Text'][0]) && !empty($user_info['Print Media Open Text'][0])) {
+            $clean['PrintMediaOtherPleaseSpecify_OpenText'] = $user_info['Print Media Open Text'][0];
+            if(!isset($clean['PrintMedia'])) $clean['PrintMedia'] = array();
+            if(!in_array('OtherPleaseSpecify', $clean['PrintMedia'])) {
+               $clean['PrintMedia'][] = 'OtherPleaseSpecify';
+            }
+         }
+         if(isset($user_info['Movement Aids Open Text'][0]) && !empty($user_info['Movement Aids Open Text'][0])) {
+            $clean['MovementCanesandServiceAnimalsOtherNavigationalMobilityAid_OpenText'] = $user_info['Movement Aids Open Text'][0];
+            if(!isset($clean['MovementCanesandServiceAnimals'])) $clean['MovementCanesandServiceAnimals'] = array();
+            if(!in_array('OtherNavigationalMobilityAid', $clean['MovementCanesandServiceAnimals'])) {
+               $clean['MovementCanesandServiceAnimals'][] = 'OtherNavigationalMobilityAid';
+            }
+         }
+         if(isset($user_info['Communication Preferences Open Text'][0]) && !empty($user_info['Communication Preferences Open Text'][0])) {
+            $clean['CommunicationPreferencesOtherPleaseSpecify_OpenText'] = $user_info['Communication Preferences Open Text'][0];
+            if(!isset($clean['CommunicationPreferences'])) $clean['CommunicationPreferences'] = array();
+            if(!in_array('OtherPleaseSpecify', $clean['CommunicationPreferences'])) {
+               $clean['CommunicationPreferences'][] = 'OtherPleaseSpecify';
+            }
+         }
+         if(isset($user_info['Other Technologies Open Text'][0]) && !empty($user_info['Other Technologies Open Text'][0])) {
+            $clean['OtherTechnologiesOtherPleaseSpecify_OpenText'] = $user_info['Other Technologies Open Text'][0];
+            if(!isset($clean['OtherTechnologies'])) $clean['OtherTechnologies'] = array();
+            if(!in_array('OtherPleaseSpecify', $clean['OtherTechnologies'])) {
+               $clean['OtherTechnologies'][] = 'OtherPleaseSpecify';
+            }
+         }
+         // Load referred fields
+         if(isset($user_info['Referred'][0])) {
+            $clean['inf_field_referred'] = $user_info['Referred'][0];
+         }
+         if(isset($user_info['Referred By'][0])) {
+            $clean['inf_field_referred_name'] = $user_info['Referred By'][0];
          }
       }
    }
 
    global $part2Step3Form;
    $strHtml = printFormNew($part2Step3Form, $clean, $arrErrs );
-   $strHtml.= "<script>jQuery(document).ready(function($) { jQuery('#content').find('header').remove(); });</script>";
+   $strHtml.= "<script>
+   jQuery(document).ready(function($) { 
+      jQuery('#content').find('header').remove();
+      
+      // Auto-show text fields that have values when page loads
+      $('fieldset[data-type=\"chkbox\"] input[type=\"text\"]').each(function() {
+         var textField = $(this);
+         var textValue = textField.val();
+         
+         // If the text field has a value, show it
+         if (textValue && textValue.length > 0) {
+            textField.show();
+         }
+      });
+   });
+   </script>";
    return $strHtml;
 }
 add_shortcode("opinc-part2-step3", "opinc_part2_step3_form_sc");
@@ -308,10 +560,15 @@ function opinc_part2_step4_form_sc($atts, $content = null) {
       wp_redirect($redirect); exit;
    }
 
+   // Don't clear session data - let it persist across navigation
+   
    $arrErrs = getFormErrors();
    $clean = getClean();
 
-   if (empty($clean) || !isset($clean['submitted'])) {
+   $sessionData = getFormStepData('step4');
+   if (!empty($sessionData)) {
+        $clean = $sessionData;
+    } else if (empty($clean) || !isset($clean['submitted'])) {
       $current_user = wp_get_current_user();
       if($current_user) {
          $userid = $current_user->ID;
@@ -325,6 +582,16 @@ function opinc_part2_step4_form_sc($atts, $content = null) {
          }
          if(isset($user_info['inf_option_pronouns'][0])) $clean['inf_option_pronouns'] = $user_info['inf_option_pronouns'][0];
                   if(isset($user_info['pronouns_other_text'][0])) $clean['inf_option_pronouns_other_please_specify_OpenText'] = $user_info['pronouns_other_text'][0];
+                           // Load gender open text field if exists
+         if(isset($user_info['Gender OpenText'][0])) {
+            $clean['inf_option_Gender_776_OpenText'] = $user_info['Gender OpenText'][0];
+         } elseif(isset($user_info['inf_option_Gender_opentext'][0])) {
+            $clean['inf_option_Gender_776_OpenText'] = $user_info['inf_option_Gender_opentext'][0];
+         }
+         // Load sexual orientation open text field if exists
+         if(isset($user_info['Sexual Orientations Open Text'][0])) {
+            $clean['SexualOrientationsOtherPleaseSpecify_OpenText'] = $user_info['Sexual Orientations Open Text'][0];
+         }
                   if(isset($user_info['identify_terms'][0])) $clean['inf_field_identify_terms'] = $user_info['identify_terms'][0];
          if(isset($user_info['identify_terms_text'][0])) $clean['inf_field_identify_terms_text'] = $user_info['identify_terms_text'][0];
          // if(isset($user_info['inf_field_identify_terms'][0])) $clean['inf_field_identify_terms'] = $user_info['inf_field_identify_terms'][0];
@@ -352,10 +619,15 @@ function opinc_part2_step5_form_sc($atts, $content = null) {
       wp_redirect($redirect); exit;
    }
 
+   // Don't clear session data - let it persist across navigation
+   
    $arrErrs = getFormErrors();
    $clean = getClean();
 
-   if (empty($clean) || !isset($clean['submitted'])) {
+   $sessionData = getFormStepData('step5');
+   if (!empty($sessionData)) {
+        $clean = $sessionData;
+    } else if (empty($clean) || !isset($clean['submitted'])) {
       $current_user = wp_get_current_user();
       if($current_user) {
          $userid = $current_user->ID;
@@ -389,10 +661,15 @@ function opinc_part2_step6_form_sc($atts, $content = null) {
       wp_redirect($redirect); exit;
    }
 
+   // Don't clear session data - let it persist across navigation
+   
    $arrErrs = getFormErrors();
    $clean = getClean();
 
-   if (empty($clean) || !isset($clean['submitted'])) {
+   $sessionData = getFormStepData('step6');
+   if(!empty($sessionData)) {
+        $clean = $sessionData;
+    } else if (empty($clean) || !isset($clean['submitted'])) {
       $current_user = wp_get_current_user();
       if($current_user) {
          $userid = $current_user->ID;
@@ -407,7 +684,27 @@ function opinc_part2_step6_form_sc($atts, $content = null) {
 
    global $part2Step6Form;
    $strHtml = printFormNew($part2Step6Form, $clean, $arrErrs );
-   $strHtml.= "<script>jQuery(document).ready(function($) { jQuery('#content').find('header').remove(); });</script>";
+   $strHtml.= "<script>
+   jQuery(document).ready(function($) { 
+      jQuery('#content').find('header').remove();
+      
+      // Add visual feedback for checkbox validation
+      var totalCheckboxes = $('#PleaseConfirm-legend').parent().find('input[type=\"checkbox\"]').length;
+      
+      $('#PleaseConfirm-legend').parent().find('input[type=\"checkbox\"]').on('change', function() {
+         var checkedCount = $('#PleaseConfirm-legend').parent().find('input[type=\"checkbox\"]:checked').length;
+         var errorDiv = $('#PleaseConfirm-errors');
+         
+         if (checkedCount < totalCheckboxes) {
+            errorDiv.html('Please confirm all ' + totalCheckboxes + ' statements (' + checkedCount + '/' + totalCheckboxes + ' selected)').show();
+            errorDiv.attr('role', 'alert');
+         } else {
+            errorDiv.html('').hide();
+            errorDiv.removeAttr('role');
+         }
+      });
+   });
+   </script>";
    return $strHtml;
 }
 add_shortcode("opinc-part2-step6", "opinc_part2_step6_form_sc");
@@ -416,16 +713,29 @@ add_shortcode("opinc-part2-step6", "opinc_part2_step6_form_sc");
 function redirectAfterPart2Step6(){
    ob_clean();
    ob_start();
+   if ( isset($_POST['previous_step6']) ) {
+       storeFormStepData('step6', $_POST);
+       if($_SERVER['HTTP_HOST'] == 'localhost') {
+           $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/part2-step5/';
+       } else {
+           $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/part2-step5/";
+       }
+       wp_redirect($redirectUrl);
+       exit;
+   }
    if(isset($_POST['submit_part2_step6']) || isset($_POST['save_continue_later_step6'])) {
       $current_user = wp_get_current_user();
+      storeFormStepData('step6', $_POST);
+
       if($current_user) {
          $userid = $current_user->ID;
-         // Validate all confirmations are selected
+         // Validate all confirmations are selected - all 4 checkboxes must be checked
+        // This validation applies to both "Save & Next Step" and "Save & Continue Later"
          $errs = array();
-         if(!isset($_POST['PleaseConfirm']) || count($_POST['PleaseConfirm']) < 3) {
-            $errs[] = array('PleaseConfirm', __('Please confirm all statements', 'openinclusion'));
+         if(!isset($_POST['PleaseConfirm']) || !is_array($_POST['PleaseConfirm']) || count($_POST['PleaseConfirm']) < 4) {
+            $errs[] = array('PleaseConfirm', __('Please confirm all 4 statements to proceed', 'openinclusion'));
          }
-         if(count($errs) > 0 && isset($_POST['submit_part2_step6'])) { 
+         if(count($errs) > 0) { 
             setFormErrors($errs); 
             return; 
          }
@@ -488,10 +798,15 @@ function opinc_part2_step7_form_sc($atts, $content = null) {
       wp_redirect($redirect); exit;
    }
 
+   // Don't clear session data - let it persist across navigation
+   
    $arrErrs = getFormErrors();
    $clean = getClean();
 
-   if (empty($clean) || !isset($clean['submitted'])) {
+   $sessionData = getFormStepData('step7');
+   if(!empty($sessionData)) {
+        $clean = $sessionData;
+    } else if (empty($clean) || !isset($clean['submitted'])) {
       $current_user = wp_get_current_user();
       if($current_user) {
          $userid = $current_user->ID;
@@ -514,6 +829,16 @@ add_shortcode("opinc-part2-step7", "opinc_part2_step7_form_sc");
 function redirectAfterPart2Step7(){
    ob_clean();
    ob_start();
+   if ( isset($_POST['previous_step7']) ) {
+       storeFormStepData('step7', $_POST);
+       if($_SERVER['HTTP_HOST'] == 'localhost') {
+           $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/part2-step6/';
+       } else {
+           $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/part2-step6/";
+       }
+       wp_redirect($redirectUrl);
+       exit;
+   }
    if(isset($_POST['submit_part2_step7']) || isset($_POST['save_continue_later_step7'])) {
       $current_user = wp_get_current_user();
       if($current_user) {
@@ -639,10 +964,15 @@ function opinc_part2_step8_form_sc($atts, $content = null) {
       wp_redirect($redirect); exit;
    }
 
+   // Don't clear session data - let it persist across navigation
+   
    $arrErrs = getFormErrors();
    $clean = getClean();
 
-   if (empty($clean) || !isset($clean['submitted'])) {
+   $sessionData = getFormStepData('step8');
+   if(!empty($sessionData)) {
+        $clean = $sessionData;
+    } else if (empty($clean) || !isset($clean['submitted'])) {
       $current_user = wp_get_current_user();
       if($current_user) {
          $userid = $current_user->ID;
@@ -698,26 +1028,81 @@ function opinc_part2_step8_form_sc($atts, $content = null) {
          var target = $(this).data('target');
          var input = $('#' + target);
          var button = $(this);
-         
+         var showText = button.data('show-text') || 'Show -- show password';
+         var hideText = button.data('hide-text') || 'Hide';
+
          if (input.attr('type') === 'password') {
             input.attr('type', 'text');
-            button.text('Hide');
+            button.text(hideText);
+            button.attr('aria-label', 'Hide password');
          } else {
             input.attr('type', 'password');
-            button.text('Show');
+            button.text(showText);
+            button.attr('aria-label', 'Show password');
+         }
+      });
+
+      // Generate new password (regenerate)
+      $(document).on('click', '.generate-password', function() {
+         var target = $(this).data('target');
+         var input = $('#' + target);
+         var newPassword = generatePassword();
+         var toggleButton = $('.toggle-password[data-target="' + target + '"]');
+         var hideText = toggleButton.data('hide-text') || 'Hide';
+
+         input.val(newPassword).attr('type', 'text');
+
+         if (toggleButton.length) {
+            toggleButton.text(hideText).attr('aria-label', 'Hide password');
+         }
+
+         // If the second field has a value, clear it so user re-enters the new password
+         if (target === 'inf_field_Password') {
+            $('#inf_field_Password_reenter').val('');
+            $('#password-mismatch-error').remove();
+            $('#inf_field_Password_reenter').css('border-color', '');
+         }
+      });
+            // Validate password match on blur of second field
+      $('#inf_field_Password_reenter').on('blur', function() {
+         var firstPassword = $('#inf_field_Password').val();
+         var secondPassword = $(this).val();
+         
+         if (secondPassword && secondPassword !== firstPassword) {
+            $(this).css('border-color', '#dc3545');
+            if (!$('#password-mismatch-error').length) {
+               // $(this).after('<span id="password-mismatch-error" class="errors" style="color: #dc3545; display: block; margin-top: 5px;">Passwords do not match. Please enter the same password shown above.</span>');
+                              wrapper.after('<span id="password-mismatch-error" class="errors" style="color: #dc3545; display: block; margin-top: 5px;">Passwords do not match. Please enter the same password shown above.</span>');
+            }
+         } else if (secondPassword && secondPassword === firstPassword) {
+            $(this).css('border-color', '#28a745');
+            $('#password-mismatch-error').remove();
          }
       });
       
       // Generate password
-      $(document).on('click', '.generate-password', function() {
-         var target = $(this).data('target');
-         var input = $('#' + target);
-         var password = generatePassword();
-         input.val(password);
+      // $(document).on('click', '.generate-password', function() {
+      //    var target = $(this).data('target');
+      //    var input = $('#' + target);
+      //    var password = generatePassword();
+      //    input.val(password);
+            $('#part2-step8-form').on('submit', function(e) {
+         var firstPassword = $('#inf_field_Password').val();
+         var secondPassword = $('#inf_field_Password_reenter').val();
+         var wrapper = $('#inf_field_Password_reenter').closest('.password-field-wrapper');
          
          // Also update the re-enter field if it's empty
-         if (target === 'inf_field_Password' && $('#inf_field_Password_reenter').val() === '') {
-            $('#inf_field_Password_reenter').val(password);
+         // if (target === 'inf_field_Password' && $('#inf_field_Password_reenter').val() === '') {
+         //    $('#inf_field_Password_reenter').val(password);
+                  if (!secondPassword || secondPassword !== firstPassword) {
+            e.preventDefault();
+            $('#inf_field_Password_reenter').css('border-color', '#dc3545');
+            if (!$('#password-mismatch-error').length) {
+               // $('#inf_field_Password_reenter').after('<span id="password-mismatch-error" class="errors" style="color: #dc3545; display: block; margin-top: 5px;">Passwords do not match. Please enter the same password shown above.</span>');
+                              wrapper.after('<span id="password-mismatch-error" class="errors" style="color: #dc3545; display: block; margin-top: 5px;">Passwords do not match. Please enter the same password shown above.</span>');
+            }
+            $('#inf_field_Password_reenter').focus();
+            return false;
          }
       });
       
@@ -735,12 +1120,15 @@ add_shortcode("opinc-part2-step8", "opinc_part2_step8_form_sc");
 function redirectAfterPart2Step8(){
    ob_clean();
    ob_start();
-   if(isset($_POST['submit_part2_step8']) || isset($_POST['save_continue_later_step8'])) {
+   if(isset($_POST['submit_part2_step8']) || isset($_POST['save_continue_later_step8']) || isset($_POST['previous_step8'])) {
       $current_user = wp_get_current_user();
       if($current_user) {
          $userid = $current_user->ID;
-         // Validate passwords match (server-side)
+         // Validate passwords match and username (server-side)
          $errs = array();
+         if(!isset($_POST['inf_field_UserName']) || empty(trim($_POST['inf_field_UserName']))) {
+            $errs[] = array('inf_field_UserName', __('Username is required', 'openinclusion'));
+         }
          if(!isset($_POST['inf_field_Password']) || strlen($_POST['inf_field_Password']) < 8) {
             $errs[] = array('inf_field_Password', __('Password must be at least 8 characters', 'openinclusion'));
          }
@@ -754,12 +1142,49 @@ function redirectAfterPart2Step8(){
 
          // Update WP user account (only if not "save continue later")
          if(!isset($_POST['save_continue_later_step8'])) {
+            // Note: user_login (username) cannot be changed in WordPress after user creation
+            // We update the password and store the desired username as display name and meta
             $userData = array(
                'ID' => $userid,
                'user_pass' => $_POST['inf_field_Password'],
-               'user_login' => $_POST['inf_field_UserName']
+               'display_name' => $_POST['inf_field_UserName'],  // Set as display name
+               'nickname' => $_POST['inf_field_UserName']       // Set as nickname
             );
             wp_update_user($userData);
+            
+            // Store custom username in user meta for reference
+            update_user_meta($userid, 'custom_username', $_POST['inf_field_UserName']);
+            
+            // IMPORTANT: Update the actual WordPress username in the database
+            // This is the only way to change username after user creation
+            global $wpdb;
+            $username = sanitize_user($_POST['inf_field_UserName'], true);
+            
+            // Check if the new username is available
+            $username_exists = username_exists($username);
+            if(!$username_exists || $username_exists == $userid) {
+               // Username is available or belongs to this user
+               $wpdb->update(
+                  $wpdb->users,
+                  array('user_login' => $username),
+                  array('ID' => $userid),
+                  array('%s'),
+                  array('%d')
+               );
+               
+               // Clear user cache to reflect changes
+               clean_user_cache($userid);
+               
+               error_log("Username successfully updated to: " . $username . " for user ID: " . $userid);
+            } else {
+               // Username already taken
+               error_log("Username '" . $username . "' already exists. Keeping email as username.");
+               $errs[] = array('inf_field_UserName', __('This username is already taken. Please choose a different one.', 'openinclusion'));
+               if(count($errs) > 0) {
+                  setFormErrors($errs);
+                  return;
+               }
+            }
          }
 
          // Save meta
@@ -818,6 +1243,7 @@ function redirectAfterPart2Step9(){
    ob_clean();
    ob_start();
    if(isset($_POST['submit_part2_step9'])) {
+      clearFormStepData();
          $current_user = wp_get_current_user();
       if($current_user) {
          $userid = $current_user->ID;
@@ -846,10 +1272,39 @@ function redirectAfterPart2Step9(){
          update_user_meta($userid, 'Part2Step9Completed', 'Yes');
          update_user_meta($userid, 'RegistrationComplete', 'Yes');
       }
-      // Final redirect to completion page
-      // if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/registration-complete/'; }
-      // else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/registration-complete/"; }
-      $redirectUrl = "https://openinclusion.com/login/?redirect_to=https://community.openinclusion.com/entry/signin/";
+      
+      // Final redirect to Vanilla community via jsConnect with client binding
+      $redirectUrl = "https://staging4.openinclusion.com/login/?redirect_to=https://community.openinclusion.com/entry/signin/";
+
+      // Provide signed request parameters so Vanilla trusts the redirect.
+      if (!empty($vanillaSecret)) {
+         $timestamp = time();
+         $nonce = wp_generate_password(32, false, false);
+         $userIp = '';
+         if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            $forwardedIps = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+            $userIp = trim($forwardedIps[0]);
+         }
+         if (empty($userIp) && !empty($_SERVER['REMOTE_ADDR'])) {
+            $userIp = $_SERVER['REMOTE_ADDR'];
+         }
+
+         if (!empty($userIp)) {
+            $queryArgs['v'] = 2;
+            $queryArgs['timestamp'] = $timestamp;
+            $queryArgs['nonce'] = $nonce;
+            $queryArgs['ip'] = $userIp;
+            $queryArgs['sig'] = md5($userIp . $nonce . $timestamp . $vanillaSecret);
+         } else {
+            error_log('Unable to determine user IP for jsConnect signature.');
+         }
+      } else {
+         error_log('Vanilla jsConnect secret is not configured. Redirect will not be signed.');
+      }
+
+      $redirectUrl = add_query_arg($queryArgs, $redirectUrl);
+      
+      error_log("Step 9 complete - Redirecting to: " . $redirectUrl);
       wp_redirect($redirectUrl); exit;
    }
 }
@@ -953,6 +1408,44 @@ function redirectAfterRegistration(){
 
 add_action( 'template_redirect', 'redirectAfterRegistration');
 
+function cleanupRegistrationSession() {
+    if (isset($_SESSION['registration_data'])) {
+        unset($_SESSION['registration_data']);
+    }
+}
+
+function handlePreviousStep() {
+    if (isset($_POST['previous_step2'])) {
+        wp_redirect(get_permalink(get_page_by_path('part2-step1'))); 
+        exit;
+    }
+    if (isset($_POST['previous_step3'])) {
+        wp_redirect(get_permalink(get_page_by_path('part2-step2'))); 
+        exit;
+    }
+    if (isset($_POST['previous_step4'])) {
+        wp_redirect(get_permalink(get_page_by_path('part2-step3'))); 
+        exit;
+    }
+    if (isset($_POST['previous_step5'])) {
+        wp_redirect(get_permalink(get_page_by_path('part2-step4'))); 
+        exit;
+    }
+    if (isset($_POST['previous_step6'])) {
+        wp_redirect(get_permalink(get_page_by_path('part2-step5'))); 
+        exit;
+    }
+    if (isset($_POST['previous_step7'])) {
+        wp_redirect(get_permalink(get_page_by_path('part2-step6'))); 
+        exit;
+    }
+    if (isset($_POST['previous_step8'])) {
+        wp_redirect(get_permalink(get_page_by_path('part2-step7'))); 
+        exit;
+    }
+}
+add_action('init', 'handlePreviousStep');
+
 
 /**********************************************************************************************
    Below two function prepare the registration form and meta data mapping array.
@@ -966,14 +1459,13 @@ function getUserMetaDataMapping() {
       'inf_field_countryphonecode' => 'Country Code',
       'inf_field_Phone2' => 'Contact Number',      
       'PreferToContact' => 'Prefer To Contact',
-      'PreferToContactOthers' => 'Prefer To Contact',
-      'PreferToContactOthers' => 'Prefer To Contact Other',
+      'PreferToContactOtherPleaseSpecify_OpenText' => 'Prefer To Contact Other Text',
       'inf_field_country' => 'Country',
       'inf_field_region' => 'Region',
       'inf_custom_YearBorn' => 'Year_Born',
       'inf_option_Gender' => 'Gender',
-      'inf_option_Gender_opentext' => 'Gender',
       'inf_option_Gender_opentext' => 'Gender OpenText',
+      'inf_option_Gender_776_OpenText' => 'Gender OpenText',
       'SensoryNeeds' => 'Sensory Needs',
       'PhysicalNeeds' => 'Physical Needs',
       'CognitiveAndMentalhealthNeeds' => 'Cognitive And Mental health Needs',
@@ -982,6 +1474,11 @@ function getUserMetaDataMapping() {
       'OtherNeeds' => 'Other Needs',
       'OtherTechnologies' => 'Other Technologies',
       // 'OtherNeedsOtherPleaseSpecify' => 'Other Needs',
+      'SensoryNeedsOtherPleaseSpecify_OpenText' => 'Sensory Needs Open Text',
+      'PhysicalNeedsOtherPleaseSpecify_OpenText' => 'Physical Needs Open Text',
+      'CognitiveAndMentalhealthNeedsOtherMentalHealth_OpenText' => 'Mental Health Open Text',
+      'CommunicationNeedsOtherPleaseSpecify_OpenText' => 'Communication Needs Open Text',
+      'ChronichealthNeedsOtherLongTermCondition_OpenText' => 'Chronic Health Open Text',
       'OtherNeedsOtherPleaseSpecify_OpenText' => 'Other Needs Open Text',
       'SexualOrientationsOtherPleaseSpecify_OpenText' => 'Sexual Orientations Open Text',
       'inf_field_PrimaryNeed' => 'Primary Need',
@@ -989,12 +1486,21 @@ function getUserMetaDataMapping() {
       'inf_field_TemporaryAccessNeed' => 'Temporary Access Need',
       'DigitalandScreenTechnologies' => 'Digital and Screen Technologies',
             'DigitalandScreenTechnologiesSpecificSoftware' => 'Digital and Screen Technologies Specific Software',
+      'DigitalandScreenTechnologiesOtherPleaseSpecify_OpenText' => 'Digital Technologies Open Text',
+      'PrintMedia' => 'Print Media',
+      'PrintMediaOtherPleaseSpecify_OpenText' => 'Print Media Open Text',
       'MovementCanesandServiceAnimals' => 'Movement Canes and Service Animals',
+      'MovementCanesandServiceAnimalsOtherNavigationalMobilityAid_OpenText' => 'Movement Aids Open Text',
       'CommunicationPreferences' => 'Communication Preferences',
+      'CommunicationPreferencesOtherPleaseSpecify_OpenText' => 'Communication Preferences Open Text',
       'PersonalSupportandHome' => 'PersonalSupportandHome',
       // 'OtherTechnologiesOtherPleaseSpecify' => 'Other Technologies',
       'OtherTechnologiesOtherPleaseSpecify_OpenText' => 'Other Technologies Open Text',
       // 'OtherTechnologiesOtherPleaseSpecify_OpenText' => 'Other Technologies Open Text',
+      'ResearchFormats' => 'ResearchFormats',
+      'RelationShipOtherPleaseSpecify_OpenText' => 'Relationship Other Text',
+      'inf_field_referred' => 'Referred',
+      'inf_field_referred_name' => 'Referred By',
       'inf_field_identify_terms' => 'identify_terms',
       'inf_field_identify_terms_text' => 'identify_terms_text',
       'inf_option_pronouns_other_please_specify_OpenText' => 'pronouns_other_text',
@@ -1461,7 +1967,8 @@ function redirectAfterPart2Step1(){
    ob_clean();
    ob_start();
 //    if(isset($_POST['submit_part2_step1'])) {
-   if(isset($_POST['submit_part2_step1']) || isset($_POST['save_continue_later'])) {
+   if(isset($_POST['submit_part2_step1']) || isset($_POST['save_continue_later']) || isset($_POST['previous_step1'])) {
+      storeFormStepData('step1', $_POST);
       $current_user = wp_get_current_user();
       if($current_user) {
          $userid = $current_user->ID;
@@ -1505,7 +2012,7 @@ function redirectAfterPart2Step1(){
             $errs[] = array('RelationShip', __('Please select at least one option', 'openinclusion'));
          }
          
-         // If validation fails and user clicked "Save & Continue to Next Step", show errors
+        // If validation fails and user clicked "Save & Next Step", show errors
          if(count($errs) > 0 && isset($_POST['submit_part2_step1'])) {
             setFormErrors($errs);
             return; // Stay on current step with errors
@@ -1609,7 +2116,7 @@ function redirectAfterPart2Step1(){
                exit;      
             }
          } else {
-            // Mark that user has completed Part 2 Step 1 (only for "Save & Continue to Next Step")
+           // Mark that user has completed Part 2 Step 1 (only for "Save & Next Step")
             update_user_meta( $userid, 'Part2Step1Completed', 'Yes');
             
             // Update Part 2 Step 1 data in Keap/Infusionsoft (temporarily disabled to avoid class iSDK redeclare)
@@ -1771,8 +2278,22 @@ function user_should_be_screened_out($relationshipValues) {
 function redirectAfterPart2Step2(){
    ob_clean();
    ob_start();
+
+   if ( isset($_POST['previous_step2']) ) {
+       storeFormStepData('step2', $_POST);
+       if($_SERVER['HTTP_HOST'] == 'localhost') {
+           $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/part2-step1/';
+       } else {
+           $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/part2-step1/";
+       }
+       wp_redirect($redirectUrl);
+       exit;
+   }
    if(isset($_POST['submit_part2_step2']) || isset($_POST['save_continue_later_step2'])) {
+      storeFormStepData('step2', $_POST);
+
       $current_user = wp_get_current_user();
+
       if($current_user) {
          $userid = $current_user->ID;
          
@@ -1808,7 +2329,7 @@ function redirectAfterPart2Step2(){
             }
          }
          
-         // If validation fails and user clicked "Save & Continue to Next Step", show errors
+        // If validation fails and user clicked "Save & Next Step", show errors
          if(count($errs) > 0 && isset($_POST['submit_part2_step2'])) {
             setFormErrors($errs);
             return; // Stay on current step with errors
@@ -1827,14 +2348,10 @@ function redirectAfterPart2Step2(){
             return;
          }
 
-                  // Update Keap with Step 2 data
-        //  if (function_exists('class_exists') && !class_exists('iSDK') && file_exists(__DIR__."/../../../infusion/updateMultiStepData.php")) {
+                  // Update Keap with Step 2 data (always update, including Save & Continue Later)
                  if (file_exists(__DIR__."/../../../infusion/updateMultiStepData.php")) {
             include_once (__DIR__."/../../../infusion/updateMultiStepData.php");
             $user_info = get_user_meta($userid);
-         //    $user_email = $user_info['Email'][0];
-         //    updateKeapMultiStepData('step2', $_POST, $user_email);
-         // }
                      $user_email = isset($user_info['Email'][0]) ? $user_info['Email'][0] : '';
             
             // If no email in meta, try to get from user object
@@ -1844,13 +2361,22 @@ function redirectAfterPart2Step2(){
             
             // Only proceed if we have a valid email
             if (!empty($user_email)) {
-                $result = updateKeapMultiStepData('step2', $_POST, $user_email);
-                error_log("Keap update result for step2: " . ($result ? 'SUCCESS' : 'FAILED'));
+                // Use update mode if this is a re-save (going back) or if step was previously completed
+                $isUpdate = isset($_POST['previous_step2']) || get_user_meta($userid, 'Part2Step2Completed', true) === 'Yes';
+                $result = updateKeapMultiStepData('step2', $_POST, $user_email, $isUpdate);
+                error_log("Keap update result for step2: " . ($result ? 'SUCCESS' : 'FAILED') . " (updateMode: " . ($isUpdate ? 'true' : 'false') . ")");
             } else {
                 error_log("No valid email found for step2");
             }
          }
          
+         // Handle Previous button - go back to Step 1
+         if(isset($_POST['previous_step2'])) {
+            if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/part2-step1/'; }
+            else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/part2-step1/"; }
+            wp_redirect($redirectUrl); exit;
+         }
+
          if(isset($_POST['save_continue_later_step2'])) {
              // Send continue registration email
             $nextStepUrl = "https://" . $_SERVER['HTTP_HOST'] . "/part2-step3/";
@@ -1875,8 +2401,22 @@ add_action( 'template_redirect', 'redirectAfterPart2Step2');
 function redirectAfterPart2Step3(){
    ob_clean();
    ob_start();
-   if(isset($_POST['submit_part2_step3']) || isset($_POST['save_continue_later_step3'])) {
+
+   if(isset($_POST['submit_part2_step3']) || isset($_POST['save_continue_later_step3']) || isset($_POST['previous_step3']) ) {
       $current_user = wp_get_current_user();
+      storeFormStepData('step3', $_POST);
+
+      if(isset($_POST['previous_step3'])) {
+         if($_SERVER['HTTP_HOST'] == 'localhost') {
+            $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/part2-step2/';
+         } else {
+            $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/part2-step2/";
+         }
+         wp_redirect($redirectUrl);
+         exit;
+      }
+
+   if(!isset($_POST['previous_step3'])) {
       if($current_user) {
          $userid = $current_user->ID;
          
@@ -1917,11 +2457,12 @@ function redirectAfterPart2Step3(){
             }
          }
          
-         // If validation fails and user clicked "Save & Continue to Next Step", show errors
+        // If validation fails and user clicked "Save & Next Step", show errors
          if(count($errs) > 0 && isset($_POST['submit_part2_step3'])) {
             setFormErrors($errs);
             return; // Stay on current step with errors
          }
+      }
          
          // Save user meta data with proper error handling
          try {
@@ -1947,15 +2488,20 @@ function redirectAfterPart2Step3(){
             
             // Only proceed if we have a valid email
             if (!empty($user_email)) {
-                updateKeapMultiStepData('step3', $_POST, $user_email);
+                // Use update mode if this is a re-save (going back) or if step was previously completed
+                $isUpdate = isset($_POST['previous_step3']) || get_user_meta($userid, 'Part2Step3Completed', true) === 'Yes';
+                $result = updateKeapMultiStepData('step3', $_POST, $user_email, $isUpdate);
+                error_log("Keap update result for step3: " . ($result ? 'SUCCESS' : 'FAILED') . " (updateMode: " . ($isUpdate ? 'true' : 'false') . ")");
             }
          }
             
-            // Mark completion
+            // Mark completion (only if not going back and not saving for later)
+            if(!isset($_POST['previous_step3']) && !isset($_POST['save_continue_later_step3'])) {
             update_user_meta( $userid, 'Part2Step3Completed', 'Yes');
+            }
             
-            // Only include updateUserStatus.php if we're not in "save continue later" mode and if file exists
-            if(!isset($_POST['save_continue_later_step3']) && file_exists(__DIR__."/../../../infusion/updateUserStatus.php")) {
+            // Only include updateUserStatus.php if we're not in "save continue later" or "previous" mode and if file exists
+            if(!isset($_POST['save_continue_later_step3']) && !isset($_POST['previous_step3']) && file_exists(__DIR__."/../../../infusion/updateUserStatus.php")) {
                try {
                   include_once (__DIR__."/../../../infusion/updateUserStatus.php");
                } catch (Error $e) {
@@ -1972,6 +2518,13 @@ function redirectAfterPart2Step3(){
             $errs[] = array('general', __('There was an error processing your data. Please check your selections and try again.', 'openinclusion'));
             setFormErrors($errs);
             return;
+         }
+         
+         // Handle Previous button - go back to Step 2
+         if(isset($_POST['previous_step3'])) {
+            if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/part2-step2/'; }
+            else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/part2-step2/"; }
+            wp_redirect($redirectUrl); exit;
          }
          
          if(isset($_POST['save_continue_later_step3'])) {
@@ -1997,8 +2550,20 @@ add_action( 'template_redirect', 'redirectAfterPart2Step3');
 function redirectAfterPart2Step4(){
    ob_clean();
    ob_start();
-   if(isset($_POST['submit_part2_step4']) || isset($_POST['save_continue_later_step4'])) {
+   if ( isset($_POST['previous_step4']) ) {
+       storeFormStepData('step4', $_POST);
+       if($_SERVER['HTTP_HOST'] == 'localhost') {
+           $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/part2-step3/';
+       } else {
+           $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/part2-step3/";
+       }
+       wp_redirect($redirectUrl);
+       exit;
+   }
+   if(isset($_POST['submit_part2_step4']) || isset($_POST['save_continue_later_step4']) || isset($_POST['previous_step4'])) {
       $current_user = wp_get_current_user();
+      storeFormStepData('step4', $_POST);
+
       if($current_user) {
          $userid = $current_user->ID;
          
@@ -2035,7 +2600,7 @@ function redirectAfterPart2Step4(){
             }
          }
          
-         // If validation fails and user clicked "Save & Continue to Next Step", show errors
+        // If validation fails and user clicked "Save & Next Step", show errors
          if(count($errs) > 0 && isset($_POST['submit_part2_step4'])) {
             setFormErrors($errs);
             return; // Stay on current step with errors
@@ -2061,9 +2626,20 @@ function redirectAfterPart2Step4(){
             
             // Only proceed if we have a valid email
             if (!empty($user_email)) {
-                updateKeapMultiStepData('step4', $_POST, $user_email);
+                // Use update mode if this is a re-save (going back) or if step was previously completed
+                $isUpdate = isset($_POST['previous_step4']) || get_user_meta($userid, 'Part2Step4Completed', true) === 'Yes';
+                $result = updateKeapMultiStepData('step4', $_POST, $user_email, $isUpdate);
+                error_log("Keap update result for step4: " . ($result ? 'SUCCESS' : 'FAILED') . " (updateMode: " . ($isUpdate ? 'true' : 'false') . ")");
             }
          }
+         
+         // Handle Previous button - go back to Step 3
+         if(isset($_POST['previous_step4'])) {
+            if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/part2-step3/'; }
+            else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/part2-step3/"; }
+            wp_redirect($redirectUrl); exit;
+         }
+         
          if(isset($_POST['save_continue_later_step4'])) {
              // Send continue registration email
             $nextStepUrl = "https://" . $_SERVER['HTTP_HOST'] . "/part2-step5/";
@@ -2087,8 +2663,20 @@ add_action( 'template_redirect', 'redirectAfterPart2Step4');
 function redirectAfterPart2Step5(){
    ob_clean();
    ob_start();
+   if ( isset($_POST['previous_step5']) ) {
+       storeFormStepData('step5', $_POST);
+       if($_SERVER['HTTP_HOST'] == 'localhost') {
+           $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/part2-step4/';
+       } else {
+           $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/part2-step4/";
+       }
+       wp_redirect($redirectUrl);
+       exit;
+   }
    if(isset($_POST['submit_part2_step5']) || isset($_POST['save_continue_later_step5'])) {
       $current_user = wp_get_current_user();
+      storeFormStepData('step5', $_POST);
+
       if($current_user) {
          $userid = $current_user->ID;
          // Validate consent
@@ -2438,10 +3026,17 @@ function printFormNew($formDef,$clean, $arrErrs ) {
             foreach ((array)$field['options'] as $option) {
                $clickevent = '';
                $checked = '';
+
+               // $shouldHaveOpenText = ($option[0] == 'OtherPleaseSpecify');
+                $shouldHaveOpenText = ($option[0] == 'OtherPleaseSpecify' || 
+                                      $option[0] == 'OtherMentalHealth' || 
+                                      $option[0] == 'OtherLongTermCondition' ||
+                                      $option[0] == 'OtherNavigationalMobilityAid');
                
                // echo "<br>";
                foreach ($option as $value) {
-                  if (strpos($value, 'Other') !== false) {
+                  // if (strpos($value, 'Other') !== false) {
+                  if (strpos($value, 'Other') !== false && $value != 'OtherClinicallyObese') {
                       $containsOther = true;
                       break;
                   }
@@ -2464,35 +3059,71 @@ function printFormNew($formDef,$clean, $arrErrs ) {
                // if($option[0] == 'OtherPleaseSpecify' && strlen($otherFieldValue)>0) {
                if (strpos($clickevent, 'hideshowOpenText') === false) {
                   if (empty($clickevent)) {
-                     if($containsOther){
+                     // if($containsOther){
+                     if($shouldHaveOpenText){
                         $clickevent = ' OnClick="hideshowOpenText(this,`otherFieldValue`)"';
                      }
                   } else {
-                     if($containsOther){
+                     // if($containsOther){
+                     if($shouldHaveOpenText){
                         $clickevent = rtrim($clickevent, '"') . ' hideshowOpenText(this,`otherFieldValue`);"';
                      }
                   }
                }
-               // }
-               // else{
-               //    $clickevent.= ' OnClick="hideshowOpenText(this)"';
-               // }                 
+               if($fieldName == 'DigitalandScreenTechnologies') {
+                  $triggerOptions = array('ScreenReader', 'ScreenMagnifier', 'Dragonandother', 'ReadAloudSoftware');
+                  if(in_array($option[0], $triggerOptions)) {
+                     if(empty($clickevent)) {
+                        $clickevent = ' OnClick="toggleSpecificSoftwareField()"';
+                     } else {
+                        $clickevent = rtrim($clickevent, '"') . '; toggleSpecificSoftwareField();"';
+                     }
+                  }
+               }
+
                $strHtml .= '<li class="check-radio" >';
                // $strHtml .= '<input type="checkbox" name="'.$option[2].'" id="'.$option[3].'" value="'.$option[0].'" 'aria-labelledby="'.$field['name'].'-legend '.$field['name'].'-'.$option[0].'-label '.$field['name'].'-errors"''.$checked . $clickevent .' >';
                $strHtml .= '<input type="checkbox" name="'.$option[2].'" id="'.$option[3].'" value="'.$option[0].'" '.$checked . $clickevent .' >';
                $strHtml .= '<label for="'.$option[3].'" id="'.$field['name'].'-'.$option[0].'-label">';                
                $strHtml .= $option[1].'</label>';
-               if($option[0] == 'OtherPleaseSpecify' && strlen($otherFieldValue)>0) {
+            if($shouldHaveOpenText) {
+               // if($option[0] == 'OtherPleaseSpecify' && strlen($otherFieldValue)>0) {
+    if(strpos($option[2], '[]') !== false) {
+                     // Replace [] with the option key and _OpenText
+                     $openTextFieldName = str_replace('[]', $option[0], $option[2]) . '_OpenText';
+                  } else {
+                     $openTextFieldName = $option[2] . '_OpenText';
+                  }
+                  $existingValue = '';
+                  if(isset($clean[$openTextFieldName])) {
+                     $existingValue = $clean[$openTextFieldName];
+                      } elseif($option[0] == 'OtherPleaseSpecify' && isset($clean['SexualOrientationsOtherPleaseSpecify_OpenText'])) {
+                     // For sexual orientations, check the correct field name
+                     $existingValue = $clean['SexualOrientationsOtherPleaseSpecify_OpenText'];
+                  } elseif($option[0] == 'OtherPleaseSpecify' && strlen($otherFieldValue)>0) {
+                     // For backward compatibility, also check otherFieldValue for OtherPleaseSpecify
+                     $existingValue = $otherFieldValue;
+                  }
+
+                       // Use the correctly formatted field name for the input
+                  $inputFieldName = $openTextFieldName;
+                  $inputFieldId = $openTextFieldName;
+                  
+                  if(strlen($existingValue)>0) {
                   $strHtml .= '<script>';
                   $strHtml .= 'setTimeout(function() {';
                   $strHtml .= '  document.getElementById("'.$option[3].'").click();';
                   $strHtml .= '}, 100);';
                   $strHtml .= '</script>';
-                  $strHtml .= '<label for="'.$option[2].'_OpenText" style="display:none"><span>"'.$option[1].'"</span></label><input type="text" name="'.$option[2].'_OpenText" id="'.$option[2].'_OpenText" value="'.$otherFieldValue.'" style="width:100%;display:none">'; 
+                  // $strHtml .= '<label for="'.$option[2].'_OpenText" style="display:none"><span>"'.$option[1].'"</span></label><input type="text" name="'.$option[2].'_OpenText" id="'.$option[2].'_OpenText" value="'.$otherFieldValue.'" style="width:100%;display:none">'; 
+                  // $strHtml .= '<label for="'.$option[2].'_OpenText" style="display:none"><span>"'.$option[1].'"</span></label><input type="text" name="'.$option[2].'_OpenText" id="'.$option[2].'_OpenText" value="'.htmlspecialchars($existingValue, ENT_QUOTES, 'UTF-8').'" style="width:100%;display:none">'; 
+                                      $strHtml .= '<input type="text" name="'.$inputFieldName.'" id="'.$inputFieldId.'" value="'.htmlspecialchars($existingValue, ENT_QUOTES, 'UTF-8').'" placeholder="Please describe" style="width:100%;display:none">'; 
                }
                else{
-                  $strHtml .= '<label for="'.$option[2].'_OpenText" style="display:none"><span>"'.$option[1].'"</span></label><input type="text" name="'.$option[2].'_OpenText" id="'.$option[2].'_OpenText" value="" style="width:100%;display:none">';
-               }                
+                  // $strHtml .= '<label for="'.$option[2].'_OpenText" style="display:none"><span>"'.$option[1].'"</span></label><input type="text" name="'.$option[2].'_OpenText" id="'.$option[2].'_OpenText" value="" style="width:100%;display:none">';
+                                      $strHtml .= '<input type="text" name="'.$inputFieldName.'" id="'.$inputFieldId.'" value="" placeholder="Please describe" style="width:100%;display:none">';
+               }
+            }             
                $strHtml .= '</li>';
             }
             $strHtml .= '</ul>';
@@ -2530,6 +3161,20 @@ function printFormNew($formDef,$clean, $arrErrs ) {
                else{
                   $clickevent.= ' OnClick="hideOpenText(this)"';
                }
+
+                              // Add onClick handler for specific software field triggers in Part 2 Step 3
+               // Trigger options: ScreenReader, ScreenMagnifier, Dragonandother, ReadAloudSoftware
+               if($fieldName == 'DigitalandScreenTechnologies') {
+                  $triggerOptions = array('ScreenReader', 'ScreenMagnifier', 'Dragonandother', 'ReadAloudSoftware');
+                  if(in_array($option[0], $triggerOptions)) {
+                     if(empty($clickevent)) {
+                        $clickevent = ' OnClick="toggleSpecificSoftwareField()"';
+                     } else {
+                        $clickevent = rtrim($clickevent, '"') . '; toggleSpecificSoftwareField();"';
+                     }
+                  }
+               }
+               
                $strHtml .= '<li class="check-radio" >';
                // $strHtml .= '<input type="radio" name="'.$field['name'].'" id="'.$option[2].'" value="'.$option[0].'" aria-labelledby="'.$field['name'].'-legend '.$field['name'].'-'.$option[0].'-label '.$field['name'].'-errors"'.$checked.'>';
                // $strHtml .= '<input type="radio" name="'.$field['name'].'" id="'.$option[2].'" value="'.$option[0].'" '.$checked.'>';
@@ -2537,8 +3182,36 @@ function printFormNew($formDef,$clean, $arrErrs ) {
                $strHtml .= '<label for="'.$option[2].'">';                
                $strHtml .= $option[1].'</label>';
                // if($option[0] == '776' || $option[0] == 'OurCommunityOther'){
-                              if($option[0] == '776' || $option[0] == 'OurCommunityOther' || $option[0] == 'OtherPleaseSpecify' || $option[0] == 'SelfDescribe'){
-                  $strHtml .= '<label for="'.$option[2].'_OpenText" style="display:none"><span>"'.$option[1].'"</span></label><input type="text" name="'.$option[2].'_OpenText" id="'.$option[2].'_OpenText" value="" placeHolder="Please Enter Your Answer" style="width:100%;display:none">'; 
+               if($option[0] == '776' || $option[0] == 'OurCommunityOther' || $option[0] == 'OtherPleaseSpecify' || $option[0] == 'SelfDescribe'){
+                  $openTextFieldName = $option[2] . '_OpenText';
+                  if($fieldName == 'inf_option_Gender' && $option[0] == '776') {
+                     $openTextFieldName = 'inf_option_Gender_opentext';
+                     $openTextFieldId = 'inf_option_Gender_opentext';
+                  } else {
+                     $openTextFieldName = $option[2] . '_OpenText';
+                     $openTextFieldId = $option[2] . '_OpenText';
+                  }
+                  $existingValue = '';
+                  if(isset($clean[$openTextFieldName])) {
+                     $existingValue = $clean[$openTextFieldName];
+                  } elseif(isset($clean['inf_option_Gender_776_OpenText'])) {
+                     // Fallback to check alternative field name
+                     $existingValue = $clean['inf_option_Gender_776_OpenText'];
+                  }
+                  
+                  if(strlen($existingValue) > 0) {
+                     // Auto-click the radio button if there's an existing value
+                     $strHtml .= '<script>';
+                     $strHtml .= 'setTimeout(function() {';
+                     $strHtml .= '  document.getElementById("'.$option[2].'").click();';
+                     $strHtml .= '}, 100);';
+                     $strHtml .= '</script>';
+                     // $strHtml .= '<label for="'.$option[2].'_OpenText" style="display:none"><span>"'.$option[1].'"</span></label><input type="text" name="'.$option[2].'_OpenText" id="'.$option[2].'_OpenText" value="'.htmlspecialchars($existingValue, ENT_QUOTES, 'UTF-8').'" placeHolder="Please Enter Your Answer" style="width:100%;display:none">'; 
+                     $strHtml .= '<input type="text" name="'.$openTextFieldName.'" id="'.$openTextFieldId.'" value="'.htmlspecialchars($existingValue, ENT_QUOTES, 'UTF-8').'" placeholder="Please Enter Your Answer" style="width:100%;display:none">'; 
+                  } else {
+                  // $strHtml .= '<label for="'.$option[2].'_OpenText" style="display:none"><span>"'.$option[1].'"</span></label><input type="text" name="'.$option[2].'_OpenText" id="'.$option[2].'_OpenText" value="" placeHolder="Please Enter Your Answer" style="width:100%;display:none">'; 
+                     $strHtml .= '<input type="text" name="'.$openTextFieldName.'" id="'.$openTextFieldId.'" value="" placeholder="Please Enter Your Answer" style="width:100%;display:none">'; 
+                   }
                }
                if($option[0] == 'APartOfCommunity' || $option[0] == 'ACommunityOrganisation') {
                   $strHtml .= '<label for="'.$option[2].'_OpenText" style="display:none"><span>"'.$option[1].'"</span></label><input type="text" name="'.$option[2].'_OpenText" id="'.$option[2].'_OpenText" value="" placeHolder="Please add the name of the person who referred you from the Open community" style="width:100%;display:none">'; 
@@ -2583,7 +3256,9 @@ function printFormNew($formDef,$clean, $arrErrs ) {
 
          case 'submit':
             $strHtml .= '<li'.$liCss.'>';
-            $strHtml .= '<input type="submit" name="'.$field['name'].'" id="'.$field['name'].'" value="'.$field['value'].'" />';
+            // Add formnovalidate attribute to Previous buttons to bypass HTML5 validation
+            $formnovalidate = (strpos($field['name'], 'previous_') === 0 || $field['name'] === 'previous') ? ' formnovalidate' : '';
+            $strHtml .= '<input type="submit" name="'.$field['name'].'" id="'.$field['name'].'" value="'.$field['value'].'"'.$formnovalidate.' />';
             $strHtml .= '</li>';
             break;
 
@@ -2873,11 +3548,11 @@ function applyKeapStepTag($step, $userEmail) {
                 }
                 
                 // Apply phase tag
-                $phaseTag = getPhaseTagForStep($step, $properties_ini);
-                if ($phaseTag) {
-                    $phaseTagResult = $app->grpAssign($contactId, $phaseTag);
-                    error_log("Phase tag applied for step $step: " . print_r($phaseTagResult, true));
-                }
+               //  $phaseTag = getPhaseTagForStep($step, $properties_ini);
+               //  if ($phaseTag) {
+               //      $phaseTagResult = $app->grpAssign($contactId, $phaseTag);
+               //      error_log("Phase tag applied for step $step: " . print_r($phaseTagResult, true));
+               //  }
                 
                 // Update registration status
                 $statusUpdate = ['_RegistrationStatus' => 'In Progress - Step ' . substr($step, -1)];
@@ -2920,4 +3595,5 @@ function getPhaseTagForStep($step, $properties_ini) {
     
     return null;
 }
+?>
 ?>

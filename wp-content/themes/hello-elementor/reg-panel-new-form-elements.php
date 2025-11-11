@@ -14,11 +14,11 @@
 
  $contact_method_array = array(
 
-   array('Email',__( 'Please contact me via email', 'openinclusion' ),'PreferToContact_Email'),
-   array('SMS',__( 'SMS / Text message', 'openinclusion' ), 'PreferToContact_SMS'),
-   array('Phone',__( 'Phone call', 'openinclusion' ), 'PreferToContact_Phone'),
-   array('Whatsapp Message',__( 'Whatsapp Message', 'openinclusion' ), 'PreferToContact_Whatsapp'),
-   array('Others',__( 'Other, or any other relevant information about how you do or don\'t wish to be contacted by us.', 'openinclusion' ),'PreferToContact[]', 'PreferToContactOthers_Others_2'),
+   array('Email',__( 'Please contact me via email', 'openinclusion' ),'PreferToContact[]', 'PreferToContact_Email'),
+   array('SMS',__( 'SMS / Text message', 'openinclusion' ), 'PreferToContact[]', 'PreferToContact_SMS'),
+   array('Phone',__( 'Phone call', 'openinclusion' ), 'PreferToContact[]', 'PreferToContact_Phone'),
+   array('Whatsapp Message',__( 'Whatsapp Message', 'openinclusion' ), 'PreferToContact[]', 'PreferToContact_Whatsapp'),
+   array('OtherPleaseSpecify',__( 'Other, or any other relevant information about how you do or don\'t wish to be contacted by us.', 'openinclusion' ),'PreferToContact[]', 'PreferToContact_Other'),
 );
 
  function get_contact_methods() {
@@ -69,7 +69,7 @@
    array('A-personal-caregiver-to-a-disabled-person',__( 'A caregiver for a disabled or older person (not paid / personal)', 'openinclusion' ),'RelationShip[]', 'RelationShip_personal_caregiver'),
    array('A-parent-of-someone-with-a-disability',__( 'A parent of someone with a disability (child or adult)', 'openinclusion' ),'RelationShip[]', 'RelationShip_parent_of_someone_with_disability'),
    array('A-spouse-child-or-sibling-of-a-disabled-person',__( 'A spouse, child or sibling of a disabled person/person with a disability', 'openinclusion' ),'RelationShip[]', 'RelationShip_relation_with_disable'),
-   array('I-have-another-relationship-to-disability-or-age-related-needs',__( 'Other. Please describe', 'openinclusion' ),'RelationShip[]', 'RelationShip_other_relation_with_disable'),
+   array('OtherPleaseSpecify',__( 'Other. Please describe', 'openinclusion' ),'RelationShip[]', 'RelationShip_OtherPleaseSpecify'),
    // array('None-of-the-above',__( 'None of the above', 'openinclusion' ),'RelationShip[]', 'RelationShip_none_of_above'),
  ); 
 
@@ -191,7 +191,7 @@ function get_confirm_methods(){
  
  
  $other_needs_array = array(
-    array('OtherPleaseSpecify',__( 'Other. Please describe' , 'openinclusion' ),'OtherNeedsOtherPleaseSpecify', 'OtherNeedsOtherPleaseSpecify'),
+    array('OtherPleaseSpecify',__( 'Other. Please describe' , 'openinclusion' ),'OtherNeeds[]', 'OtherNeeds_OtherPleaseSpecify'),
     array('PreferNotToSay',__( 'Prefer not to respond', 'openinclusion' ),'OtherNeeds[]', 'OtherNeeds_PreferNotToSay'),
  ); 
  
@@ -939,7 +939,7 @@ function get_temporaryaccess_needs() {
    //  array('774',__( 'Prefer not to respond', 'openinclusion' ),'inf_option_Gender_774'),
    //array('OtherPleaseSpecify',__( 'Let me type my own answer', 'openinclusion' ),'inf_option_Gender_OtherPleaseSpecify'),
    // array('776',__( 'Let me type my own answer', 'openinclusion' ),'inf_option_Gender_776','inf_option_Gender_opentext',"Please enter your gender"),
-    array('776',__( 'Other (please self-describe)', 'openinclusion' ),'inf_option_Gender_776'),
+   array('OtherPleaseSpecify',__( 'Other (please self-describe)', 'openinclusion' ),'inf_option_Gender_other_please_specify'),
    array('774',__( 'Prefer not to respond', 'openinclusion' ),'inf_option_Gender_774'),
 
  );

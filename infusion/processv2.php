@@ -101,6 +101,11 @@ if ($app->cfgCon("connectionName")) {
             $app->grpAssign($contactId, $properties_ini['non_verified']);
         }
         
+        // Assign phase_basic_info tag for Part 1 completion
+        if(isset($properties_ini['phase_basic_info'])) {
+            $app->grpAssign($contactId, $properties_ini['phase_basic_info']);
+        }
+        
         // Assign form submission tag
         if(isset($properties_ini['open-panel-form-submitted'])) {
             $app->grpAssign($contactId, $properties_ini['open-panel-form-submitted']);
@@ -122,6 +127,11 @@ if ($app->cfgCon("connectionName")) {
                 if (is_array($conDat) && isset($conDat[0]) && is_array($conDat[0]) && isset($conDat[0]['Id'])) {
             $app->updateCon($conDat[0]['Id'], $contactData);
             $contactId = $conDat[0]['Id'];
+            
+            // Assign phase_basic_info tag for Part 1 completion (existing contact)
+            if(isset($properties_ini['phase_basic_info'])) {
+                $app->grpAssign($contactId, $properties_ini['phase_basic_info']);
+            }
         } else {
             error_log("Invalid contact data structure in processv2.php: " . print_r($conDat, true));
             return false;
