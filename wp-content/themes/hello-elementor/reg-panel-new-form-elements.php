@@ -1173,7 +1173,6 @@ function get_temporaryaccess_needs() {
  
  $othertechnologies_array = array(
     array('OtherPleaseSpecify',__( 'Other. Please describe', 'openinclusion'),'OtherTechnologiesOtherPleaseSpecify', 'OtherTechnologiesOtherPleaseSpecify'),
-    array('PreferNotToSay',__( 'Prefer not to respond', 'openinclusion'),'OtherTechnologies[]', 'OtherTechnologies_PreferNotToSay'),
  );    
  
  function get_othertechnologies() {

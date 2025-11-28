@@ -540,6 +540,16 @@ function opinc_part2_step3_form_sc($atts, $content = null) {
             textField.show();
          }
       });
+      
+      // Initialize referral name field visibility based on current selection
+      var referredValue = $('input[name=\"inf_field_referred\"]:checked').val();
+      if (referredValue === 'Yes') {
+         $('#inf_field_referred_name_wrapper').show();
+         $('#inf_field_referred_name').prop('disabled', false);
+      } else {
+         $('#inf_field_referred_name_wrapper').hide();
+         $('#inf_field_referred_name').prop('disabled', true);
+      }
    });
    </script>";
    return $strHtml;
@@ -1274,41 +1284,55 @@ function redirectAfterPart2Step9(){
       }
       
       // Final redirect to Vanilla community via jsConnect with client binding
-      $redirectUrl = "https://staging4.openinclusion.com/login/?redirect_to=https://community.openinclusion.com/entry/signin/";
-
-      // Provide signed request parameters so Vanilla trusts the redirect.
-      if (!empty($vanillaSecret)) {
-         $timestamp = time();
-         $nonce = wp_generate_password(32, false, false);
-         $userIp = '';
-         if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            $forwardedIps = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
-            $userIp = trim($forwardedIps[0]);
-         }
-         if (empty($userIp) && !empty($_SERVER['REMOTE_ADDR'])) {
-            $userIp = $_SERVER['REMOTE_ADDR'];
-         }
-
-         if (!empty($userIp)) {
-            $queryArgs['v'] = 2;
-            $queryArgs['timestamp'] = $timestamp;
-            $queryArgs['nonce'] = $nonce;
-            $queryArgs['ip'] = $userIp;
-            $queryArgs['sig'] = md5($userIp . $nonce . $timestamp . $vanillaSecret);
-         } else {
-            error_log('Unable to determine user IP for jsConnect signature.');
-         }
-      } else {
-         error_log('Vanilla jsConnect secret is not configured. Redirect will not be signed.');
-      }
-
-      $redirectUrl = add_query_arg($queryArgs, $redirectUrl);
+    //  
+     $redirectUrl = "https://staging4.openinclusion.com/login/?redirect_to=https://openinclusion.vanillastaging.com/entry/signin/";
       
       error_log("Step 9 complete - Redirecting to: " . $redirectUrl);
       wp_redirect($redirectUrl); exit;
    }
 }
 add_action( 'template_redirect', 'redirectAfterPart2Step9');
+
+// function openinclusion_get_vanilla_jsconnect_url( $target = '/' ) {
+//    $baseUrl = 'https://openinclusion.vanillastaging.com/entry/connect/jsconnect';
+//    $queryArgs = array(
+//       'target' => $target,
+//    );
+
+//    if ( defined( 'VF_OPTIONS_NAME' ) ) {
+//       $vanillaOptions = get_option( VF_OPTIONS_NAME );
+//       if ( is_array( $vanillaOptions ) && ! empty( $vanillaOptions['sso-clientid'] ) ) {
+//          $queryArgs['client_id'] = $vanillaOptions['sso-clientid'];
+//       } else {
+//          error_log( 'Vanilla login redirect: sso-clientid missing. Falling back without client_id.' );
+//       }
+//    }
+
+//    return add_query_arg( $queryArgs, $baseUrl );
+// }
+
+/**
+ * After a successful WordPress login, send members straight to Vanilla.
+ */
+// function openinclusion_login_redirect_to_vanilla( $redirect_to, $requested_redirect_to, $user ) {
+//    if ( is_wp_error( $user ) || ! $user || ! isset( $user->ID ) ) {
+//       return $redirect_to;
+//    }
+
+//    // Always send newly logged-in users to Vanilla staging.
+//    // return 'https://openinclusion.vanillastaging.com';
+//       // Preserve requested redirect target if provided.
+//    $target = '/';
+//    if ( ! empty( $requested_redirect_to ) ) {
+//       $target = $requested_redirect_to;
+//    } elseif ( ! empty( $redirect_to ) && $redirect_to !== admin_url() ) {
+//       $target = $redirect_to;
+//    }
+
+//    return openinclusion_get_vanilla_jsconnect_url( $target );
+// }
+// add_filter( 'login_redirect', 'openinclusion_login_redirect_to_vanilla', 999, 3 );
+
 
 /**********************************************************************************************
       This function redirects to thank you page after registration. Validate if consent is submitted
@@ -2935,7 +2959,16 @@ function printFormNew($formDef,$clean, $arrErrs ) {
       }
       switch ($field['type']) {
          case 'text':
-            $strHtml .= '<li'.$liCss.' '.$liId.'>';
+            // Check if this is the referral name field - hide by default unless "Yes" is selected
+            $displayStyle = '';
+            if($field['name'] == 'inf_field_referred_name') {
+               $displayStyle = ' style="display:none;"';
+               // Check if referral is "Yes" in clean data
+               if(isset($clean['inf_field_referred']) && $clean['inf_field_referred'] == 'Yes') {
+                  $displayStyle = '';
+               }
+            }
+            $strHtml .= '<li'.$liCss.' '.$liId.$displayStyle.'>';
             $strHtml .= $labelTxt;
             // Check if clean array populated - to see if prev value stored
             if (count($clean) > 0) {
@@ -2944,7 +2977,8 @@ function printFormNew($formDef,$clean, $arrErrs ) {
             } else {
                $val = '';
             }
-            $strHtml .= '<input maxlength="'.$field['maxlen'].'" type="text" name="'.$field['name'].'" id="'.$field['name'].'" value="'.$val.'"';
+            $disabledAttr = ($field['name'] == 'inf_field_referred_name' && (!isset($clean['inf_field_referred']) || $clean['inf_field_referred'] != 'Yes')) ? ' disabled="disabled"' : '';
+            $strHtml .= '<input maxlength="'.$field['maxlen'].'" type="text" name="'.$field['name'].'" id="'.$field['name'].'" value="'.$val.'"'.$disabledAttr;
             $strHtml .= $reqAttr.$ariaInvalidFrag.$validStr.'><span class="errors" tabindex="0">'.$errMsg.'</span>';
             $strHtml .= '</label></li>';
          break;
@@ -3153,12 +3187,20 @@ function printFormNew($formDef,$clean, $arrErrs ) {
                //    $checked = 'checked="true"';
                // }
                $clickevent = '';
+               // Handle referral field conditional display
+               if($fieldName == 'inf_field_referred') {
+                  if (empty($clickevent)) {
+                     $clickevent = ' OnClick="toggleReferredNameField(this)"';
+                  } else {
+                     $clickevent = rtrim($clickevent, '"') . '; toggleReferredNameField(this);"';
+                  }
+               }
                // if($option[0] == '776' || $option[0] == 'APartOfCommunity' || $option[0] == 'ACommunityOrganisation' || $option[0] == 'OurCommunityOther') {
                               if($option[0] == '776' || $option[0] == 'APartOfCommunity' || $option[0] == 'ACommunityOrganisation' || $option[0] == 'OurCommunityOther' || $option[0] == 'OtherPleaseSpecify' || $option[0] == 'SelfDescribe') {
                   // $selectedValues = getSelectedOptions($fieldName, $clean);
                   $clickevent.= ' OnClick="hideshowOpenText(this)"';  
                }
-               else{
+               else if($fieldName != 'inf_field_referred'){
                   $clickevent.= ' OnClick="hideOpenText(this)"';
                }
 
@@ -3440,9 +3482,8 @@ function update_user_role(){
    // 3. Set custom headers for RapidAPI Auth and Content-Type header
    curl_setopt($filtercurl, CURLOPT_HTTPHEADER, [
    'X-RapidAPI-Host: kvstore.p.rapidapi.com',
-   'X-RapidAPI-Key: [Input your RapidAPI Key Here]',
    'Content-Type: application/json',
-   "Authorization: Bearer va.n5YzoOdlgbJCgQmfcmXTUYf4qME-Zzyi.y4SJdQ.VZhzFry"
+   "Authorization: Bearer va.BPVD-hqyaWR2kX5U2yHFKiaaWHRZ46Na.Kcfhew.8SYfa8D"
    ]);
    $response = curl_exec($filtercurl);
    $array_response = json_decode($response);
@@ -3454,9 +3495,8 @@ function update_user_role(){
    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
    curl_setopt($curl, CURLOPT_HTTPHEADER, [
    'X-RapidAPI-Host: kvstore.p.rapidapi.com',
-   'X-RapidAPI-Key: [Input your RapidAPI Key Here]',
    'Content-Type: application/json',
-   "Authorization: Bearer va.n5YzoOdlgbJCgQmfcmXTUYf4qME-Zzyi.y4SJdQ.VZhzFry"
+   "Authorization: Bearer va.BPVD-hqyaWR2kX5U2yHFKiaaWHRZ46Na.Kcfhew.8SYfa8D"
    ]);
    $response = curl_exec($curl);
    $role_response = json_decode($response);
@@ -3483,9 +3523,8 @@ function update_user_role(){
       // 4. Set custom headers for RapidAPI Auth and Content-Type header
       curl_setopt($curl, CURLOPT_HTTPHEADER, [
       'X-RapidAPI-Host: kvstore.p.rapidapi.com',
-      'X-RapidAPI-Key: [Input your RapidAPI Key Here]',
       'Content-Type: application/json',
-      "Authorization: Bearer va.n5YzoOdlgbJCgQmfcmXTUYf4qME-Zzyi.y4SJdQ.VZhzFry"
+      "Authorization: Bearer va.BPVD-hqyaWR2kX5U2yHFKiaaWHRZ46Na.Kcfhew.8SYfa8D"
       ]);
       $response = curl_exec($curl);
       curl_close($curl);

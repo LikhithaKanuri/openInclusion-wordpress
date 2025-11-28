@@ -195,14 +195,27 @@ input[type=date], input[type=email], input[type=number], input[type=password], i
 }
 
 #content .contact li.submit.save-later input {
-  background-color: #6c757d;
-  border-color: #6c757d;
-  color: white;
+  background-color: #f6d578;
+  border-color: #f6d578;
+  color: #28325a;
 }
 
 #content .contact li.submit.save-later input:hover {
-  background-color: #5a6268;
-  border-color: #545b62;
+  background-color: #f4cd5a;
+  border-color: #f4cd5a;
+  color: #28325a;
+}
+
+#content .contact li.submit.previous-button input {
+  background-color: #f6d578;
+  border-color: #f6d578;
+  color: #28325a;
+}
+
+#content .contact li.submit.previous-button input:hover {
+  background-color: #f4cd5a;
+  border-color: #f4cd5a;
+  color: #28325a;
 }
 
 #content .contact .err-img {

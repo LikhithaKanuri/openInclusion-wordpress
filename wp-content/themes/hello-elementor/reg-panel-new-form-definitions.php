@@ -190,10 +190,16 @@ function openinc_create_form_defs_v3() {
          
          array(
             'label' => __( 'My phone number:', 'openinclusion' ),
+            // 'label' => __( '', 'openinclusion' ),
+            // 'type' => 'text',
+            // 'name' => 'inf_field_Phone2',
             'type' => 'other-html',
             'name' => 'phone_field_wrapper',
             'li-id' => 'liphonenumber',
             'li-class' => 'clear',
+            // 'li-class' => 'phone-field-part',
+
+            // 'maxlen' => 250,
             'value' => <<<HTML
             <label for="inf_field_Phone2" class="phone-combined-label">
                <span class="text">My phone number: <span class="mand">*</span></span>
@@ -945,7 +951,7 @@ function getProfileEditFields() {
          ),
 
          array(
-            'label' => __( 'Were you referred by someone to the Open Inclusion community?', 'openinclusion' ),
+            'label' => __( 'Who were you referred by?', 'openinclusion' ),
             'type' => 'radiogroup-inf',
             'name' => 'inf_field_referred',
             'li-class' => 'clear',
@@ -959,10 +965,11 @@ function getProfileEditFields() {
          ),
 
          array(
-            'label' => __( 'If yes, please share the name of the person or organisation that referred you so we can thank them.', 'openinclusion' ),
+            'label' => __( 'Please provide their first, last name or email', 'openinclusion' ),
             'type' => 'text',
             'name' => 'inf_field_referred_name',
             'li-class' => 'clear',
+            'li-id' => 'inf_field_referred_name_wrapper',
             'maxlen' => 250,
             'validation' => array(
                array('len', __( 'Referrer name can only be %1$d characters long', 'openinclusion' )),
@@ -1311,7 +1318,7 @@ function getUserRole(){
    $user_name = $user_info['first_name'][0]."%20".$last_name;
    $sub_object = $current_user->{'data'};
    $key_exists = property_exists($sub_object, 'user_login');  
-   $filterURL = 'https://community.openinclusion.com/api/v2/users/by-names?name='.$user_name;
+   $filterURL = 'https://openinclusion.vanillastaging.com/api/v2/users/by-names?name='.$user_name;
    $filtercurl = curl_init($filterURL);
    // 1. Set the CURLOPT_RETURNTRANSFER option to true
    curl_setopt($filtercurl, CURLOPT_RETURNTRANSFER, true);
@@ -1330,7 +1337,7 @@ function getUserRole(){
    $array_response = json_decode($response);
    $vanillaUserId = $array_response[0]->userID;
    curl_close($filtercurl);
-   $url = 'https://community.openinclusion.com/api/v2/users/'.$vanillaUserId;
+   $url = 'https://openinclusion.vanillastaging.com/api/v2/users/'.$vanillaUserId;
    $curl = curl_init($url);
    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
@@ -1582,7 +1589,7 @@ $part2Step3Form = array(
          )
       ),
       array(
-         'label' => '<strong>'.__( 'Were you referred by someone to the Open Inclusion community?', 'openinclusion' ).'</strong>',
+         'label' => '<strong>'.__( 'Who were you referred by?', 'openinclusion' ).'</strong>',
          'type' => 'radiogroup-inf',
          'name' => 'inf_field_referred',
          'li-class' => 'clear',
@@ -1595,10 +1602,11 @@ $part2Step3Form = array(
          )
       ),
       array(
-         'label' => '<strong>'.__( 'Were you referred by someone to the Open Inclusion community?', 'openinclusion' ).'</strong>',
+         'label' => '<strong>'.__( 'Please provide their first, last name or email', 'openinclusion' ).'</strong>',
          'type' => 'text',
          'name' => 'inf_field_referred_name',
          'li-class' => 'clear',
+         'li-id' => 'inf_field_referred_name_wrapper',
          'maxlen' => 250,
          'validation' => array(
             array('len', __( 'Referrer name can only be %1$d characters long', 'openinclusion' )),
@@ -1800,23 +1808,9 @@ $part2Step5Form = array(
          'name' => 'CommunityAgreement',
          'li-class' => 'clear',
          'options' => array(
-           array('agree', __( 'I agree to community rules', 'openinclusion' ), 'CommunityAgreement[]', 'CommunityAgreement_agree')
+            array('agree', __( 'I agree to community rules', 'openinclusion' ), 'CommunityAgreement[]', 'CommunityAgreement_agree')
          ),
-         'validation' => array(
-            array('reqd', __( 'You must agree to proceed', 'openinclusion' )),
-         )
-      ),
-      array(
-         'name' => 'previous_step5',
-         'type' => 'submit',
-         'li-class' => 'submit previous-button',
-         'value' => __('Previous', 'openinclusion' )
-      ),
-      array(
-         'name' => 'save_continue_later_step5',
-         'type' => 'submit',
-         'li-class' => 'submit save-later',
-         'value' => __('Save & Continue Later', 'openinclusion' )
+         'validation' => array()
       ),
       array(
          'name' => 'submit_part2_step5',
@@ -1871,20 +1865,9 @@ HTML
          'li-class' => 'clear',
          'options' => get_confirm_methods(),
          'validation' => array(
-            array('reqd-all', __( 'Please select all 4 statements to proceed', 'openinclusion' )),
+            array('reqd', __( 'Please select all conditions', 'openinclusion' )),
+            array('check_all_selected', __( 'Please select all conditions', 'openinclusion' )),
          ),
-      ),
-      array(
-         'name' => 'previous_step6',
-         'type' => 'submit',
-         'li-class' => 'submit previous-button',
-         'value' => __('Previous', 'openinclusion' )
-      ),
-      array(
-         'name' => 'save_continue_later_step6',
-         'type' => 'submit',
-         'li-class' => 'submit save-later',
-         'value' => __('Save & Continue Later', 'openinclusion' )
       ),
       array(
          'name' => 'submit_part2_step6',
@@ -2004,7 +1987,7 @@ HTML
          'type' => 'other-html',
          'name' => 'password_field_wrapper',
          'li-class' => 'clear',
-                 'value' => <<<HTML
+                  'value' => <<<HTML
             <label for="inf_field_Password" class="password-field-label">
                <span class="text">*Please create a password for the online Open Inclusion Community:</span>
             </label>
@@ -2014,10 +1997,11 @@ HTML
             <p style="font-size: 14px; color: #666; margin-top: 5px; margin-bottom: 10px;">
                <strong>Password requirements:</strong> Passwords need to have a minimum of 8 characters and include a mix of letters (uppercase and lowercase), numbers, and special characters.
             </p>
-           <div class="password-field-wrapper">
+            <div class="password-field-wrapper">
               <input type="password" name="inf_field_Password" id="inf_field_Password" maxlength="250" required aria-label="Create a password for Open Inclusion Community" />
-              <button type="button" class="toggle-password" data-target="inf_field_Password" data-show-text="Show -- show password" data-hide-text="Hide" aria-label="Show password">Show -- show password</button>
+              <button type="button" class="toggle-password" data-target="inf_field_Password" data-show-text="Show password" data-hide-text="Hide" aria-label="Show password">Show password</button>
               <button type="button" class="generate-password" data-target="inf_field_Password" aria-label="Generate password">Generate Password</button>
+            </div
             </div>
 HTML
          ,
@@ -2037,7 +2021,7 @@ HTML
             </label>
            <div class="password-field-wrapper">
               <input type="password" name="inf_field_Password_reenter" id="inf_field_Password_reenter" maxlength="250" required aria-label="Re-enter the password you created or generated above" />
-              <button type="button" class="toggle-password" data-target="inf_field_Password_reenter" data-show-text="Show -- show password" data-hide-text="Hide" aria-label="Show password">Show -- show password</button>
+              <button type="button" class="toggle-password" data-target="inf_field_Password_reenter" data-show-text="Show password" data-hide-text="Hide" aria-label="Show password">Show password</button>
             </div>
 HTML
          ,

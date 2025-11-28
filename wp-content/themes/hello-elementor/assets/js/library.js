@@ -1957,12 +1957,12 @@ function checkPreferNotToRespond(element) {
 function selectResearchRelatedOptions(){
    var isChecked = jQuery('#inf_option_any_paid_research').prop('checked');
     if (isChecked) {
-        // Select the next 7 checkboxes
-        var nextCheckboxes = jQuery('#inf_option_any_paid_research').closest('li.check-radio').nextAll('li.check-radio').slice(0, 7).find('input[type="checkbox"]');
+        // Select the next 8 checkboxes (including "In person Events")
+        var nextCheckboxes = jQuery('#inf_option_any_paid_research').closest('li.check-radio').nextAll('li.check-radio').slice(0, 8).find('input[type="checkbox"]');
             nextCheckboxes.prop('checked', true);
     } else {
-        // Uncheck the next 7 checkboxes if "Any paid research" is unchecked
-        var nextCheckboxes = jQuery('#inf_option_any_paid_research').closest('li.check-radio').nextAll('li.check-radio').slice(0, 7).find('input[type="checkbox"]');
+        // Uncheck the next 8 checkboxes if "Any paid research" is unchecked
+        var nextCheckboxes = jQuery('#inf_option_any_paid_research').closest('li.check-radio').nextAll('li.check-radio').slice(0, 8).find('input[type="checkbox"]');
             nextCheckboxes.prop('checked', false);
     }
 }
@@ -1989,6 +1989,21 @@ function hideOpenText(element) {
    }
 
    toggleGenderSelfDescribeField();
+}
+
+function toggleReferredNameField(element) {
+   // Show/hide the referral name text field based on Yes/No selection
+   var isYes = jQuery(element).val() === 'Yes';
+   var referredNameWrapper = jQuery('#inf_field_referred_name_wrapper');
+   var referredNameField = jQuery('#inf_field_referred_name');
+   
+   if (isYes) {
+      referredNameWrapper.show();
+      referredNameField.prop('disabled', false);
+   } else {
+      referredNameWrapper.hide();
+      referredNameField.prop('disabled', true).val('');
+   }
 }
 
 function clearOffText(element, targetId) {
