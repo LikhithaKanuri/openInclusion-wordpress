@@ -96,9 +96,9 @@ function find_out_community_needs() {
 
 $please_confirm_array = array(
    array('I-am-18-years-old-or-older',__( 'I am 18 years old or older', 'openinclusion' ),'PleaseConfirm[]', 'PleaseConfirm_18_years_old'),
-   array('I-have-read-understood-and-agree-to-the-above-terms-and-conditions',__( 'I have read, understood and agree to the above terms and conditions', 'openinclusion' ),'PleaseConfirm[]', 'PleaseConfirm_understood_terms_and_condition'),
+   array('I-have-read-understood-and-agree-to-the-above-terms-and-conditions',__( 'I have read, understood and agree to the above <a href="https://openinclusion.com/terms/" target="_blank">terms and conditions</a>', 'openinclusion' ),'PleaseConfirm[]', 'PleaseConfirm_understood_terms_and_condition'),
    array('I-understand-that-I-am-responsible-for-any-tax-I-may-be-liable-for-on-payments-that-I-receive-from-Open-Inclusion-Limited. ',__( 'I understand that I am responsible for any tax I may be liable for on payments that I receive from Open Inclusion Limited.', 'openinclusion' ),'PleaseConfirm[]', 'PleaseConfirm_resposible_for_tax'),
-   array('I-agree-that-Open-Inclusion-may-the-personal-information-I-provide-to-Open-in-accordance-with-the-terms-and-conditions-and-privacy-policy-as-described-above.',__( 'I agree that Open Inclusion may process the personal information I provide to Open in accordance with the terms and conditions and privacy policy as described above.', 'openinclusion' ),'PleaseConfirm[]', 'PleaseConfirm_personal_information'),
+   array('I-agree-that-Open-Inclusion-may-the-personal-information-I-provide-to-Open-in-accordance-with-the-terms-and-conditions-and-privacy-policy-as-described-above.',__( 'I agree that Open Inclusion may process the personal information I provide to Open in accordance with the <a href="https://openinclusion.com/terms/" target="_blank">terms and conditions</a> and <a href="https://openinclusion.com/privacy-policy/" target="_blank">privacy policy</a> as described above.', 'openinclusion' ),'PleaseConfirm[]', 'PleaseConfirm_personal_information'),
 );
 
 function get_confirm_methods(){
@@ -256,8 +256,8 @@ function get_temporaryaccess_needs() {
    array('Bisexual',__( 'Bisexual', 'openinclusion' ),'SexualOrientations[]','SexualOrientation_Bisexual'),
    array('GayLesbianQueer',__( 'Gay/lesbian/queer', 'openinclusion' ),'SexualOrientations[]','SexualOrientation_GayLesbianQueer'),
    array('Heterosexual',__( 'Heterosexual/straight', 'openinclusion' ),'SexualOrientations[]','SexualOrientation_Heterosexual'),
-   array('PreferNotToSay',__( 'Prefer not to say', 'openinclusion' ),'SexualOrientations[]','SexualOrientation_PreferNotToSay'),
-   array('OtherPleaseSpecify',__( 'Other/prefer to self describe', 'openinclusion' ),'SexualOrientations[]','SexualOrientation_Other')
+   array('OtherPleaseSpecify',__( 'Other/prefer to self describe', 'openinclusion' ),'SexualOrientations[]','SexualOrientation_Other'),
+   array('PreferNotToSay',__( 'Prefer not to say', 'openinclusion' ),'SexualOrientations[]','SexualOrientation_PreferNotToSay')
  );
 
  function get_sexual_orientations(){
@@ -1013,7 +1013,7 @@ function get_temporaryaccess_needs() {
     array('1203',__( 'I understand there is no obligation to participate or accept work opportunities offered and that I can ask to be removed from the research panel anytime.', 'openinclusion' ),'consent[]','inf_option_noobligation'),
     array('1204',__( 'I understand that I am responsible for any tax I may be liable for on incentive payments I receive from Open inclusion Limited.', 'openinclusion' ),'consent[]','inf_option_responsibletax'),
     array('1208',__( 'You are responsible for any taxes you may be liable for on incentive payments received from doing research for Open Inclusion Limited.', 'openinclusion' ),'consent[]','inf_option_responsibletax'),
-    array('1207',__( 'I agree to abide by the rules of being honest and respectful when using the Open Inclusion Community website, surveys, and forums. See terms and conditions here.', 'openinclusion' ),'consent[]','inf_option_agreetorules'),
+    array('1207',__( 'I agree to abide by the rules of being honest and respectful when using the Open Inclusion Community website, surveys, and forums. See <a href="https://openinclusion.com/terms/" target="_blank">terms and conditions</a> here.', 'openinclusion' ),'consent[]','inf_option_agreetorules'),
     
  );
  function get_legals() {
@@ -1173,6 +1173,7 @@ function get_temporaryaccess_needs() {
  
  $othertechnologies_array = array(
     array('OtherPleaseSpecify',__( 'Other. Please describe', 'openinclusion'),'OtherTechnologiesOtherPleaseSpecify', 'OtherTechnologiesOtherPleaseSpecify'),
+    array('PreferNotToSay',__( 'Prefer not to respond', 'openinclusion'),'OtherTechnologies[]', 'OtherTechnologies_PreferNotToSay'),
  );    
  
  function get_othertechnologies() {

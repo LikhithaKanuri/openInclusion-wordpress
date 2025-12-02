@@ -57,6 +57,23 @@ function openinc_create_form_defs_v3() {
          array(
             'label' => '',
             'type'  => 'other-html',
+            'name'  => 'privacy_section',
+            'li-class' => 'clear',
+            'value' => <<<HTML
+            <h2>Your Privacy Protections</h2>
+            <p>Maintaining your data privacy and trust is our top priority. As a General Data Privacy Regulations (GDPR)-compliant organization, we proactively train our staff and manage your personal information to ensure your privacy, safety and confidence.</p>
+            <p>We collect personal information to match you with relevant research opportunities, balance and understand the range of perspectives that we gather. We protect your data with industry-standard encryption and never share personally identifiable details without your explicit consent.</p>
+            <p>Every research project has a clear separate consent that you will be sent to review, ask questions as you wish and need to sign if you wish to take part. It describes exactly how your data will be used, who will manage it and who will see it. It is always your choice to be involved or not once all the details are clear as relevant to that project.</p>
+            <p>You have full control over your personal information. At any time, you can access and update your information or ask us to remove your data by contacting us at <a href="mailto:contact@openinclusion.com">contact@openinclusion.com</a>. You can also unsubscribe from our communications at any time with a single click.</p>
+            <p>For a comprehensive understanding of how we handle your data, including your full GDPR rights, please review our detailed <a href="https://openinclusion.com/privacy-policy/" target="_blank">Privacy Policy</a> and <a href="https://openinclusion.com/terms/" target="_blank">Terms and Conditions</a> available on our website.</p>
+HTML
+            ,
+            'validation' => array()
+         ),
+
+         array(
+            'label' => '',
+            'type'  => 'other-html',
             'name'  => 'banner1',
             'li-class' => 'clear',
             'value' => '
@@ -434,6 +451,61 @@ HTML
          'value' => '1.49.0.36',
       ),
 
+      array(
+         'label' => __('<span>Please confirm</span>', 'openinclusion'),
+         'type' => 'chkboxgroup-inf',
+         'name' => 'PleaseConfirm',
+         'li-class' => 'clear',
+         'options' => get_confirm_methods(),
+         'validation' => array(
+            array('reqd', __( 'Please select all conditions', 'openinclusion' )),
+            array('check_all_selected', __( 'Please select all conditions', 'openinclusion' )),
+         ),
+      ),
+
+      array(
+         'label' => __( 'I do not consent but want to speak with a member of Open Staff', 'openinclusion' ),
+         'type' => 'chkbox',
+         'name' => 'do_not_consent_contact',
+         'li-class' => 'clear',
+         'li-id' => 'do_not_consent_wrapper',
+         'value' => '1',
+         'validation' => array()
+      ),
+
+      array(
+         'label' => '',
+         'type' => 'other-html',
+         'name' => 'contact_form_wrapper',
+         'li-class' => 'clear',
+         'li-id' => 'contact_form_container',
+         'value' => <<<HTML
+            <div id="contact-form-section" style="display:none; margin-top: 20px; padding: 20px; border: 1px solid #ddd; background-color: #f9f9f9;">
+               <h3>Contact Open Inclusion Staff</h3>
+               <p>If you do not consent but would like to speak with a member of Open Staff, please fill out the form below or email us directly at <a href="mailto:research@openinclusion.com">research@openinclusion.com</a>.</p>
+               <form id="open-staff-contact-form" method="post" action="mailto:research@openinclusion.com" enctype="text/plain">
+                  <div style="margin-bottom: 15px;">
+                     <label for="contact_name" style="display: block; margin-bottom: 5px;">Your Name:</label>
+                     <input type="text" id="contact_name" name="name" style="width: 100%; padding: 8px; box-sizing: border-box;" />
+                  </div>
+                  <div style="margin-bottom: 15px;">
+                     <label for="contact_email" style="display: block; margin-bottom: 5px;">Your Email:</label>
+                     <input type="email" id="contact_email" name="email" style="width: 100%; padding: 8px; box-sizing: border-box;" />
+                  </div>
+                  <div style="margin-bottom: 15px;">
+                     <label for="contact_message" style="display: block; margin-bottom: 5px;">Your Message:</label>
+                     <textarea id="contact_message" name="message" rows="5" style="width: 100%; padding: 8px; box-sizing: border-box;"></textarea>
+                  </div>
+                  <div>
+                     <a href="mailto:research@openinclusion.com?subject=Contact from Registration Form&body=" id="email-link" style="display: inline-block; padding: 10px 20px; background-color: #2a3258; color: white; text-decoration: none; border-radius: 5px; margin-right: 10px;">Open Email Client</a>
+                     <button type="button" onclick="document.getElementById('contact-form-section').style.display='none'; document.getElementById('do_not_consent_contact').checked=false;" style="padding: 10px 20px; background-color: #666; color: white; border: none; border-radius: 5px; cursor: pointer;">Cancel</button>
+                  </div>
+               </form>
+            </div>
+HTML
+         ,
+         'validation' => array()
+      ),
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          array(
@@ -1182,7 +1254,7 @@ $part2Step1Form = array(
          'name' => 'banner1',
          'li-class' => 'clear',
          'value' => '
-            <h2>PAGE 1: ABOUT ME</h2>
+            <h2>Page 1: About Me</h2>
             <p>It is important for us to learn more about you so that we can invite you to research that best matches your experiences.</p>
             <p>This form should take about 10-15 minutes to complete. In it, we will ask you about:</p>
             <ul class="form-intro-list">
@@ -1230,20 +1302,6 @@ $part2Step1Form = array(
          'maxlen' => 20,
          'validation' => array(
             array('reqd', __( 'Please enter your postcode', 'openinclusion' ))
-         )
-      ),
-      
-      array(
-         'label' => __( 'Are you over 18?', 'openinclusion' ),
-         'type' => 'radiogroup-inf',
-         'name' => 'inf_field_over18',
-         'li-class' => 'clear',
-         'options' => array(
-            array('Yes', 'Yes', 'inf_field_over18_yes'),
-            array('Not Yet', 'Not Yet', 'inf_field_over18_not_yet')
-         ),
-         'validation' => array(
-            array('reqd', __( 'Please confirm if you are over 18', 'openinclusion' ))
          )
       ),
       
@@ -1389,7 +1447,7 @@ $part2Step2Form = array(
          'name' => 'banner2',
          'li-class' => 'clear',
          'value' => '
-            <h2>PAGE 2: ABOUT MY ACCESS NEEDS</h2>
+            <h2>Page 2: About My Access Needs</h2>
             <p><strong>Which of the following disabilities or conditions regularly impacts your activities or experiences?</strong></p>
             <p>Please select all that apply - whether or not you have a formal diagnosis. </p>
          ',
@@ -1501,7 +1559,7 @@ $part2Step3Form = array(
          'name' => 'banner3',
          'li-class' => 'clear',
          'value' => '
-            <h2>PAGE 3: ASSISTIVE TECHNOLOGIES I USE</h2>
+            <h2>Page 3: Assistive Technologies I Use</h2>
             <p><strong>* Adaptive approaches or assistive technologies that you use.</strong></p>
             <p>Please select all that you use at least some of the time.</p>
          ',
@@ -1659,7 +1717,7 @@ $part2Step4Form = array(
          'name' => 'banner4',
          'li-class' => 'clear',
          'value' => '
-            <h2>PAGE 4: OTHER PERSONAL CHARACTERISTICS</h2>
+            <h2>Page 4: Other Personal Characteristics</h2>
             <p>As researchers, it is helpful for us to know about your other personal characteristics and identities that can impact your product or service experiences.</p>
             <p>We recognize that your identity is deeply personal and multi-dimentional. By sharing additional aspects of your identity you will help us create more balanced and nuanced research that better reflects the diversity of disability. Anything you choose to share will be handled with care, kept secure, and always treated with respect.</p>
          ',
@@ -1681,8 +1739,8 @@ $part2Step4Form = array(
          'name' => 'inf_field_gender_at_birth_diff',
          'li-class' => 'clear',
          'options' => array(
-            array('Yes', 'Yes', 'inf_option_gender_at_birth_yes'),
             array('No', 'No', 'inf_option_gender_at_birth_no'),
+            array('Yes', 'Yes', 'inf_option_gender_at_birth_yes'),
             array('PreferNotToRespond', 'Prefer not to respond', 'inf_option_gender_at_birth_prefer_not'),
          ),
          'validation' => array(
@@ -1780,24 +1838,22 @@ $part2Step5Form = array(
                   list-style-type: circle !important;
                }
             </style>
-            <h2>PAGE 5: JOINING THE OPEN INCLUSION ONLINE COMMUNITY</h2>
-            <ul class="form-intro-list" style="list-style-type: disc; margin-left: 20px;">
-               <li style="margin-bottom: 15px;"><strong>Once you have read and confirmed the terms and conditions (if satisfied with them) we look forward to welcoming you into the Open Inclusion Insight Community. You will then be able to, </strong>
-                  <ul class="nested-list-circle" style="margin-left: 20px; margin-top: 10px;">
-                     <li style="margin-bottom: 8px;">Be invited to participate in paid research.</li>
-                     <li style="margin-bottom: 8px;">Engage in the online community discussions with others from across our community to share disability or age related experiences, barriers, creative approaches and solutions.</li>
-                  </ul>
-               </li>
-             <li style="margin-bottom: 15px;"><strong>Paid research opportunities</strong> can vary from short surveys, to more in-depth research such as mystery shopping, interviews, product or service user testing, transport journey testing, interviews or focus groups. Most are conducted online. Depending on where you live, we sometimes also have in-person consumer research. Incentives are aligned to the time and effort required to complete the research.</li>
-               <li style="margin-bottom: 15px;"><strong>There is never an obligation for you to take part in any research</strong> that you are invited to. You can "opt in" to any opportunities that you wish to join, or simply wait for another one that better suits you.</li>
-               <li style="margin-bottom: 15px;"><strong>There is no obligation for Open to provide you with research.</strong> Although we wish to engage everyone in our community, we select participants from the people who are interested in taking part. We need to balance the range of personal characteristics to meet the needs of the project. You may not always get selected for projects you would like to be part of. Please ask again next time. We love that you wish to be involved.</li>
-               <li style="margin-bottom: 15px;"><strong>We ensure our responses are valid, not fraudulent. For many projects you must be Open Verified</strong> particularly for more involved, higher paid research. These members have shown us identification or met with us (online or in person) so that we are sure that they are who they say they are.</li>
-              <li style="margin-bottom: 15px;">(online or in person) so that we are sure that they are who they say they are.</li>
-               <li style="margin-bottom: 15px;"><strong>At Open we expect and ask that everyone is treated with respect and courtesy at all times</strong>, including other community members, research participants, researchers, clients or anyone else involved. We ask everyone to interact in a considerate and kind manner at all times, including while using the online Open Inclusion community space, or in any other digital, phone based or in-person surveys, forums or engagement. We reserve the right to expel anyone from research or the community who behaves in a way that breaches this.</li>
-               <li style="margin-bottom: 15px;"><strong>Although we try, we don't always get it right.</strong> If you have any constructive feedback or a complaint about your experiences with Open Inclusion, please contact <a href="mailto:contact@openinclusion.com">contact@openinclusion.com</a>. Please describe what happened and why something didn't work for you, or provide us with constructive feedback to make our research better. This goes directly to our leadership team who will take steps to understand and address the issue, both for you and for future engagements. We always appreciate learning how we can do better.</li>
-               <li style="margin-bottom: 15px;">All research we conduct is carried out in accordance with the current <strong><a href="https://www.mrs.org.uk/standards/code-of-conduct" target="_blank">Market Research Society's Code of Conduct</a></strong>. Open Inclusion is a member of the Market Research Society. We are also a signatory to the <strong><a href="https://www.mrs.org.uk/resources/ceo-inclusion-pledge" target="_blank">MRS Inclusion Pledge</a></strong> and have committed to the five elements that ensure equitable opportunities both in our workplace and through our work.</li>
-               <li style="margin-bottom: 15px;">Our community is currently only open to those currently <strong>18 years old or older</strong>. If you are not yet 18, thank you for your interest, but we do not currently extend to your age range. Please come back when you are.</li>
+            <h2>Page 5: Joining The Open Inclusion Online Community</h2>
+            <p style="margin-bottom: 20px; line-height: 1.8; font-size: 16px;">Once you have read and confirmed the terms and conditions (if satisfied with them) we look forward to welcoming you into the Open Inclusion Insight Community. You will then be able to:</p>
+            <ul class="nested-list-circle" style="list-style-type: disc; margin-left: 40px; margin-top: 10px; margin-bottom: 25px;">
+               <li style="margin-bottom: 10px; line-height: 1.6;">Be invited to participate in paid research.</li>
+               <li style="margin-bottom: 10px; line-height: 1.6;">Engage in the online community discussions with others from across our community to share disability or age related experiences, barriers, creative approaches and solutions.</li>
             </ul>
+            <div style="margin-bottom: 20px;">
+               <p style="margin-bottom: 15px; line-height: 1.8; font-size: 16px;"><strong>Paid research opportunities</strong> can vary from short surveys, to more in-depth research such as mystery shopping, interviews, product or service user testing, transport journey testing, interviews or focus groups. Most are conducted online. Depending on where you live, we sometimes also have in-person consumer research. Incentives are aligned to the time and effort required to complete the research.</p>
+               <p style="margin-bottom: 15px; line-height: 1.8; font-size: 16px;"><strong>There is never an obligation for you to take part in any research</strong> that you are invited to. You can "opt in" to any opportunities that you wish to join, or simply wait for another one that better suits you.</p>
+               <p style="margin-bottom: 15px; line-height: 1.8; font-size: 16px;"><strong>There is no obligation for Open to provide you with research.</strong> Although we wish to engage everyone in our community, we select participants from the people who are interested in taking part. We need to balance the range of personal characteristics to meet the needs of the project. You may not always get selected for projects you would like to be part of. Please ask again next time. We love that you wish to be involved.</p>
+               <p style="margin-bottom: 15px; line-height: 1.8; font-size: 16px;"><strong>We ensure our responses are valid, not fraudulent. For many projects you must be Open Verified</strong> particularly for more involved, higher paid research. These members have shown us identification or met with us (online or in person) so that we are sure that they are who they say they are.</p>
+               <p style="margin-bottom: 15px; line-height: 1.8; font-size: 16px;"><strong>At Open we expect and ask that everyone is treated with respect and courtesy at all times</strong>, including other community members, research participants, researchers, clients or anyone else involved. We ask everyone to interact in a considerate and kind manner at all times, including while using the online Open Inclusion community space, or in any other digital, phone based or in-person surveys, forums or engagement. We reserve the right to expel anyone from research or the community who behaves in a way that breaches this.</p>
+               <p style="margin-bottom: 15px; line-height: 1.8; font-size: 16px;"><strong>Although we try, we don't always get it right.</strong> If you have any constructive feedback or a complaint about your experiences with Open Inclusion, please contact <a href="mailto:contact@openinclusion.com">contact@openinclusion.com</a>. Please describe what happened and why something didn't work for you, or provide us with constructive feedback to make our research better. This goes directly to our leadership team who will take steps to understand and address the issue, both for you and for future engagements. We always appreciate learning how we can do better.</p>
+               <p style="margin-bottom: 15px; line-height: 1.8; font-size: 16px;">All research we conduct is carried out in accordance with the current <strong><a href="https://www.mrs.org.uk/standards/code-of-conduct" target="_blank">Market Research Society's Code of Conduct</a></strong>. Open Inclusion is a member of the Market Research Society. We are also a signatory to the <strong><a href="https://www.mrs.org.uk/resources/ceo-inclusion-pledge" target="_blank">MRS Inclusion Pledge</a></strong> and have committed to the five elements that ensure equitable opportunities both in our workplace and through our work.</p>
+               <p style="margin-bottom: 15px; line-height: 1.8; font-size: 16px;">Our community is currently only open to those currently <strong>18 years old or older</strong>. If you are not yet 18, thank you for your interest, but we do not currently extend to your age range. Please come back when you are.</p>
+            </div>
         HTML
          ,
          'validation' => array()
@@ -1814,63 +1870,6 @@ $part2Step5Form = array(
       ),
       array(
          'name' => 'submit_part2_step5',
-         'type' => 'submit',
-         'li-class' => 'submit',
-         'value' => __('Save & Next Step', 'openinclusion' )
-      ),
-   )
-);
-?>
-<?php
-// Part 2 Step 6 form definition (Your Privacy Protections)
-$part2Step6Form = array(
-   'cont-id' => '',
-   'cont-class' => 'contact panel-contact',
-   'form-id' => 'part2-step6-form',
-   'client-val' => true,
-   'mand-ind' => '*',
-   'success-img' => '',
-   'error-img' => '',
-   'error-sect-id' => 'sub-errs',
-   'error-sect-class' => '',
-   'error-sect-hdr' => __( 'Submission Problems', 'openinclusion' ),
-   'error-sect-hdr-level' => 2,
-   'error-sect-intro' => '<p>'.__( 'We were not able to process your enquiry. Please review the following items and check what you entered', 'openinclusion' ).'</p>',
-   'nonce-name' => 'part2_step6_nonce',
-   'sq-reqd' => false,
-   'sq-id' => 'sq',
-   'sq-label' => __( 'Please answer this question:', 'openinclusion' ).' %1$s <span class="clarify">('.__( 'Helps stop spam', 'openinclusion' ).')</span>',
-   'fields' => array(
-      array(
-         'label' => '',
-         'type' => 'other-html',
-         'name' => 'banner6',
-         'li-class' => 'clear',
-         'value' => <<<HTML
-            <h2>PAGE 6: YOUR PRIVACY PROTECTIONS</h2>
-            <p>Maintaining your data privacy and trust is our top priority. As a General Data Privacy Regulations (GDPR)-compliant organization, we proactively train our staff and manage your personal information to ensure your privacy, safety and confidence.</p>
-            <p>We collect personal information to match you with relevant research opportunities, balance and understand the range of perspectives that we gather. We protect your data with industry-standard encryption and never share personally identifiable details without your explicit consent.</p>
-            <p>Every research project has a clear separate consent that you will be sent to review, ask questions as you wish and need to sign if you wish to take part. It describes exactly how your data will be used, who will manage it and who will see it. It is always your choice to be involved or not once all the details are clear as relevant to that project.</p>
-            <p>You have full control over your personal information. At any time, you can access and update your information or ask us to remove your data by contacting us at <a href="mailto:contact@openinclusion.com">contact@openinclusion.com</a>. You can also unsubscribe from our communications at any time with a single click.</p>
-            <p>For a comprehensive understanding of how we handle your data, including your full GDPR rights, please review our detailed Privacy Policy and Terms and Conditions available on our website.</p>
-            <p>Required questions are marked with an asterisk *</p>
-HTML
-         ,
-         'validation' => array()
-      ),
-      array(
-         'label' => __('<span>Please confirm</span>', 'openinclusion'),
-         'type' => 'chkboxgroup-inf',
-         'name' => 'PleaseConfirm',
-         'li-class' => 'clear',
-         'options' => get_confirm_methods(),
-         'validation' => array(
-            array('reqd', __( 'Please select all conditions', 'openinclusion' )),
-            array('check_all_selected', __( 'Please select all conditions', 'openinclusion' )),
-         ),
-      ),
-      array(
-         'name' => 'submit_part2_step6',
          'type' => 'submit',
          'li-class' => 'submit',
          'value' => __('Save & Next Step', 'openinclusion' )
@@ -1904,7 +1903,7 @@ $part2Step7Form = array(
          'name' => 'banner7',
          'li-class' => 'clear',
          'value' => <<<HTML
-            <h2>PAGE 7: IDENTITY VERIFICATION</h2>
+            <h2>Page 6: Identity Verification</h2>
             <p>To be invited to the more in-depth research, please verify your identity.</p>
             <p>We prefer inviting people to our research who are Open Verified. They have completed this final step.</p>
             <p>Open Verified is a layer of additional personal verification that helps us know that you are who you say you are. This reduces the risks of research fraud and increases our confidence in the insights that we provide to our clients.</p>
@@ -1960,7 +1959,7 @@ $part2Step8Form = array(
          'name' => 'banner8',
          'li-class' => 'clear',
          'value' => <<<HTML
-            <h2>PAGE 8: CREATE YOUR COMMUNITY LOGIN</h2>
+            <h2>Page 7: Create Your Community Login</h2>
             <p>In order to log into the community we have generated a username for you.</p>
             <p>You can create your own password or we can auto generate one for you.</p>
             <p><strong>Password requirements:</strong> Passwords need to have a minimum of 8 characters and include a mix of letters (uppercase and lowercase), numbers, and special characters.</p>
@@ -2065,7 +2064,7 @@ $part2Step9Form = array(
          'name' => 'banner9',
          'li-class' => 'clear',
          'value' => <<<HTML
-            <h2>PAGE 9: THANK YOU!</h2>
+            <h2>Page 8: Thank You!</h2>
             <p>We look forward to working with you on paid research opportunities soon.</p>
             <p>We cannot know exactly when the next research opportunity will arise that includes respondents with your access needs and other characteristics. We hope that it will not be long.</p>
             <p>In the meantime please engage with others across our community in discussions.</p>

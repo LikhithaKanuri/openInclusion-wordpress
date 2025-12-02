@@ -1145,10 +1145,13 @@ jQuery(document).ready(function ($) {
       $(this).parent().find("input").trigger("click");
    });
 
-   // Part 2 Step 1: Over 18 toggle and screen-out handling
+   // Part 2 Step 1: Over 18 question removed - no longer needed
+   // Age validation now handled via birth year field
    (function() {
       var $form = $('#part2-step1-form');
       if (!$form.length) return;
+      // Over 18 handling removed - return early
+      return;
 
       function getFieldLiByInput($input) {
          if (!$input.length) return $();
@@ -1276,6 +1279,83 @@ jQuery(document).ready(function ($) {
    });
 
    })();
+
+   /****************** Prevent Enter key from submitting forms **************************/
+   // Track if Enter key was pressed (to distinguish from button clicks)
+   var enterKeyPressed = false;
+   
+   // Prevent Enter key from submitting forms - catch it at the form level first
+   $(document).on('keydown', '.contact form', function(e) {
+      if (e.keyCode === 13 || e.which === 13) {
+         var $target = $(e.target);
+         
+         // Allow Enter in textareas (for line breaks)
+         if ($target.is('textarea')) {
+            // Allow default behavior (line break) but mark that Enter was pressed
+            enterKeyPressed = true;
+            return true;
+         }
+         
+         // Allow Enter on submit/button elements when they are focused
+         if ($target.is('input[type="submit"], input[type="button"], button[type="submit"], button[type="button"]')) {
+            // Mark that this is an intentional button press
+            enterKeyPressed = false;
+            $target.closest('form').data('submit-triggered', true);
+            return true;
+         }
+         
+         // For all other form elements, prevent Enter key
+         e.preventDefault();
+         e.stopPropagation();
+         e.stopImmediatePropagation();
+         enterKeyPressed = true;
+         return false;
+      }
+   });
+   
+   // Additional prevention at input/select level
+   $(document).on('keydown', '.contact form input:not([type="submit"]):not([type="button"]):not([type="checkbox"]):not([type="radio"]), .contact form select', function(e) {
+      if (e.keyCode === 13 || e.which === 13) {
+         e.preventDefault();
+         e.stopPropagation();
+         e.stopImmediatePropagation();
+         enterKeyPressed = true;
+         return false;
+      }
+   });
+   
+   // Prevent form submission via Enter key unless it's from a submit button click
+   $(document).on('submit', '.contact form', function(e) {
+      var $form = $(this);
+      var submitTriggered = $form.data('submit-triggered');
+      
+      // If Enter key was pressed and no button was explicitly clicked, prevent submission
+      if (enterKeyPressed && !submitTriggered) {
+         e.preventDefault();
+         e.stopPropagation();
+         e.stopImmediatePropagation();
+         enterKeyPressed = false; // Reset flag
+         return false;
+      }
+      
+      // Reset flags
+      enterKeyPressed = false;
+      $form.data('submit-triggered', false);
+   });
+   
+   // Mark form submission when submit button is clicked (not Enter key)
+   $(document).on('click', '.contact form input[type="submit"], .contact form input[type="button"], .contact form button[type="submit"], .contact form button[type="button"]', function(e) {
+      var $form = $(this).closest('form');
+      $form.data('submit-triggered', true);
+      enterKeyPressed = false; // Clear Enter key flag when button is clicked
+   });
+   
+   // Also handle mousedown to catch button presses early
+   $(document).on('mousedown', '.contact form input[type="submit"], .contact form input[type="button"], .contact form button[type="submit"], .contact form button[type="button"]', function(e) {
+      var $form = $(this).closest('form');
+      $form.data('submit-triggered', true);
+      enterKeyPressed = false;
+   });
 
    /****************** Form is submitted **************************/
    $('.contact').find('input[type="submit"]').on('click', function (e) {
@@ -1497,8 +1577,27 @@ jQuery(document).ready(function ($) {
 
       out_html += '</ul></section>';
       const element = document.getElementById(err_arr[0][0]);
-      element.focus()
-      element.scrollIntoView();
+      
+      // Check if we're on step7 page - if so, don't scroll to top
+      var isStep7Page = window.location.pathname.indexOf('part2-step7') !== -1 || 
+                        window.location.pathname.indexOf('step7') !== -1 ||
+                        document.getElementById('part2-step7-form') !== null;
+      
+      if (isStep7Page && element) {
+         // For step7, just focus the element but don't scroll
+         // The custom script will handle scrolling to the error message
+         try {
+            element.focus();
+         } catch(e) {
+            // If focus fails, try scrollIntoView with preventScroll option
+            if (element.scrollIntoView) {
+               element.scrollIntoView({ behavior: 'instant', block: 'nearest' });
+            }
+         }
+      } else if (element) {
+         element.focus()
+         element.scrollIntoView();
+      }
 
       $('#' + err_id + '-list').html(out_html);
       // $( '#'+err_id + '-section' ).focus();
@@ -1923,6 +2022,8 @@ function checkPreferNotToRespond(element) {
       jQuery('#OtherNeedsOtherPleaseSpecify_OpenText').prop('disabled', true).val('');
       jQuery('#OtherTechnologiesOtherPleaseSpecify_OpenText').hide();
       jQuery('#OtherTechnologiesOtherPleaseSpecify_OpenText').prop('disabled', true).val('');
+      jQuery('#SexualOrientationsOtherPleaseSpecify_OpenText').hide();
+      jQuery('#SexualOrientationsOtherPleaseSpecify_OpenText').prop('disabled', true).val('');
       
       console.log('Hiding text fields in fieldset');
    } else {
@@ -1948,6 +2049,8 @@ function checkPreferNotToRespond(element) {
          jQuery('#OtherNeedsOtherPleaseSpecify_OpenText').prop('disabled', false);
          jQuery('#OtherTechnologiesOtherPleaseSpecify_OpenText').show();
          jQuery('#OtherTechnologiesOtherPleaseSpecify_OpenText').prop('disabled', false);
+         jQuery('#SexualOrientationsOtherPleaseSpecify_OpenText').show();
+         jQuery('#SexualOrientationsOtherPleaseSpecify_OpenText').prop('disabled', false);
       }
       
       console.log('Showing text fields in fieldset');

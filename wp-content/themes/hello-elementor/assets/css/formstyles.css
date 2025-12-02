@@ -26,7 +26,7 @@ input[type=date], input[type=email], input[type=number], input[type=password], i
   list-style-type: none;
   padding: 0;
   background: none;
-  margin: 0 0 2em 0;
+  margin: 0 0 1.2em 0;
   clear: left;
 }
 
@@ -105,6 +105,18 @@ input[type=date], input[type=email], input[type=number], input[type=password], i
   clear: left;
   margin: 0.4em 0; }
 
+/* Ensure fieldsets don't add extra spacing between questions */
+#content .contact ul li fieldset {
+  margin: 0;
+  padding: 0;
+}
+
+/* Ensure nested lists inside fieldsets don't add extra spacing */
+#content .contact ul li fieldset ul {
+  margin: 0;
+  padding: 0;
+}
+
 #content .contact ul li.check-radio input {
   clear: left;
   float: left;
@@ -117,7 +129,10 @@ input[type=date], input[type=email], input[type=number], input[type=password], i
   width: auto; }
 
 #content .contact ul li.submit {
-  padding-top: 0.5em; }
+  padding-top: 0.5em;
+  margin-bottom: 20px;
+  clear: both;
+}
 
 #content .contact ul li.columns ul.checkbox-radio > li {
   display: inline-block;
@@ -138,15 +153,72 @@ input[type=date], input[type=email], input[type=number], input[type=password], i
   line-height: 1.6rem;
   font-weight: normal !important; }
 
+/* Style for single checkboxes (like do_not_consent_contact) */
+#content .contact ul li input[type="checkbox"]:not([name*="[]"]) {
+  width: 24px !important;
+  height: 24px !important;
+  margin-right: 10px;
+  margin-top: 0;
+  vertical-align: middle;
+  cursor: pointer;
+  float: left;
+}
+
+/* Specific styling for do_not_consent_contact checkbox */
+#do_not_consent_wrapper {
+  margin-top: 1.2em;
+  padding-top: 1.2em;
+  border-top: 1px solid #ddd;
+  clear: both;
+}
+
+#do_not_consent_wrapper label {
+  display: block !important;
+  cursor: pointer;
+  line-height: 1.8em;
+  overflow: hidden;
+}
+
+#do_not_consent_wrapper input[type="checkbox"] {
+  width: 24px !important;
+  height: 24px !important;
+  margin-right: 10px !important;
+  margin-top: 2px !important;
+  float: left;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+#do_not_consent_wrapper label .text {
+  display: inline-block !important;
+  padding: 0 !important;
+  margin-left: 0 !important;
+  width: auto;
+  line-height: 1.6rem;
+}
+
 #content .contact fieldset {
   width: 100%;
-  display: block; }
+  display: block;
+  margin: 0;
+  padding: 0;
+}
 
 #content .contact legend {
   width: 90%;
   display: block;
   padding: 0 30px 0 0;
+  margin: 0 0 0.5em 0;
   font-weight: normal !important; }
+
+/* Remove ">" character from expandableLegend */
+#content .contact legend.expandableLegend::after {
+  content: none !important;
+}
+
+#content .contact legend.expandableLegend {
+  content: none;
+}
 
 #content .contact legend.valid,
 #content .contact label.valid {
@@ -176,6 +248,10 @@ input[type=date], input[type=email], input[type=number], input[type=password], i
 #content .contact li.submit {
   display: inline-block;
   margin-right: 10px;
+  margin-bottom: 20px;
+  clear: both;
+  position: relative;
+  z-index: 10;
 }
 
 /* Container for submit buttons to control alignment */
@@ -189,6 +265,27 @@ input[type=date], input[type=email], input[type=number], input[type=password], i
 
 /* Clear float after submit buttons */
 #content .contact ul li.submit:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Ensure form container has proper spacing before footer */
+#content .contact {
+  margin-bottom: 40px;
+  padding-bottom: 30px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Ensure submit buttons stay within form boundaries */
+#content .contact ul {
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+}
+
+/* Clear floats after the form list */
+#content .contact ul:after {
   content: "";
   display: table;
   clear: both;
@@ -249,11 +346,14 @@ input[type=button]:focus, input[type=button]:hover, input[type=submit]:focus, in
 
 #content fieldset{
 	padding: 0px;
-    border: 0px;	
+    border: 0px;
+    margin: 0;
 }
 
 #content fieldset legend{	
 	font-weight:normal;
+    margin: 0;
+    padding: 0;
 }
 
 .txtbold{
@@ -488,7 +588,7 @@ label div.custom::after {
 
 /* Position the phone number field container - float next to country code */
 #liphonenumber {
-  margin-bottom: 2em !important;
+  margin-bottom: 1.2em !important;
   float: left !important;
   width: auto !important;
   min-width: 300px;

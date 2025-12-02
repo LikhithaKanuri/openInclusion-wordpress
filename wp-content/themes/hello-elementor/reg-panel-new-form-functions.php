@@ -178,6 +178,57 @@ function opinc_panel_form_sc_v2($atts, $content = null) {
    $strHtml.= "<script>jQuery(document).ready(function($) { jQuery('#content').find('header').remove(); });</script>";
    // Need the javascript after the form
    // $strHtml .= '<script type="text/javascript" src="https://ly190.infusionsoft.com/app/webTracking/getTrackingCode?trackingId=3e8aae4c347ffce85759672e1959435e"></script>';
+   
+   // JavaScript for "I do not consent" checkbox and contact form
+   $strHtml .= <<<HTML
+   <script>
+   jQuery(document).ready(function($) {
+      // Handle "I do not consent" checkbox
+      $('#do_not_consent_contact').on('change', function() {
+         if ($(this).is(':checked')) {
+            $('#contact-form-section').slideDown();
+            // Disable consent checkboxes
+            $('input[name="PleaseConfirm[]"]').prop('disabled', true).prop('checked', false);
+         } else {
+            $('#contact-form-section').slideUp();
+            // Re-enable consent checkboxes
+            $('input[name="PleaseConfirm[]"]').prop('disabled', false);
+         }
+      });
+      
+      // Handle email link with form data
+      $('#open-staff-contact-form').on('submit', function(e) {
+         e.preventDefault();
+         var name = $('#contact_name').val();
+         var email = $('#contact_email').val();
+         var message = $('#contact_message').val();
+         var subject = encodeURIComponent('Contact from Registration Form - Do Not Consent');
+         var body = encodeURIComponent('Name: ' + name + '\\nEmail: ' + email + '\\n\\nMessage:\\n' + message);
+         window.location.href = 'mailto:research@openinclusion.com?subject=' + subject + '&body=' + body;
+      });
+      
+      // Update email link when form fields change
+      $('#contact_name, #contact_email, #contact_message').on('input', function() {
+         var name = $('#contact_name').val();
+         var email = $('#contact_email').val();
+         var message = $('#contact_message').val();
+         var subject = encodeURIComponent('Contact from Registration Form - Do Not Consent');
+         var body = encodeURIComponent('Name: ' + name + '\\nEmail: ' + email + '\\n\\nMessage:\\n' + message);
+         $('#email-link').attr('href', 'mailto:research@openinclusion.com?subject=' + subject + '&body=' + body);
+      });
+      
+      // Prevent form submission if "do not consent" is checked
+      $('#contactform').on('submit', function(e) {
+         if ($('#do_not_consent_contact').is(':checked')) {
+            e.preventDefault();
+            alert('If you do not consent, please use the contact form above to speak with Open Staff.');
+            return false;
+         }
+      });
+   });
+   </script>
+HTML;
+   
    $phoneCodes = get_phoneCodes();
    $phoneCodesJson = json_encode($phoneCodes);
    $selectedCode = isset($clean['inf_field_countryphonecode']) ? htmlspecialchars($clean['inf_field_countryphonecode'], ENT_QUOTES, 'UTF-8') : '';
@@ -271,7 +322,7 @@ function opinc_part2_step1_form_sc($atts, $content = null) {
          if(isset($user_info['Country'][0])) $clean['inf_field_country'] = $user_info['Country'][0];
          if(isset($user_info['Region'][0])) $clean['inf_field_region'] = $user_info['Region'][0];
          if(isset($user_info['Postcode'][0])) $clean['inf_field_postcode'] = $user_info['Postcode'][0];
-         if(isset($user_info['Over 18'][0])) $clean['inf_field_over18'] = $user_info['Over 18'][0];
+         // Over 18 question removed - no longer needed
          if(isset($user_info['Year_Born'][0])) $clean['inf_custom_YearBorn'] = $user_info['Year_Born'][0];
          if(isset($user_info['Has Disability'][0])) $clean['inf_field_hasDisability'] = $user_info['Has Disability'][0];
          if(isset($user_info['Relationship to Disability'][0])) {
@@ -652,149 +703,140 @@ function opinc_part2_step5_form_sc($atts, $content = null) {
 
    global $part2Step5Form;
    $strHtml = printFormNew($part2Step5Form, $clean, $arrErrs );
-   $strHtml.= "<script>jQuery(document).ready(function($) { jQuery('#content').find('header').remove(); });</script>";
+   $strHtml.= "<script>
+   (function($) {
+      // Override the scrollIntoView method to prevent scroll to top for this page
+      var originalScrollIntoView = Element.prototype.scrollIntoView;
+      var scrollOverrideActive = false;
+      
+      // Prevent default scroll to top behavior
+      if (window.location.hash === '' || window.location.hash === '#') {
+         window.history.replaceState('', document.title, window.location.pathname + window.location.search);
+      }
+      
+      // Store scroll position before form submission
+      $('#part2-step5-form').on('submit', function(e) {
+         sessionStorage.setItem('part2step5_submitted', 'true');
+         sessionStorage.setItem('part2step5_scrollpos', $(window).scrollTop().toString());
+      });
+      
+      $(document).ready(function() {
+         $('#content').find('header').remove();
+         
+         // Override scrollIntoView to prevent unwanted scrolling
+         Element.prototype.scrollIntoView = function(options) {
+            // Only prevent scroll if we're on the step5 page and have errors
+            var hasStep5Errors = $('#CommunityAgreement-errors').length || 
+                                $('#CommunityAgreement-legend').closest('fieldset').find('.fieldseterrors').length ||
+                                ($('#form-error-list').length && $('#form-error-list').text().indexOf('agree') !== -1);
+            
+            if (hasStep5Errors && $('#part2-step5-form').length) {
+               // Don't call the original scrollIntoView - we'll handle scrolling ourselves
+               return;
+            }
+            // For other cases, use the original behavior
+            return originalScrollIntoView.call(this, options);
+         };
+         
+         // Function to scroll to error message
+         function scrollToError() {
+            var hasErrors = false;
+            var targetElement = null;
+            
+            // Check for fieldset errors (most specific)
+            var fieldsetErrors = $('#CommunityAgreement-legend').closest('fieldset').find('.fieldseterrors');
+            if (fieldsetErrors.length && fieldsetErrors.text().trim() !== '') {
+               targetElement = $('#CommunityAgreement-legend').closest('fieldset');
+               hasErrors = true;
+            }
+            // Check for error container
+            else if ($('#CommunityAgreement-errors').length && $('#CommunityAgreement-errors').text().trim() !== '') {
+               targetElement = $('#CommunityAgreement-legend').closest('fieldset');
+               hasErrors = true;
+            }
+            // Check for general form errors
+            else if ($('#form-error-list').length && $('#form-error-list').text().trim() !== '') {
+               // If there's a CommunityAgreement error, scroll to that fieldset
+               var errorText = $('#form-error-list').text();
+               if (errorText.indexOf('agree') !== -1 || errorText.indexOf('CommunityAgreement') !== -1 || errorText.indexOf('must agree') !== -1) {
+                  targetElement = $('#CommunityAgreement-legend').closest('fieldset');
+                  hasErrors = true;
+               }
+            }
+            
+            if (hasErrors && targetElement && targetElement.length) {
+               // Immediately prevent any scroll to top
+               $('html, body').stop(true, true);
+               
+               // Get the target position
+               var scrollPosition = targetElement.offset().top - 100;
+               
+               // Set scroll position immediately (no animation delay)
+               $('html, body').scrollTop(scrollPosition);
+               
+               // Then animate smoothly
+               setTimeout(function() {
+                  $('html, body').animate({
+                     scrollTop: scrollPosition
+                  }, 400, function() {
+                     // Focus on the fieldset for accessibility after scroll completes
+                     targetElement.attr('tabindex', '-1').focus();
+                  });
+               }, 50);
+               
+               return true;
+            }
+            return false;
+         }
+         
+         // Check if form was just submitted (after page reload with errors)
+         var wasSubmitted = sessionStorage.getItem('part2step5_submitted') === 'true';
+         if (wasSubmitted) {
+            sessionStorage.removeItem('part2step5_submitted');
+            
+            // Immediately prevent scroll to top
+            $('html, body').scrollTop(0);
+            
+            // Wait for DOM to be ready, then scroll to error
+            setTimeout(function() {
+               scrollToError();
+            }, 50);
+            
+            // Also check after a bit more delay
+            setTimeout(function() {
+               scrollToError();
+            }, 200);
+            } else {
+            // Check for errors on page load - run multiple times to catch all scenarios
+            var errorFound = false;
+            
+            // Immediate check
+            if (scrollToError()) {
+               errorFound = true;
+            }
+            
+            // Check after short delay (for dynamically rendered errors)
+            setTimeout(function() {
+               if (!errorFound) {
+                  scrollToError();
+               }
+            }, 100);
+            
+            // Check after longer delay (for any late-rendering errors)
+            setTimeout(function() {
+               if (!errorFound) {
+                  scrollToError();
+               }
+            }, 500);
+         }
+      });
+   })(jQuery);
+   </script>";
    return $strHtml;
 }
 add_shortcode("opinc-part2-step5", "opinc_part2_step5_form_sc");
 
-// Shortcode: Part 2 Step 6 (Privacy Protection)
-function opinc_part2_step6_form_sc($atts, $content = null) {
-   extract(shortcode_atts(array(
-   ), $atts));
-
-   if (!is_user_logged_in()) {
-      if($_SERVER['HTTP_HOST'] == 'localhost') {
-         $redirect = "http://" . $_SERVER['HTTP_HOST']."/openinclusion/login";
-      } else {
-         $redirect = "https://" . $_SERVER['HTTP_HOST']. "/login";
-      }
-      wp_redirect($redirect); exit;
-   }
-
-   // Don't clear session data - let it persist across navigation
-   
-   $arrErrs = getFormErrors();
-   $clean = getClean();
-
-   $sessionData = getFormStepData('step6');
-   if(!empty($sessionData)) {
-        $clean = $sessionData;
-    } else if (empty($clean) || !isset($clean['submitted'])) {
-      $current_user = wp_get_current_user();
-      if($current_user) {
-         $userid = $current_user->ID;
-         $user_info = get_user_meta($userid);
-         $clean = array();
-         if(isset($user_info['Consent'][0])) {
-            $val = $user_info['Consent'][0];
-            $clean['PleaseConfirm'] = strpos($val,'|') !== false ? explode('|', $val) : array($val);
-         }
-      }
-   }
-
-   global $part2Step6Form;
-   $strHtml = printFormNew($part2Step6Form, $clean, $arrErrs );
-   $strHtml.= "<script>
-   jQuery(document).ready(function($) { 
-      jQuery('#content').find('header').remove();
-      
-      // Add visual feedback for checkbox validation
-      var totalCheckboxes = $('#PleaseConfirm-legend').parent().find('input[type=\"checkbox\"]').length;
-      
-      $('#PleaseConfirm-legend').parent().find('input[type=\"checkbox\"]').on('change', function() {
-         var checkedCount = $('#PleaseConfirm-legend').parent().find('input[type=\"checkbox\"]:checked').length;
-         var errorDiv = $('#PleaseConfirm-errors');
-         
-         if (checkedCount < totalCheckboxes) {
-            errorDiv.html('Please confirm all ' + totalCheckboxes + ' statements (' + checkedCount + '/' + totalCheckboxes + ' selected)').show();
-            errorDiv.attr('role', 'alert');
-         } else {
-            errorDiv.html('').hide();
-            errorDiv.removeAttr('role');
-         }
-      });
-   });
-   </script>";
-   return $strHtml;
-}
-add_shortcode("opinc-part2-step6", "opinc_part2_step6_form_sc");
-
-// Redirects after Step 6 submission
-function redirectAfterPart2Step6(){
-   ob_clean();
-   ob_start();
-   if ( isset($_POST['previous_step6']) ) {
-       storeFormStepData('step6', $_POST);
-       if($_SERVER['HTTP_HOST'] == 'localhost') {
-           $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/part2-step5/';
-       } else {
-           $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/part2-step5/";
-       }
-       wp_redirect($redirectUrl);
-       exit;
-   }
-   if(isset($_POST['submit_part2_step6']) || isset($_POST['save_continue_later_step6'])) {
-      $current_user = wp_get_current_user();
-      storeFormStepData('step6', $_POST);
-
-      if($current_user) {
-         $userid = $current_user->ID;
-         // Validate all confirmations are selected - all 4 checkboxes must be checked
-        // This validation applies to both "Save & Next Step" and "Save & Continue Later"
-         $errs = array();
-         if(!isset($_POST['PleaseConfirm']) || !is_array($_POST['PleaseConfirm']) || count($_POST['PleaseConfirm']) < 4) {
-            $errs[] = array('PleaseConfirm', __('Please confirm all 4 statements to proceed', 'openinclusion'));
-         }
-         if(count($errs) > 0) { 
-            setFormErrors($errs); 
-            return; 
-         }
-
-         // Save meta
-         $userMetaData = prepareUserMetaData();
-         foreach( $userMetaData as $key => $val ) { update_user_meta( $userid, $key, $val ); }
-
-                  // Update Keap with Step 6 data
-         if (file_exists(__DIR__."/../../../infusion/updateMultiStepData.php")) {
-            include_once (__DIR__."/../../../infusion/updateMultiStepData.php");
-            $user_info = get_user_meta($userid);
-            $user_email = isset($user_info['Email'][0]) ? $user_info['Email'][0] : '';
-            
-            // If no email in meta, try to get from user object
-            if (empty($user_email)) {
-                $user_email = $current_user->user_email;
-            }
-            
-            // Only proceed if we have a valid email
-            if (!empty($user_email)) {
-                $result = updateKeapMultiStepData('step6', $_POST, $user_email);
-                error_log("Keap update result for step6: " . ($result ? 'SUCCESS' : 'FAILED'));
-            } else {
-                error_log("No valid email found for step6");
-            }
-         }
-
-
-
-         // Update status
-         update_user_meta( $userid, 'Part2Step6Completed', 'Yes' );
-
-         if(isset($_POST['save_continue_later_step6'])) {
-            if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/mywordpress/thank-you-2/'; }
-            else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/thank-you-2/"; }
-            wp_redirect($redirectUrl); exit;
-         }
-
-         // Next: Step 7
-         if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/part2-step7/'; }
-         else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/part2-step7/"; }
-         wp_redirect($redirectUrl); exit;
-      }
-   }
-}
-add_action( 'template_redirect', 'redirectAfterPart2Step6');
-
-// Shortcode: Part 2 Step 7 (Identity Verification)
+// Shortcode: Part 2 Step 7 (Page 6: Identity Verification)
 function opinc_part2_step7_form_sc($atts, $content = null) {
    extract(shortcode_atts(array(
    ), $atts));
@@ -830,7 +872,266 @@ function opinc_part2_step7_form_sc($atts, $content = null) {
 
    global $part2Step7Form;
    $strHtml = printFormNew($part2Step7Form, $clean, $arrErrs );
-   $strHtml.= "<script>jQuery(document).ready(function($) { jQuery('#content').find('header').remove(); });</script>";
+   // Add immediate inline script to prevent scroll BEFORE any other scripts run
+   $strHtml.= "<script>
+   // IMMEDIATE scroll prevention - runs before jQuery or any other scripts
+   (function() {
+      // Store original scrollIntoView immediately
+      if (typeof Element !== 'undefined' && Element.prototype.scrollIntoView) {
+         var originalScrollIntoView = Element.prototype.scrollIntoView;
+         
+         // Override immediately to catch any early calls
+         Element.prototype.scrollIntoView = function(options) {
+            // Check if we're on step7 page
+            var isStep7Page = window.location.pathname.indexOf('part2-step7') !== -1 || 
+                              window.location.pathname.indexOf('step7') !== -1;
+            
+            if (!isStep7Page) {
+               // Try to detect step7 form in DOM
+               try {
+                  if (document.getElementById('part2-step7-form') !== null) {
+                     isStep7Page = true;
+                  }
+               } catch(e) {}
+            }
+            
+            if (isStep7Page) {
+               // Check for errors - if DOM not ready, prevent scroll to be safe
+               try {
+                  var openVerifiedErrors = document.getElementById('OpenVerifiedOptIn-errors');
+                  var formErrorList = document.getElementById('form-error-list');
+                  var openVerifiedLegend = document.getElementById('OpenVerifiedOptIn-legend');
+                  
+                  var hasErrors = false;
+                  if (openVerifiedErrors && openVerifiedErrors.textContent.trim() !== '') {
+                     hasErrors = true;
+                  } else if (openVerifiedLegend) {
+                     var fieldset = openVerifiedLegend.closest('fieldset');
+                     if (fieldset) {
+                        var fieldsetErrors = fieldset.querySelector('.fieldseterrors');
+                        if (fieldsetErrors && fieldsetErrors.textContent.trim() !== '') {
+                           hasErrors = true;
+                        }
+                     }
+                  } else if (formErrorList && formErrorList.textContent) {
+                     var errorText = formErrorList.textContent.toLowerCase();
+                     if (errorText.indexOf('agree') !== -1 || errorText.indexOf('openverifiedoptin') !== -1 || errorText.indexOf('verify') !== -1) {
+                        hasErrors = true;
+                     }
+                  }
+                  
+                  // If we have errors or DOM not ready, prevent scroll
+                  if (hasErrors || !document.body || document.readyState === 'loading') {
+                     return; // Don't scroll
+                  }
+               } catch(e) {
+                  // If error checking fails, prevent scroll to be safe
+                  return;
+               }
+            }
+            
+            // For other cases, use original behavior
+            return originalScrollIntoView.call(this, options);
+         };
+      }
+   })();
+   </script>
+   <script>
+   (function($) {
+      // IMMEDIATELY override scrollIntoView BEFORE any other scripts can use it
+      // This must happen synchronously, not in document.ready
+      var originalScrollIntoView = Element.prototype.scrollIntoView;
+      var isStep7Page = window.location.pathname.indexOf('part2-step7') !== -1 || 
+                        window.location.pathname.indexOf('step7') !== -1 ||
+                        document.getElementById('part2-step7-form') !== null;
+      
+      // Override scrollIntoView immediately to catch early calls
+      Element.prototype.scrollIntoView = function(options) {
+         // Check if we're on step7 page
+         if (isStep7Page || document.getElementById('part2-step7-form') !== null) {
+            // Check for step7 errors
+            var hasStep7Errors = false;
+            try {
+               var openVerifiedErrors = document.getElementById('OpenVerifiedOptIn-errors');
+               var formErrorList = document.getElementById('form-error-list');
+               var openVerifiedLegend = document.getElementById('OpenVerifiedOptIn-legend');
+               
+               if (openVerifiedErrors && openVerifiedErrors.textContent.trim() !== '') {
+                  hasStep7Errors = true;
+               } else if (openVerifiedLegend) {
+                  var fieldset = openVerifiedLegend.closest('fieldset');
+                  if (fieldset) {
+                     var fieldsetErrors = fieldset.querySelector('.fieldseterrors');
+                     if (fieldsetErrors && fieldsetErrors.textContent.trim() !== '') {
+                        hasStep7Errors = true;
+                     }
+                  }
+               } else if (formErrorList && formErrorList.textContent) {
+                  var errorText = formErrorList.textContent.toLowerCase();
+                  if (errorText.indexOf('agree') !== -1 || errorText.indexOf('openverifiedoptin') !== -1 || errorText.indexOf('verify') !== -1) {
+                     hasStep7Errors = true;
+                  }
+               }
+            } catch(e) {
+               // If DOM not ready, assume we might have errors and prevent scroll
+               hasStep7Errors = true;
+            }
+            
+            if (hasStep7Errors) {
+               // Don't call the original scrollIntoView - we'll handle scrolling ourselves
+               return;
+            }
+         }
+         // For other cases, use the original behavior
+         return originalScrollIntoView.call(this, options);
+      };
+      
+      // Prevent default scroll to top behavior
+      if (window.location.hash === '' || window.location.hash === '#') {
+         window.history.replaceState('', document.title, window.location.pathname + window.location.search);
+      }
+      
+      // Store scroll position before form submission
+      $(document).on('submit', '#part2-step7-form', function(e) {
+         sessionStorage.setItem('part2step7_submitted', 'true');
+         sessionStorage.setItem('part2step7_scrollpos', $(window).scrollTop().toString());
+      });
+      
+      $(document).ready(function() {
+         $('#content').find('header').remove();
+         
+         // Re-check if we're on step7 page (in case pathname check didn't work)
+         if (document.getElementById('part2-step7-form') !== null) {
+            isStep7Page = true;
+         }
+         
+         // Function to scroll to error message
+         function scrollToError() {
+            var hasErrors = false;
+            var targetElement = null;
+            
+            // Check for fieldset errors (most specific)
+            var fieldsetErrors = $('#OpenVerifiedOptIn-legend').closest('fieldset').find('.fieldseterrors');
+            if (fieldsetErrors.length && fieldsetErrors.text().trim() !== '') {
+               targetElement = $('#OpenVerifiedOptIn-legend').closest('fieldset');
+               hasErrors = true;
+            }
+            // Check for error container
+            else if ($('#OpenVerifiedOptIn-errors').length && $('#OpenVerifiedOptIn-errors').text().trim() !== '') {
+               targetElement = $('#OpenVerifiedOptIn-legend').closest('fieldset');
+               hasErrors = true;
+            }
+            // Check for general form errors
+            else if ($('#form-error-list').length && $('#form-error-list').text().trim() !== '') {
+               // If there's an OpenVerifiedOptIn error, scroll to that fieldset
+               var errorText = $('#form-error-list').text();
+               if (errorText.indexOf('agree') !== -1 || errorText.indexOf('OpenVerifiedOptIn') !== -1 || errorText.indexOf('verify') !== -1 || errorText.indexOf('must agree') !== -1) {
+                  targetElement = $('#OpenVerifiedOptIn-legend').closest('fieldset');
+                  hasErrors = true;
+               }
+            }
+            
+            if (hasErrors && targetElement && targetElement.length) {
+               // Immediately prevent any scroll to top
+               $('html, body').stop(true, true);
+               
+               // Get the target position
+               var scrollPosition = targetElement.offset().top - 100;
+               
+               // Set scroll position immediately (no animation delay)
+               $('html, body').scrollTop(scrollPosition);
+               
+               // Then animate smoothly
+               setTimeout(function() {
+                  $('html, body').animate({
+                     scrollTop: scrollPosition
+                  }, 400, function() {
+                     // Focus on the fieldset for accessibility after scroll completes
+                     targetElement.attr('tabindex', '-1').focus();
+                  });
+               }, 50);
+               
+               return true;
+            }
+            return false;
+         }
+         
+         // Immediately prevent any scroll on page load if we have errors
+         // This runs before any other scroll can happen
+         var hasErrorsOnLoad = false;
+         try {
+            var openVerifiedErrors = document.getElementById('OpenVerifiedOptIn-errors');
+            var formErrorList = document.getElementById('form-error-list');
+            var openVerifiedLegend = document.getElementById('OpenVerifiedOptIn-legend');
+            
+            if (openVerifiedErrors && openVerifiedErrors.textContent.trim() !== '') {
+               hasErrorsOnLoad = true;
+            } else if (openVerifiedLegend) {
+               var fieldset = openVerifiedLegend.closest('fieldset');
+               if (fieldset) {
+                  var fieldsetErrors = fieldset.querySelector('.fieldseterrors');
+                  if (fieldsetErrors && fieldsetErrors.textContent.trim() !== '') {
+                     hasErrorsOnLoad = true;
+                  }
+               }
+            } else if (formErrorList && formErrorList.textContent) {
+               var errorText = formErrorList.textContent.toLowerCase();
+               if (errorText.indexOf('agree') !== -1 || errorText.indexOf('openverifiedoptin') !== -1 || errorText.indexOf('verify') !== -1) {
+                  hasErrorsOnLoad = true;
+               }
+            }
+         } catch(e) {}
+         
+         if (hasErrorsOnLoad) {
+            // Immediately prevent scroll to top
+            window.scrollTo(0, 0);
+            $('html, body').stop(true, true).scrollTop(0);
+         }
+         
+         // Check if form was just submitted (after page reload with errors)
+         var wasSubmitted = sessionStorage.getItem('part2step7_submitted') === 'true';
+         if (wasSubmitted) {
+            sessionStorage.removeItem('part2step7_submitted');
+            
+            // Immediately prevent scroll to top
+            window.scrollTo(0, 0);
+            $('html, body').stop(true, true).scrollTop(0);
+            
+            // Wait for DOM to be ready, then scroll to error
+            setTimeout(function() {
+               scrollToError();
+            }, 50);
+            
+            // Also check after a bit more delay
+            setTimeout(function() {
+               scrollToError();
+            }, 200);
+            } else {
+            // Check for errors on page load - run multiple times to catch all scenarios
+            var errorFound = false;
+            
+            // Immediate check
+            if (scrollToError()) {
+               errorFound = true;
+            }
+            
+            // Check after short delay (for dynamically rendered errors)
+            setTimeout(function() {
+               if (!errorFound) {
+                  scrollToError();
+               }
+            }, 100);
+            
+            // Check after longer delay (for any late-rendering errors)
+            setTimeout(function() {
+               if (!errorFound) {
+                  scrollToError();
+               }
+            }, 500);
+         }
+      });
+   })(jQuery);
+   </script>";
    return $strHtml;
 }
 add_shortcode("opinc-part2-step7", "opinc_part2_step7_form_sc");
@@ -842,9 +1143,9 @@ function redirectAfterPart2Step7(){
    if ( isset($_POST['previous_step7']) ) {
        storeFormStepData('step7', $_POST);
        if($_SERVER['HTTP_HOST'] == 'localhost') {
-           $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/part2-step6/';
+           $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/part2-step5/';
        } else {
-           $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/part2-step6/";
+           $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/part2-step5/";
        }
        wp_redirect($redirectUrl);
        exit;
@@ -963,7 +1264,7 @@ function redirectAfterPart2Step7(){
 }
 add_action( 'template_redirect', 'redirectAfterPart2Step7');
 
-// Shortcode: Part 2 Step 8 (Create Community Login)
+// Shortcode: Part 2 Step 8 (Page 7: Create Community Login)
 function opinc_part2_step8_form_sc($atts, $content = null) {
    extract(shortcode_atts(array(
    ), $atts));
@@ -1235,7 +1536,7 @@ function redirectAfterPart2Step8(){
 }
 add_action( 'template_redirect', 'redirectAfterPart2Step8');
 
-// Shortcode: Part 2 Step 9 (Thank You)
+// Shortcode: Part 2 Step 9 (Page 8: Thank You)
 function opinc_part2_step9_form_sc($atts, $content = null) {
    extract(shortcode_atts(array(
    ), $atts));
@@ -1455,12 +1756,8 @@ function handlePreviousStep() {
         wp_redirect(get_permalink(get_page_by_path('part2-step4'))); 
         exit;
     }
-    if (isset($_POST['previous_step6'])) {
-        wp_redirect(get_permalink(get_page_by_path('part2-step5'))); 
-        exit;
-    }
     if (isset($_POST['previous_step7'])) {
-        wp_redirect(get_permalink(get_page_by_path('part2-step6'))); 
+        wp_redirect(get_permalink(get_page_by_path('part2-step5'))); 
         exit;
     }
     if (isset($_POST['previous_step8'])) {
@@ -2013,9 +2310,7 @@ function redirectAfterPart2Step1(){
             $errs[] = array('inf_field_postcode', __('Please enter your postcode', 'openinclusion'));
          }
          
-         if(!isset($_POST['inf_field_over18']) || empty($_POST['inf_field_over18'])) {
-            $errs[] = array('inf_field_over18', __('Please confirm if you are over 18', 'openinclusion'));
-         }
+         // Over 18 question removed - no longer needed
          
          if(!isset($_POST['inf_custom_YearBorn']) || empty($_POST['inf_custom_YearBorn'])) {
             $errs[] = array('inf_custom_YearBorn', __('Please enter your birth year', 'openinclusion'));
@@ -2043,28 +2338,8 @@ function redirectAfterPart2Step1(){
          }
          
          // Business logic validations (screening)
-         if(isset($_POST['inf_field_over18']) && $_POST['inf_field_over18'] == 'Not Yet') {
-            // Mark user as screened out
-            update_user_meta( $userid, 'ScreenedOut', 'Yes');
-            update_user_meta( $userid, 'ScreenedOutReason', 'Under 18 years old');
-            
-            // Redirect to thank-you page with error message
-            if(isset($_SERVER['HTTP_HOST'])) {
-               if($_SERVER['HTTP_HOST'] == 'localhost') {
-                  $redirectUrl = "http://" . $_SERVER['HTTP_HOST']."/mywordpress/thank-you-2/";
-               }
-               else {
-                  $redirectUrl = "https://". $_SERVER['HTTP_HOST']. "/thank-you-2/";
-               }
-               
-               // Add error message as URL parameter
-               $errorMessage = urlencode('Thanks for your interest! Currently, we\'re only able to accept members aged 18 and over for our online community.');
-               $redirectUrl .= "?error=" . $errorMessage;
-               
-               wp_redirect($redirectUrl);
-               exit;
-            }
-         }
+         // Note: Over 18 question removed - age validation now handled via birth year
+         // Age screening can be done via birth year validation if needed
          
          // Update user meta data with Part 2 Step 1 information
          $userMetaData = prepareUserMetaData();
@@ -2755,9 +3030,9 @@ function redirectAfterPart2Step5(){
             wp_redirect($redirectUrl); exit;
          }
 
-         // Redirect to Step 6 (only if validation passed)
-         if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/part2-step6/'; }
-         else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/part2-step6/"; }
+         // Redirect to Step 7 (only if validation passed)
+         if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/part2-step7/'; }
+         else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/part2-step7/"; }
          wp_redirect($redirectUrl); exit;
       }
    }
@@ -3613,18 +3888,20 @@ function applyKeapStepTag($step, $userEmail) {
 
 /**
  * Get the appropriate phase tag for a given step
+ * Note: step6 (privacy consent) was removed - content moved to Page 1
+ * Page mapping: step7 = Page 6, step8 = Page 7, step9 = Page 8
  */
 function getPhaseTagForStep($step, $properties_ini) {
     $phaseMapping = array(
-        'step1' => 'phase_basic_info',
-        'step2' => 'phase_access_needs', 
-        'step3' => 'phase_technologies',
-        'step4' => 'phase_demographics',
-        'step5' => 'phase_community_agreement',
-        'step6' => 'phase_privacy_consent',
-        'step7' => 'phase_identity_verification',
-        'step8' => 'phase_login_creation',
-        'step9' => 'phase_complete'
+        'step1' => 'phase_basic_info',           // Page 1
+        'step2' => 'phase_access_needs',          // Page 2
+        'step3' => 'phase_technologies',          // Page 3
+        'step4' => 'phase_demographics',          // Page 4
+        'step5' => 'phase_community_agreement',    // Page 5
+        // step6 removed - privacy consent moved to Page 1
+        'step7' => 'phase_identity_verification',  // Page 6 (Identity Verification)
+        'step8' => 'phase_login_creation',        // Page 7 (Create Community Login)
+        'step9' => 'phase_complete'               // Page 8 (Thank You)
     );
     
     if (isset($phaseMapping[$step])) {
