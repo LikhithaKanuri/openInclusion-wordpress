@@ -29,6 +29,24 @@ docElem.addEventListener('focus', function(event) {
 		return;
 	}
 
+	// Prevent flying-focus from showing when previous button is clicked
+	// Check if body has class indicating previous navigation
+	if (body.classList.contains('previous-navigation-active')) {
+		return;
+	}
+	// Check if this is a programmatic focus (not keyboard navigation)
+	if (!isJustPressed()) {
+		// Check if target is inside a form that was just submitted via previous button
+		var form = target.closest('form');
+		if (form && form.dataset.previousButtonClicked === 'true') {
+			return;
+		}
+		// Also check if target has a class indicating it's from previous navigation
+		if (target.classList.contains('previous-navigation-focus')) {
+			return;
+		}
+	}
+
 	var isFirstFocus = false;
 	if (!ringElem) {
 		isFirstFocus = true;

@@ -45,6 +45,18 @@ function eraseCookie(name) {
 }
 
 jQuery(document).ready(function ($) {
+
+   if (sessionStorage.getItem('previousButtonClicked') === 'true') {
+      // Temporarily disable flying-focus for a short period
+      setTimeout(function() {
+         sessionStorage.removeItem('previousButtonClicked');
+      }, 1000);
+      // Add class to body to signal flying-focus to skip
+      $('body').addClass('previous-navigation-active');
+      setTimeout(function() {
+         $('body').removeClass('previous-navigation-active');
+      }, 1000);
+   }
    var $errInProgress = false;
    var $fieldId = '';
    var $errArray = [];
@@ -1145,12 +1157,11 @@ jQuery(document).ready(function ($) {
       $(this).parent().find("input").trigger("click");
    });
 
-   // Part 2 Step 1: Over 18 question removed - no longer needed
-   // Age validation now handled via birth year field
+   // Part 2 Step 1: Over 18 toggle and screen-out handling
    (function() {
       var $form = $('#part2-step1-form');
       if (!$form.length) return;
-      // Over 18 handling removed - return early
+
       return;
 
       function getFieldLiByInput($input) {
@@ -1279,84 +1290,8 @@ jQuery(document).ready(function ($) {
    });
 
    })();
-
-   /****************** Prevent Enter key from submitting forms **************************/
-   // Track if Enter key was pressed (to distinguish from button clicks)
-   var enterKeyPressed = false;
    
-   // Prevent Enter key from submitting forms - catch it at the form level first
-   $(document).on('keydown', '.contact form', function(e) {
-      if (e.keyCode === 13 || e.which === 13) {
-         var $target = $(e.target);
-         
-         // Allow Enter in textareas (for line breaks)
-         if ($target.is('textarea')) {
-            // Allow default behavior (line break) but mark that Enter was pressed
-            enterKeyPressed = true;
-            return true;
-         }
-         
-         // Allow Enter on submit/button elements when they are focused
-         if ($target.is('input[type="submit"], input[type="button"], button[type="submit"], button[type="button"]')) {
-            // Mark that this is an intentional button press
-            enterKeyPressed = false;
-            $target.closest('form').data('submit-triggered', true);
-            return true;
-         }
-         
-         // For all other form elements, prevent Enter key
-         e.preventDefault();
-         e.stopPropagation();
-         e.stopImmediatePropagation();
-         enterKeyPressed = true;
-         return false;
-      }
-   });
    
-   // Additional prevention at input/select level
-   $(document).on('keydown', '.contact form input:not([type="submit"]):not([type="button"]):not([type="checkbox"]):not([type="radio"]), .contact form select', function(e) {
-      if (e.keyCode === 13 || e.which === 13) {
-         e.preventDefault();
-         e.stopPropagation();
-         e.stopImmediatePropagation();
-         enterKeyPressed = true;
-         return false;
-      }
-   });
-   
-   // Prevent form submission via Enter key unless it's from a submit button click
-   $(document).on('submit', '.contact form', function(e) {
-      var $form = $(this);
-      var submitTriggered = $form.data('submit-triggered');
-      
-      // If Enter key was pressed and no button was explicitly clicked, prevent submission
-      if (enterKeyPressed && !submitTriggered) {
-         e.preventDefault();
-         e.stopPropagation();
-         e.stopImmediatePropagation();
-         enterKeyPressed = false; // Reset flag
-         return false;
-      }
-      
-      // Reset flags
-      enterKeyPressed = false;
-      $form.data('submit-triggered', false);
-   });
-   
-   // Mark form submission when submit button is clicked (not Enter key)
-   $(document).on('click', '.contact form input[type="submit"], .contact form input[type="button"], .contact form button[type="submit"], .contact form button[type="button"]', function(e) {
-      var $form = $(this).closest('form');
-      $form.data('submit-triggered', true);
-      enterKeyPressed = false; // Clear Enter key flag when button is clicked
-   });
-   
-   // Also handle mousedown to catch button presses early
-   $(document).on('mousedown', '.contact form input[type="submit"], .contact form input[type="button"], .contact form button[type="submit"], .contact form button[type="button"]', function(e) {
-      var $form = $(this).closest('form');
-      $form.data('submit-triggered', true);
-      enterKeyPressed = false;
-   });
-
    /****************** Form is submitted **************************/
    $('.contact').find('input[type="submit"]').on('click', function (e) {
       // Check if this is a "Previous" button - if so, skip ALL validation
@@ -1577,12 +1512,9 @@ jQuery(document).ready(function ($) {
 
       out_html += '</ul></section>';
       const element = document.getElementById(err_arr[0][0]);
-      
-      // Check if we're on step7 page - if so, don't scroll to top
       var isStep7Page = window.location.pathname.indexOf('part2-step7') !== -1 || 
-                        window.location.pathname.indexOf('step7') !== -1 ||
-                        document.getElementById('part2-step7-form') !== null;
-      
+      window.location.pathname.indexOf('step7') !== -1 ||
+      document.getElementById('part2-step7-form') !== null;    
       if (isStep7Page && element) {
          // For step7, just focus the element but don't scroll
          // The custom script will handle scrolling to the error message
@@ -1595,8 +1527,8 @@ jQuery(document).ready(function ($) {
             }
          }
       } else if (element) {
-         element.focus()
-         element.scrollIntoView();
+      element.focus()
+      element.scrollIntoView();
       }
 
       $('#' + err_id + '-list').html(out_html);
@@ -2025,34 +1957,74 @@ function checkPreferNotToRespond(element) {
       jQuery('#SexualOrientationsOtherPleaseSpecify_OpenText').hide();
       jQuery('#SexualOrientationsOtherPleaseSpecify_OpenText').prop('disabled', true).val('');
       
+      
       console.log('Hiding text fields in fieldset');
    } else {
       // Show open text fields only for "OtherPleaseSpecify" checked options
-      fieldset.find('input[type=checkbox]:checked').each(function() {
-         if (jQuery(this).val() !== 'PreferNotToSay' && jQuery(this).val() === 'OtherPleaseSpecify') {
-            jQuery(this).parent().find('input[type=text]').show();
-            jQuery(this).parent().find('input[type=text]').prop('disabled', false);
+      // fieldset.find('input[type=checkbox]:checked').each(function() {
+      //    if (jQuery(this).val() !== 'PreferNotToSay' && jQuery(this).val() === 'OtherPleaseSpecify') {
+      //       jQuery(this).parent().find('input[type=text]').show();
+      //       jQuery(this).parent().find('input[type=text]').prop('disabled', false);
+            fieldset.find('input[id*="OtherPleaseSpecify_OpenText"], input[name*="OtherPleaseSpecify_OpenText"]').hide();
+      fieldset.find('input[id*="OtherPleaseSpecify_OpenText"], input[name*="OtherPleaseSpecify_OpenText"]').prop('disabled', true);
+      
+      // Then, show only the text field for each specific "OtherPleaseSpecify" option that is checked
+      fieldset.find('input[type=checkbox]:checked, input[type=radio]:checked').each(function() {
+         var $input = jQuery(this);
+         var inputValue = $input.val();
+         var inputId = $input.attr('id');
+         
+         // Skip "PreferNotToSay" options
+         if (inputValue === 'PreferNotToSay') {
+            return;
+         }
+      // });
+      
+      // var otherPleaseSpecify = fieldset.find('input[value="OtherPleaseSpecify"]');
+      // if (otherPleaseSpecify.length > 0 && otherPleaseSpecify.prop('checked')) {
+      //    fieldset.find('input[id*="OtherPleaseSpecify_OpenText"]').show();
+      //    fieldset.find('input[id*="OtherPleaseSpecify_OpenText"]').prop('disabled', false);
+         
+      //    fieldset.find('input[name*="OtherPleaseSpecify_OpenText"]').show();
+      //    fieldset.find('input[name*="OtherPleaseSpecify_OpenText"]').prop('disabled', false);
+         
+      //    // Show specific known IDs
+      //    jQuery('#OtherNeedsOtherPleaseSpecify_OpenText').show();
+      //    jQuery('#OtherNeedsOtherPleaseSpecify_OpenText').prop('disabled', false);
+      //    jQuery('#OtherTechnologiesOtherPleaseSpecify_OpenText').show();
+      //    jQuery('#OtherTechnologiesOtherPleaseSpecify_OpenText').prop('disabled', false);
+      //    jQuery('#SexualOrientationsOtherPleaseSpecify_OpenText').show();
+      //    jQuery('#SexualOrientationsOtherPleaseSpecify_OpenText').prop('disabled', false);
+      // }
+      
+      var isOtherOption = (inputValue === 'OtherPleaseSpecify' || inputValue === 'SelfDescribe');
+         
+         // Also check if the ID contains "other" (case-insensitive) for other variations
+         var hasOtherInId = inputId && (inputId.toLowerCase().indexOf('other') !== -1);
+         
+         if (isOtherOption || hasOtherInId) {
+            // Find the associated text field using the checkbox/radio ID
+            // Text field ID is typically: {checkbox_id}_OpenText
+            var textFieldId = inputId + '_OpenText';
+            var $textField = jQuery('#' + textFieldId);
+            
+            // Special handling for gender field
+            if (inputId === 'inf_option_Gender_776') {
+               $textField = jQuery('#inf_option_Gender_opentext');
+            }
+            
+            // If not found by ID, try finding it in the parent li element
+            if (!$textField.length) {
+               $textField = $input.closest('li').find('input[type=text]');
+            }
+            
+            // Show only this specific text field
+            if ($textField.length) {
+               $textField.show();
+               $textField.prop('disabled', false);
+            }
          }
       });
-      
-      // Show "Other. Please describe" text field if "Other. Please describe" is checked
-      var otherPleaseSpecify = fieldset.find('input[value="OtherPleaseSpecify"]');
-      if (otherPleaseSpecify.length > 0 && otherPleaseSpecify.prop('checked')) {
-         fieldset.find('input[id*="OtherPleaseSpecify_OpenText"]').show();
-         fieldset.find('input[id*="OtherPleaseSpecify_OpenText"]').prop('disabled', false);
-         
-         fieldset.find('input[name*="OtherPleaseSpecify_OpenText"]').show();
-         fieldset.find('input[name*="OtherPleaseSpecify_OpenText"]').prop('disabled', false);
-         
-         // Show specific known IDs
-         jQuery('#OtherNeedsOtherPleaseSpecify_OpenText').show();
-         jQuery('#OtherNeedsOtherPleaseSpecify_OpenText').prop('disabled', false);
-         jQuery('#OtherTechnologiesOtherPleaseSpecify_OpenText').show();
-         jQuery('#OtherTechnologiesOtherPleaseSpecify_OpenText').prop('disabled', false);
-         jQuery('#SexualOrientationsOtherPleaseSpecify_OpenText').show();
-         jQuery('#SexualOrientationsOtherPleaseSpecify_OpenText').prop('disabled', false);
-      }
-      
       console.log('Showing text fields in fieldset');
    }
 }
@@ -2060,14 +2032,33 @@ function checkPreferNotToRespond(element) {
 function selectResearchRelatedOptions(){
    var isChecked = jQuery('#inf_option_any_paid_research').prop('checked');
     if (isChecked) {
-        // Select the next 8 checkboxes (including "In person Events")
-        var nextCheckboxes = jQuery('#inf_option_any_paid_research').closest('li.check-radio').nextAll('li.check-radio').slice(0, 8).find('input[type="checkbox"]');
+        // Select the next 7 checkboxes
+      //   var nextCheckboxes = jQuery('#inf_option_any_paid_research').closest('li.check-radio').nextAll('li.check-radio').slice(0, 7).find('input[type="checkbox"]');
+              var nextCheckboxes = jQuery('#inf_option_any_paid_research').closest('li.check-radio').nextAll('li.check-radio').slice(0, 8).find('input[type="checkbox"]');
             nextCheckboxes.prop('checked', true);
     } else {
-        // Uncheck the next 8 checkboxes if "Any paid research" is unchecked
-        var nextCheckboxes = jQuery('#inf_option_any_paid_research').closest('li.check-radio').nextAll('li.check-radio').slice(0, 8).find('input[type="checkbox"]');
+        // Uncheck the next 7 checkboxes if "Any paid research" is unchecked
+      //   var nextCheckboxes = jQuery('#inf_option_any_paid_research').closest('li.check-radio').nextAll('li.check-radio').slice(0, 7).find('input[type="checkbox"]');
+              var nextCheckboxes = jQuery('#inf_option_any_paid_research').closest('li.check-radio').nextAll('li.check-radio').slice(0, 8).find('input[type="checkbox"]');
             nextCheckboxes.prop('checked', false);
     }
+}
+
+function toggleReferredNameField(element) {
+   // Show/hide the referral name text field based on Yes/No selection
+   var isYes = jQuery(element).val() === 'Yes';
+   var referredNameWrapper = jQuery('#inf_field_referred_name_wrapper');
+   var referredNameField = jQuery('#inf_field_referred_name');
+   
+   if (isYes) {
+      // referredNameWrapper.show();
+      referredNameWrapper.addClass('show-referred-field').show();
+      referredNameField.prop('disabled', false);
+   } else {
+      // referredNameWrapper.hide();
+      referredNameWrapper.removeClass('show-referred-field').hide();
+      referredNameField.prop('disabled', true).val('');
+   }
 }
 
 function hideOpenText(element) {
@@ -2092,21 +2083,6 @@ function hideOpenText(element) {
    }
 
    toggleGenderSelfDescribeField();
-}
-
-function toggleReferredNameField(element) {
-   // Show/hide the referral name text field based on Yes/No selection
-   var isYes = jQuery(element).val() === 'Yes';
-   var referredNameWrapper = jQuery('#inf_field_referred_name_wrapper');
-   var referredNameField = jQuery('#inf_field_referred_name');
-   
-   if (isYes) {
-      referredNameWrapper.show();
-      referredNameField.prop('disabled', false);
-   } else {
-      referredNameWrapper.hide();
-      referredNameField.prop('disabled', true).val('');
-   }
 }
 
 function clearOffText(element, targetId) {
@@ -2492,3 +2468,142 @@ jQuery(document).ready(function($) {
    togglePronounsTextField();
    toggleGenderSelfDescribeField();
 });
+
+function triggerSaveAndContinue($form) {
+    if (!$form || !$form.length) return false;
+    
+    // Reset global validation state
+    $errInProgress = false;
+    $fieldId = '';
+    $errArray = [];
+    
+    // 1. Validate ALL text/select fields
+    $form.find('input[type="text"], input[type="password"], input[type="email"], textarea, select').each(function() {
+        if (!validateTextSelectField(this)) {
+            if (!$errInProgress) {
+                $errInProgress = true;
+                $fieldId = $(this).attr('id');
+            }
+        }
+    });
+    
+    // 2. Validate radio/checkbox groups
+    $form.find('fieldset[data-type="radio"], fieldset[data-type="chkbox"]').each(function() {
+        if ($(this).attr('data-type') === 'radio' && !validateRadioGrp(this)) {
+            if (!$errInProgress) $errInProgress = true;
+        }
+        if ($(this).attr('data-type') === 'chkbox' && !validateCheckboxGrp(this)) {
+            if (!$errInProgress) $errInProgress = true;
+        }
+    });
+    
+    // 3. If errors exist, show them and stop
+    if ($errInProgress) {
+        print_out_form_errors('form-error', $errArray);
+        if ($fieldId) $('#' + $fieldId).focus();
+        return false;
+    }
+    
+    // 4. SUCCESS: Click the CORRECT submit button (Save & Next Step)
+    // IMPORTANT: Skip "Previous" and "Save & Continue Later" buttons
+    var $saveBtn = $form.find('input[type="submit"][name*="submit_part2"], button[type="submit"][name*="submit_part2"]')
+        .filter(':visible')
+        .filter(function() {
+            var name = $(this).attr('name');
+            // Only select the main submit button, not "previous" or "save_continue_later"
+            return name && name.indexOf('submit_part2') !== -1 && 
+                   name.indexOf('previous') === -1 && 
+                   name.indexOf('save_continue_later') === -1;
+        })
+        .first();
+    
+    // Fallback: If specific button not found, look for any submit button with correct criteria
+    if (!$saveBtn.length) {
+        $saveBtn = $form.find('input[type="submit"], button[type="submit"]')
+            .filter(':visible')
+            .filter(function() {
+                var $this = $(this);
+                var name = $this.attr('name');
+                var value = $this.val();
+                // Exclude Previous and Save Later buttons
+                return !$this.hasClass('previous-button') && 
+                       !$this.hasClass('save-later') &&
+                       name && name.indexOf('previous') === -1 &&
+                       name && name.indexOf('save_continue_later') === -1;
+            })
+            .first();
+    }
+    
+    if ($saveBtn.length) {
+        $saveBtn.click();
+        return true;
+    }
+    
+    return false;
+}
+
+(function($) {
+    // Clean namespaced handler - only targets registration forms
+    $(document).off('keydown.enterNav');
+    
+    var formSelector = 'form.registration-form, form[data-step], #part2-step1-form, #part2-step2-form, #part2-step3-form, #part2-step4-form, #part2-step5-form, #part2-step6-form, #part2-step7-form, #part2-step8-form, #contactform';
+    
+    // Handle text inputs, selects, password fields - validate on Enter
+    $(document).on('keydown.enterNav', formSelector + ' input[type="text"], ' + formSelector + ' input[type="password"], ' + formSelector + ' input[type="email"], ' + formSelector + ' select', function(e) {
+        if (e.keyCode !== 13 && e.which !== 13) return;
+        
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        
+        var $el = $(this);
+        var $form = $el.closest('form');
+        
+        // Validate current field
+        var isValid = validateTextSelectField($el[0]);
+        
+        if (!isValid) {
+            $el.focus();
+            return false;
+        }
+        
+        // Field valid - trigger Save & Continue
+        triggerSaveAndContinue($form);
+        return false;
+    });
+    
+    // Textareas: Allow Enter for line breaks; Ctrl/Cmd+Enter to submit
+    $(document).on('keydown.enterNav', formSelector + ' textarea', function(e) {
+        if (e.keyCode !== 13 && e.which !== 13) return;
+        if (e.ctrlKey || e.metaKey) {
+            e.preventDefault();
+            triggerSaveAndContinue($(this).closest('form'));
+            return false;
+        }
+        return true; // Allow line break
+    });
+    
+    // **FIX**: Checkboxes and radios: Prevent Enter from submitting, allow Space
+    $(document).on('keydown.enterNav', formSelector + ' input[type="checkbox"], ' + formSelector + ' input[type="radio"]', function(e) {
+        if (e.keyCode === 13 || e.which === 13) {
+            e.preventDefault();  // Prevent page reload
+            e.stopImmediatePropagation();
+            return false;  // Don't submit
+        }
+        return true;  // Allow Space to toggle
+    });
+    
+    // Submit buttons: Allow Enter to trigger click
+    $(document).on('keydown.enterNav', formSelector + ' input[type="submit"], ' + formSelector + ' button[type="submit"]', function(e) {
+        if (e.keyCode === 13 || e.which === 13) {
+            e.preventDefault();
+            $(this).trigger('click');
+            return false;
+        }
+    });
+    
+    // Allow normal form submission (don't prevent it)
+    $(document).on('submit.enterNav', formSelector, function(e) {
+        return true;
+    });
+    
+})(jQuery);

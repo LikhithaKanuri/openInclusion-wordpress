@@ -776,9 +776,13 @@ function redirectAfterPart2Step6(){
          }
 
          // Next: Step 7
-         if($_SERVER['HTTP_HOST'] == 'localhost') { $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/part2-step7/'; }
-         else { $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/part2-step7/"; }
-         wp_redirect($redirectUrl); exit;
+         if($_SERVER['HTTP_HOST'] == 'localhost') { 
+            $redirectUrl = "http://" . $_SERVER['HTTP_HOST'].'/openinclusion/part2-step7/'; 
+         } else { 
+            $redirectUrl = "https://" . $_SERVER['HTTP_HOST']. "/part2-step7/"; 
+         }
+         wp_redirect($redirectUrl); 
+         exit;
       }
    }
 }

@@ -105,18 +105,6 @@ input[type=date], input[type=email], input[type=number], input[type=password], i
   clear: left;
   margin: 0.4em 0; }
 
-/* Ensure fieldsets don't add extra spacing between questions */
-#content .contact ul li fieldset {
-  margin: 0;
-  padding: 0;
-}
-
-/* Ensure nested lists inside fieldsets don't add extra spacing */
-#content .contact ul li fieldset ul {
-  margin: 0;
-  padding: 0;
-}
-
 #content .contact ul li.check-radio input {
   clear: left;
   float: left;
@@ -129,10 +117,7 @@ input[type=date], input[type=email], input[type=number], input[type=password], i
   width: auto; }
 
 #content .contact ul li.submit {
-  padding-top: 0.5em;
-  margin-bottom: 20px;
-  clear: both;
-}
+  padding-top: 0.5em; }
 
 #content .contact ul li.columns ul.checkbox-radio > li {
   display: inline-block;
@@ -153,72 +138,18 @@ input[type=date], input[type=email], input[type=number], input[type=password], i
   line-height: 1.6rem;
   font-weight: normal !important; }
 
-/* Style for single checkboxes (like do_not_consent_contact) */
-#content .contact ul li input[type="checkbox"]:not([name*="[]"]) {
-  width: 24px !important;
-  height: 24px !important;
-  margin-right: 10px;
-  margin-top: 0;
-  vertical-align: middle;
-  cursor: pointer;
-  float: left;
-}
-
-/* Specific styling for do_not_consent_contact checkbox */
-#do_not_consent_wrapper {
-  margin-top: 1.2em;
-  padding-top: 1.2em;
-  border-top: 1px solid #ddd;
-  clear: both;
-}
-
-#do_not_consent_wrapper label {
-  display: block !important;
-  cursor: pointer;
-  line-height: 1.8em;
-  overflow: hidden;
-}
-
-#do_not_consent_wrapper input[type="checkbox"] {
-  width: 24px !important;
-  height: 24px !important;
-  margin-right: 10px !important;
-  margin-top: 2px !important;
-  float: left;
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-#do_not_consent_wrapper label .text {
-  display: inline-block !important;
-  padding: 0 !important;
-  margin-left: 0 !important;
-  width: auto;
-  line-height: 1.6rem;
-}
-
 #content .contact fieldset {
   width: 100%;
   display: block;
-  margin: 0;
-  padding: 0;
-}
+    margin: 0;
+  padding: 0; }
 
 #content .contact legend {
   width: 90%;
   display: block;
   padding: 0 30px 0 0;
-  margin: 0 0 0.5em 0;
+    margin: 0 0 0.5em 0;
   font-weight: normal !important; }
-
-/* Remove ">" character from expandableLegend */
-#content .contact legend.expandableLegend::after {
-  content: none !important;
-}
-
-#content .contact legend.expandableLegend {
-  content: none;
-}
 
 #content .contact legend.valid,
 #content .contact label.valid {
@@ -248,10 +179,6 @@ input[type=date], input[type=email], input[type=number], input[type=password], i
 #content .contact li.submit {
   display: inline-block;
   margin-right: 10px;
-  margin-bottom: 20px;
-  clear: both;
-  position: relative;
-  z-index: 10;
 }
 
 /* Container for submit buttons to control alignment */
@@ -259,8 +186,88 @@ input[type=date], input[type=email], input[type=number], input[type=password], i
   float: left;
 }
 
+#content .contact ul li input[type="checkbox"]:not([name*="[]"]) {
+  width: 24px !important;
+  height: 24px !important;
+  margin-right: 10px;
+  margin-top: 0;
+  vertical-align: middle;
+  cursor: pointer;
+  float: left;
+}
+
+/* Specific styling for do_not_consent_contact checkbox */
+#do_not_consent_wrapper {
+  margin-top: 1.2em;
+  padding-top: 1.2em;
+  border-top: 1px solid #ddd;
+  clear: both;
+}
+
+#inf_field_referred_name_wrapper {
+  display: none !important;
+}
+
+/* Show the field when Yes is selected (this will override the default hide) */
+#inf_field_referred_name_wrapper.show-referred-field {
+  display: block !important;
+}
+
+#inf_field_referred_name_wrapper {
+  display: none !important;
+}
+
+/* Show the field when Yes is selected (this will override the default hide) */
+#inf_field_referred_name_wrapper.show-referred-field {
+  display: block !important;
+}
+
+
+#do_not_consent_wrapper label {
+  display: block !important;
+  cursor: pointer;
+  line-height: 1.8em;
+  overflow: hidden;
+}
+
+#do_not_consent_wrapper input[type="checkbox"] {
+  width: 24px !important;
+  height: 24px !important;
+  margin-right: 10px !important;
+  margin-top: 2px !important;
+  float: left;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+#do_not_consent_wrapper label .text {
+  display: inline-block !important;
+  padding: 0 !important;
+  margin-left: 0 !important;
+  width: auto;
+  line-height: 1.6rem;
+}
+
+
 #content .contact ul li.submit:last-of-type {
   float: right;
+}
+
+#do_not_consent_wrapper label::after,
+#do_not_consent_wrapper label .text::after,
+#do_not_consent_wrapper label::before,
+#do_not_consent_wrapper label .text::before,
+#do_not_consent_wrapper li label::after,
+#do_not_consent_wrapper li label .text::after {
+  content: "" !important;
+  display: none !important;
+}
+
+/* Additional specificity to override any other rules */
+#content #do_not_consent_wrapper label::after,
+#content #do_not_consent_wrapper label .text::after {
+  content: "" !important;
+  display: none !important;
 }
 
 /* Clear float after submit buttons */
@@ -270,7 +277,25 @@ input[type=date], input[type=email], input[type=number], input[type=password], i
   clear: both;
 }
 
-/* Ensure form container has proper spacing before footer */
+#content .contact li.submit.save-later input {
+  /* background-color: #6c757d;
+  border-color: #6c757d;
+  color: white; */
+  background-color: #f6d578;
+  /* border-color: #f6d578; */
+  border: 2px solid #2a3258;
+  color: #28325a;
+}
+
+#content .contact li.submit.save-later input:hover {
+  /* background-color: #5a6268;
+  border-color: #545b62; */
+    background-color: #f4cd5a;
+      border: 2px solid #2a3258;
+  /* border-color: #f4cd5a; */
+  color: #28325a;
+}
+
 #content .contact {
   margin-bottom: 40px;
   padding-bottom: 30px;
@@ -278,11 +303,19 @@ input[type=date], input[type=email], input[type=number], input[type=password], i
   z-index: 1;
 }
 
+#content .contact legend.expandableLegend::after {
+  content: none !important;
+}
+
+#content .contact legend.expandableLegend {
+  content: none;
+}
+
 /* Ensure submit buttons stay within form boundaries */
-#content .contact ul {
+/* #content .contact ul {
   margin-bottom: 30px;
   padding-bottom: 20px;
-}
+} */
 
 /* Clear floats after the form list */
 #content .contact ul:after {
@@ -291,27 +324,18 @@ input[type=date], input[type=email], input[type=number], input[type=password], i
   clear: both;
 }
 
-#content .contact li.submit.save-later input {
-  background-color: #f6d578;
-  border-color: #f6d578;
-  color: #28325a;
-}
-
-#content .contact li.submit.save-later input:hover {
-  background-color: #f4cd5a;
-  border-color: #f4cd5a;
-  color: #28325a;
-}
-
 #content .contact li.submit.previous-button input {
   background-color: #f6d578;
-  border-color: #f6d578;
+  /* border-color: #f6d578;
+   */
+     border: 2px solid #2a3258;
   color: #28325a;
 }
 
 #content .contact li.submit.previous-button input:hover {
   background-color: #f4cd5a;
-  border-color: #f4cd5a;
+  /* border-color: #f4cd5a; */
+  border: 2px solid #2a3258;
   color: #28325a;
 }
 
@@ -345,14 +369,14 @@ input[type=button]:focus, input[type=button]:hover, input[type=submit]:focus, in
 
 
 #content fieldset{
+      margin: 0;
 	padding: 0px;
-    border: 0px;
-    margin: 0;
+    border: 0px;	
 }
 
 #content fieldset legend{	
 	font-weight:normal;
-    margin: 0;
+      margin: 0;
     padding: 0;
 }
 
@@ -592,22 +616,21 @@ label div.custom::after {
   float: left !important;
   width: auto !important;
   min-width: 300px;
-  overflow: visible !important;
+  overflow: visible;
   clear: none !important;
   position: relative;
   margin-left: 0 !important;
   margin-top: 0 !important;
-  display: block !important;
 }
 
-/* Hide the label text since we're using ::before on country code */
+/* Hide the actual label text since we're using ::before on country code */
 #liphonenumber label .text {
   display: none !important;
 }
 
-/* Make label not interfere with input positioning */
+/* Style the label to allow input to float properly - ensure it doesn't hide the input */
 #liphonenumber label {
-  display: contents !important;
+  display: inline-block !important;
   width: auto !important;
   margin: 0 !important;
   padding: 0 !important;
@@ -615,15 +638,13 @@ label div.custom::after {
   float: none !important;
   overflow: visible !important;
   position: relative;
-  visibility: visible !important;
 }
 
-/* CRITICAL: Make the phone number input visible and properly positioned next to country code */
+/* Make the phone number input appear inline with country code - CRITICAL: ensure it's visible */
 #liphonenumber label input[type="text"],
 #liphonenumber label input[type="tel"],
 #liphonenumber input[type="text"],
-#liphonenumber input[type="tel"],
-#inf_field_Phone2 {
+#liphonenumber input[type="tel"] {
   border-radius: 0 25px 25px 0 !important;
   border-left: none !important;
   width: 300px !important;
@@ -635,29 +656,25 @@ label div.custom::after {
   display: inline-block !important;
   visibility: visible !important;
   opacity: 1 !important;
-  float: left !important;
+  float: none !important;
   clear: none !important;
   position: relative !important;
   z-index: 10 !important;
   background-color: #fff !important;
   border: 1px solid #ddd !important;
   box-sizing: border-box !important;
-  height: 38px !important;
+  height: auto !important;
   line-height: normal !important;
   font-size: 16px !important;
   color: #000 !important;
-  appearance: none !important;
-  -webkit-appearance: none !important;
-  -moz-appearance: textfield !important;
 }
 
-/* Additional override to ensure input is visible - target by ID directly */
-#inf_field_Phone2 {
+/* Override any general input styles that might hide the phone input */
+#liphonenumber label input {
+  width: 300px !important;
   display: inline-block !important;
   visibility: visible !important;
   opacity: 1 !important;
-  width: 300px !important;
-  float: left !important;
 }
 
 /* Add focus states for combined appearance */
@@ -951,14 +968,6 @@ ul.sub-list li {
   color: #6c757d;
 }
 
-/* Readonly password field styling */
-#inf_field_Password[readonly] {
-  background-color: #f8f9fa !important;
-  color: #000 !important;
-  cursor: default;
-}
-
-/* Password mismatch error styling */
 #password-mismatch-error {
   color: #dc3545 !important;
   display: block !important;
@@ -995,9 +1004,13 @@ ul.sub-list li {
   transform: translateY(-50%);
   width: 0;
   height: 0;
+  /* border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid #fff; */
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
-  border-top: 6px solid #000;
+  /* border-top: 6px solid #fff; */
+   border-top: 6px solid #000;
   pointer-events: none;
   z-index: 10;
 }
@@ -1008,9 +1021,10 @@ ul.sub-list li {
   padding-right: 40px !important;
   border: 1px solid #666 !important;
   border-radius: 25px !important;
+  /* border-right: none !important; */
   height: 38px !important;
   font-size: 16px !important;
-  background-color: #666 !important;
+  background-color: #fff !important;
   appearance: none !important;
   -webkit-appearance: none !important;
   -moz-appearance: none !important;
@@ -1027,7 +1041,9 @@ ul.sub-list li {
 .phone-number-input-wrapper input {
   width: 100% !important;
   padding: 8px 12px !important;
-  border: 1px solid #ddd !important;
+  border: 1px solid #666 !important;
+  /* border-radius: 0 25px 25px 0 !important;
+  border-left: none !important; */
   border-radius: 25px !important;
   height: 38px !important;
   font-size: 16px !important;
@@ -1058,10 +1074,12 @@ ul.sub-list li {
   .phone-country-code-wrapper {
     width: 100%;
     max-width: 100%;
+    /* margin-bottom: 0.5em; */
   }
   
   .phone-country-code-wrapper select {
     border-radius: 25px !important;
+    /* border-right: 1px solid #ddd !important; */
   }
   
   .phone-number-input-wrapper {
@@ -1070,5 +1088,33 @@ ul.sub-list li {
   
   .phone-number-input-wrapper input {
     border-radius: 25px !important;
+    /* border-left: 1px solid #ddd !important; */
   }
+}
+
+/* Fix for blue dot issue on page headings */
+#content h2::before,
+#content h2::after,
+.contact h2::before,
+.contact h2::after,
+h2::first-letter::before,
+h2::first-letter::after {
+  content: none !important;
+  display: none !important;
+  background: none !important;
+  border: none !important;
+}
+
+/* Remove any overlays or indicators on headings */
+#content h2,
+.contact h2 {
+  position: relative;
+}
+
+#content h2 *::before,
+#content h2 *::after,
+.contact h2 *::before,
+.contact h2 *::after {
+  content: none !important;
+  display: none !important;
 }
